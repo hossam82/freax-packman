@@ -202,4 +202,11 @@ public class StringUtils
 		}
 		return ret;
 	}
+
+	public static String trimDir(String file)
+	{
+		int idx = file.lastIndexOf(System.getProperty("file.separator")) + 1;
+		file = file.substring(idx);
+		return file;
+	}
 }

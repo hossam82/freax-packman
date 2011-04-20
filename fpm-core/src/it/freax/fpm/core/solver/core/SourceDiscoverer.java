@@ -12,6 +12,7 @@ import it.freax.fpm.core.types.RootExecution;
 import it.freax.fpm.core.util.CoreUtils;
 import it.freax.fpm.core.util.EntriesScorer;
 import it.freax.fpm.core.util.LogConfigurator;
+import it.freax.fpm.core.util.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -67,6 +68,8 @@ public class SourceDiscoverer
 			CompilationUnit cu = tn.getAssociatedCU();
 			this.setPackageInfos(cu, srcfiles);
 			tn.updateCU(cu);
+			this.log.debug(cu.getDummySpec().getPackage().getPackageName());
+			this.log.debug(cu.getDummySpec().getPackage().getVersion());
 		}
 		Treenode tn = ret.getArchiveSpecification().first();
 		DummySpec ds = tn.getAssociatedCU().getDummySpec();
@@ -131,10 +134,24 @@ public class SourceDiscoverer
 		boolean ret = false;
 		for (Iterator<ConfType> it = this.conf.typesIterator(); it.hasNext();)
 		{
-			ret = it.next().containsNotevole(file);
+			ret = it.next().containsNotevole(StringUtils.trimDir(file));
 			if (ret)
 			{
 				break;
+			}
+		}
+		return ret;
+	}
+
+	private Vector<String> getNotableFileLangs(String notablefile)
+	{
+		Vector<String> ret = new Vector<String>();
+		for (Iterator<ConfType> it = this.conf.typesIterator(); it.hasNext();)
+		{
+			ConfType ct = it.next();
+			if (ct.containsNotevole(StringUtils.trimDir(notablefile)))
+			{
+				ret.add(ct.getSource());
 			}
 		}
 		return ret;
@@ -167,7 +184,7 @@ public class SourceDiscoverer
 				ConfType type = this.conf.getType(lang);
 				if (file.isNotable())
 				{
-					NotableFile notable = type.getNotableFile(file.getName());
+					NotableFile notable = type.getNotableFile(StringUtils.trimDir(file.getName()));
 					instructions.addAll(type.getInstructionsById(notable.getId()));
 				}
 				else
@@ -241,10 +258,13 @@ public class SourceDiscoverer
 		String content = this.reader.getEntryContent(file);
 		srcfile.setContent(content);
 
-		if (!srcfile.isNotable())
+		if (srcfile.isNotable())
+		{
+			srcfile.addAllLangs(this.getNotableFileLangs(file));
+		}
+		else
 		{
 			EbnfParser parser = getEbnfParser(null, null, false);
-
 			while (typeit.hasNext())
 			{
 				ConfType type = typeit.next();
@@ -275,15 +295,16 @@ public class SourceDiscoverer
 
 	private void setPackageInfos(CompilationUnit cu, Vector<SrcFile> files)
 	{
+		this.log.debug(files.size());
 		for (SrcFile file : files)
 		{
-			for (String lang : file.getLangs())
+			if (file.isNotable())
 			{
-				ConfType type = this.conf.getType(lang);
-				Vector<Additive> additives = new Vector<Additive>();
-				if (file.isNotable())
+				for (String lang : file.getLangs())
 				{
-					NotableFile notable = type.getNotableFile(file.getName());
+					ConfType type = this.conf.getType(lang);
+					Vector<Additive> additives = new Vector<Additive>();
+					NotableFile notable = type.getNotableFile(StringUtils.trimDir(file.getName()));
 					additives = type.getAdditivesById(notable.getId());
 
 					Iterator<Entry<InfoType, Vector<Additive>>> it;

@@ -70,4 +70,9 @@ public class SrcFile
 	{
 		this.includes.addAll(includes);
 	}
+
+	public void addAllLangs(Vector<String> langs)
+	{
+		this.langs.addAll(langs);
+	}
 }

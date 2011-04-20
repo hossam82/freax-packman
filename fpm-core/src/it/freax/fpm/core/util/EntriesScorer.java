@@ -38,45 +38,52 @@ public class EntriesScorer<E>
 		boolean keyequals;
 		while (it.hasNext())
 		{
-			MapEntry<E, Integer> el = new MapEntry<E, Integer>(it.next());
-			greater = (el.getValue() > ret.getValue());
-			equals = (el.getValue() == ret.getValue());
-			lesser = (el.getValue() < ret.getValue());
-			keyequals = el.getKey().equals(ret.getKey());
-			if (this.maxCounter)
+			if (ret == null)
 			{
-				if (greater)
-				{
-					ret = el;
-				}
-				else if (equals)
-				{
-					if (!keyequals)
-					{
-						// caso particolare, prendo ret
-					}
-				}
-				else if (lesser)
-				{
-					// Nothing
-				}
+				ret = new MapEntry<E, Integer>(it.next());
 			}
 			else
 			{
-				if (lesser)
+				MapEntry<E, Integer> el = new MapEntry<E, Integer>(it.next());
+				greater = (el.getValue() > ret.getValue());
+				equals = (el.getValue() == ret.getValue());
+				lesser = (el.getValue() < ret.getValue());
+				keyequals = el.getKey().equals(ret.getKey());
+				if (this.maxCounter)
 				{
-					ret = el;
-				}
-				else if (equals)
-				{
-					if (!keyequals)
+					if (greater)
 					{
-						// caso particolare, prendo ret
+						ret = el;
+					}
+					else if (equals)
+					{
+						if (!keyequals)
+						{
+							// caso particolare, prendo ret
+						}
+					}
+					else if (lesser)
+					{
+						// Nothing
 					}
 				}
-				else if (greater)
+				else
 				{
-					// Nothing
+					if (lesser)
+					{
+						ret = el;
+					}
+					else if (equals)
+					{
+						if (!keyequals)
+						{
+							// caso particolare, prendo ret
+						}
+					}
+					else if (greater)
+					{
+						// Nothing
+					}
 				}
 			}
 		}

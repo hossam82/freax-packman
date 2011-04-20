@@ -7,6 +7,7 @@ import it.freax.fpm.core.types.WhereToParseType;
 import it.freax.fpm.core.util.EntriesScorer;
 import it.freax.fpm.core.util.StringUtils;
 
+import java.util.Map.Entry;
 import java.util.Vector;
 
 public class Additive
@@ -85,27 +86,30 @@ public class Additive
 	public String execMethod(SrcFile file)
 	{
 		String ret = "";
-		MethodType type = MethodType.getMethodType(this.howToParse);
-		MethodParams mp = type.getParams(this.howToParse);
-		String input = "";
-
-		switch (this.whereToParse)
+		if ((this.howToParse != null) && !this.howToParse.isEmpty())
 		{
-			case Content:
+			MethodType type = MethodType.getMethodType(this.howToParse);
+			MethodParams mp = type.getParams(this.howToParse);
+			String input = "";
+
+			switch (this.whereToParse)
 			{
-				input = file.getContent();
-				ret = this.getValue(type, mp, input);
-				break;
-			}
-			case FileName:
-			{
-				input = file.getName();
-				ret = this.getValue(type, mp, input);
-				break;
-			}
-			case Nothing:
-			{
-				break;
+				case Content:
+				{
+					input = file.getContent();
+					ret = this.getValue(type, mp, input);
+					break;
+				}
+				case FileName:
+				{
+					input = file.getName();
+					ret = this.getValue(type, mp, input);
+					break;
+				}
+				case Nothing:
+				{
+					break;
+				}
 			}
 		}
 		return ret;
@@ -137,6 +141,12 @@ public class Additive
 				es.add(parsed);
 			}
 		}
-		return es.getBestScore().getKey();
+		Entry<String, Integer> en = es.getBestScore();
+		String ret = "";
+		if (en != null)
+		{
+			ret = en.getKey();
+		}
+		return ret;
 	}
 }
