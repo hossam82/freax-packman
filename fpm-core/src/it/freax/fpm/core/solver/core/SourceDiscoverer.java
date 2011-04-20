@@ -213,8 +213,8 @@ public class SourceDiscoverer
 				tn.setIsCU(true);
 				tn.getAssociatedCU().addCUFile(srcfile);
 				tn.getAssociatedCU().addAllLangs(srcfile.getLangs());
+				srcfiles.add(srcfile);
 			}
-			srcfiles.add(srcfile);
 		}
 		return srcfiles;
 	}

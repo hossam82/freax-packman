@@ -74,6 +74,7 @@ public class EbnfParser
 	{
 		//TODO: Implementare metodo di parsing!!!
 		this.imports = new Vector<String>();
+		this.ebnfContent = "Dummy text!";
 		return this.ebnfContent.equalsIgnoreCase(fileToMatch);
 	}
 }
