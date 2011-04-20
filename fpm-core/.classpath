@@ -14,15 +14,15 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="fpm-core/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/commons-compress-1.1/commons-compress-1.1.jar" sourcepath="lib/commons-compress-1.1/commons-compress-1.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/fpm-core/lib/commons-compress-1.1/commons-compress-1.1-javadoc.jar!/"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="fpm-core/lib/commons-compress-1.1"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/jdom.jar" sourcepath="/home/kLeZ-hAcK/Scaricati/jdom/src/java">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/home/kLeZ-hAcK/Scaricati/jdom/build/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/commons-compress-1.1.jar" sourcepath="lib/commons-compress-1.1-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/fpm-core/lib/commons-compress-1.1-javadoc.jar!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="fpm-core/lib"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
