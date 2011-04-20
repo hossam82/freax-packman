@@ -8,6 +8,13 @@ public class PackageInfos
 	private String packageName;
 	private String packageVersion;
 
+	public PackageInfos()
+	{
+		this.archiveSpecification = new TreeSet<Treenode>();
+		this.packageName = "";
+		this.packageVersion = "";
+	}
+
 	public String getPackageName()
 	{
 		return this.packageName;
