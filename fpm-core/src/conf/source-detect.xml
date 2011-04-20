@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<conf>
+	<!--
+		Valori possibili
+		<global/>:
+		rootExec:			sudo 		==> scala i privilegi con sudo
+							expect		==> si aspetta di avere già i privilegi
+											di root
+
+		exitCodeControl:	weak		==> concatena i comandi con un ;
+											controllo debole sul ret code
+							strong		==> concatena i comandi con un &&
+											controllo forte sul ret code
+							inverted	==> concatena i comandi con un ||
+											controllo invertito, se un processo
+											torna ret code 0 il successivo non
+											sarà eseguito e spezza la catena
+
+		Split('carattere split',indice elemento da tenere,elimina estensione)
+		KeyValue('divisore chiave-valore',indice dell'operazione)
+		Operazioni:
+			- 0: Non quotato (es.: Chiave=valore)
+			- 1: Quotato con virgolette (es.: Chiave="valore")
+			- 2: Quotato con apici (es.: Chiave='valore')
+	-->
+	<!--
+		Template:
+		<general rootexec="" exitcodecontrol=""/>
+		<type src="" ebnf="" ext="" opts="">
+			<notevoli>
+				<file id="" name=""/>
+			</notevoli>
+			<instructionSet>
+				<instruction id="" action="" permissions=""/>
+			</instructionSet>
+			<additives>
+				<additive id="" infotype="" wheretoparse="" whattoparse="" howtoparse=""/>
+			</additives>
+		</type>
+	-->
+
+	<general rootExec="sudo" exitCodeControl="strong"/>
+	<type src="C" ebnf="ebnf/C.ebnf" ext=".c:.cc:.h:.hh" opts="">
+		<notevoli>
+			<file id="1" name="configure"/>
+			<file id="2" name="Makefile"/>
+			<file id="3" name="Changelog"/>
+		</notevoli>
+		<instructionSet>
+			<instruction id="0" action="gcc ${OPTS} ${EXT} -o ${PROGNAME}" permissions="user"/>
+			<instruction id="0" action="cp ${PROGNAME} ${PREFIX}" permissions="root"/>
+			<instruction id="1" action="./configure" permissions="user"/>
+			<instruction id="1" action="make" permissions="user"/>
+			<instruction id="1" action="make install" permissions="root"/>
+			<instruction id="2" action="make" permissions="user"/>
+			<instruction id="2" action="make install" permissions="root"/>
+		</instructionSet>
+		<additives>
+			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',1)"/>
+			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',1)"/>
+			<additive id="3" infotype="Changelog" wheretoparse="Nothing" whattoparse="" howtoparse=""/>
+		</additives>
+	</type>
+	<type src="C++" ebnf="ebnf/C++.ebnf" ext=".cpp:.cxx:.hpp:.hxx" opts="-x c++">
+		<notevoli>
+			<file id="1" name="configure"/>
+			<file id="2" name="Makefile"/>
+			<file id="3" name="CMakeLists.txt"/>
+			<file id="4" name="Changelog"/>
+		</notevoli>
+		<instructionSet>
+			<instruction id="0" action="gcc ${OPTS} ${EXT} -o ${PROGNAME}" permissions="user"/>
+			<instruction id="0" action="cp ${PROGNAME} ${PREFIX}" permissions="root"/>
+			<instruction id="1" action="./configure" permissions="user"/>
+			<instruction id="1" action="make" permissions="user"/>
+			<instruction id="1" action="make install" permissions="root"/>
+			<instruction id="2" action="make" permissions="user"/>
+			<instruction id="2" action="make install" permissions="root"/>
+			<instruction id="3" action="mkdir build" permissions="user"/>
+			<instruction id="3" action="cd build" permissions="user"/>
+			<instruction id="3" action="cmake -DCMAKE_INSTALL_PREFIX=${PREFIX|KDEPREFIX} ../" permissions="user"/>
+			<instruction id="3" action="make" permissions="user"/>
+			<instruction id="3" action="make install" permissions="root"/>
+		</instructionSet>
+		<additives>
+			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',1)"/>
+			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',1)"/>
+			<additive id="4" infotype="Changelog" wheretoparse="Nothing" whattoparse="" howtoparse=""/>
+		</additives>
+	</type>
+</conf>
