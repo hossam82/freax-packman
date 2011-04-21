@@ -144,7 +144,7 @@ public class StringUtils
 		{
 			Options |= Pattern.CASE_INSENSITIVE;
 		}
-		Pattern patRegex = Pattern.compile(pattern + "\\w+", Options);
+		Pattern patRegex = Pattern.compile(pattern, Options);
 		while (scn.hasNext())
 		{
 			String curr = scn.nextLine();

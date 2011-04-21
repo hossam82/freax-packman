@@ -123,7 +123,7 @@ public class Additive
 	{
 		String ret = "";
 		String pattern = this.whatToParse + mp.getDivider();
-		Vector<String> grepped = StringUtils.grep(input, pattern, false);
+		Vector<String> grepped = StringUtils.grep(input, pattern + "\\p{Graph}+", false);
 		EntriesScorer<String> es = new EntriesScorer<String>(true);
 		for (String val : grepped)
 		{
