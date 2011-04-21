@@ -56,8 +56,8 @@
 			<instruction id="2" action="make install" permissions="root"/>
 		</instructionSet>
 		<additives>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',1)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',1)"/>
+			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',0)"/>
+			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',0)"/>
 			<additive id="3" infotype="Changelog" wheretoparse="Nothing" whattoparse="" howtoparse=""/>
 		</additives>
 	</type>
@@ -83,8 +83,8 @@
 			<instruction id="3" action="make install" permissions="root"/>
 		</instructionSet>
 		<additives>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',1)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',1)"/>
+			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',0)"/>
+			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',0)"/>
 			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PACKAGE_NAME" howtoparse="KeyValue('=',2)"/>
 			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="PACKAGE_VERSION" howtoparse="KeyValue('=',2)"/>
 			<additive id="4" infotype="Changelog" wheretoparse="Nothing" whattoparse="" howtoparse=""/>

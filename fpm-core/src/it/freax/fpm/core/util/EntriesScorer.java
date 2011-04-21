@@ -21,7 +21,7 @@ public class EntriesScorer<E>
 
 	public void add(E key)
 	{
-		if ((key != null) && key.toString().isEmpty())
+		if ((key != null) && !key.toString().isEmpty())
 		{
 			Integer value = 0;
 			if (this.entries.containsKey(key))

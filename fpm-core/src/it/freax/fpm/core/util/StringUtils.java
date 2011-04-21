@@ -71,7 +71,10 @@ public class StringUtils
 		if ((input != null) && !input.isEmpty())
 		{
 			ret = input.substring(input.indexOf(startDelimiter) + 1);
-			ret = ret.substring(0, ret.indexOf(endDelimiter));
+			if (!ret.equalsIgnoreCase(input))
+			{
+				ret = ret.substring(0, ret.indexOf(endDelimiter));
+			}
 		}
 		return ret;
 	}
@@ -141,7 +144,7 @@ public class StringUtils
 		{
 			Options |= Pattern.CASE_INSENSITIVE;
 		}
-		Pattern patRegex = Pattern.compile(pattern + "*", Options);
+		Pattern patRegex = Pattern.compile(pattern + "\\w+", Options);
 		while (scn.hasNext())
 		{
 			String curr = scn.nextLine();
