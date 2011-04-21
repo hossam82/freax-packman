@@ -21,13 +21,16 @@ public class EntriesScorer<E>
 
 	public void add(E key)
 	{
-		Integer value = 0;
-		if (this.entries.containsKey(key))
+		if ((key != null) && key.toString().isEmpty())
 		{
-			value = this.entries.get(key);
-			this.entries.remove(key);
+			Integer value = 0;
+			if (this.entries.containsKey(key))
+			{
+				value = this.entries.get(key);
+				this.entries.remove(key);
+			}
+			this.entries.put(key, ++value);
 		}
-		this.entries.put(key, ++value);
 	}
 
 	public Entry<E, Integer> getBestScore()

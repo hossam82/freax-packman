@@ -112,11 +112,16 @@ public class Additive
 				}
 			}
 		}
+		else
+		{
+			ret = file.getContent();
+		}
 		return ret;
 	}
 
 	private String getValue(MethodType type, MethodParams mp, String input)
 	{
+		String ret = "";
 		String pattern = this.whatToParse + mp.getDivider();
 		Vector<String> grepped = StringUtils.grep(input, pattern, false);
 		EntriesScorer<String> es = new EntriesScorer<String>(true);
@@ -141,11 +146,13 @@ public class Additive
 				es.add(parsed);
 			}
 		}
-		Entry<String, Integer> en = es.getBestScore();
-		String ret = "";
-		if (en != null)
+		if (grepped.size() > 0)
 		{
-			ret = en.getKey();
+			Entry<String, Integer> en = es.getBestScore();
+			if (en != null)
+			{
+				ret = en.getKey();
+			}
 		}
 		return ret;
 	}

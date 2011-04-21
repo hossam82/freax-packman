@@ -89,7 +89,8 @@ public class SourceDiscoverer
 		Vector<String> ret = new Vector<String>();
 		TreeSet<String> files = new TreeSet<String>(this.entries);
 		int dirsplitlen = directory.split("/").length;
-		for (Iterator<String> it = files.iterator(); it.hasNext();)
+		Iterator<String> it = files.iterator();
+		while (it.hasNext())
 		{
 			String entry = it.next();
 			if (entry.startsWith(directory) && !entry.equalsIgnoreCase(directory) && (dirsplitlen + 1 == entry.split("/").length) && !this.isDirectory(entry))
@@ -132,7 +133,8 @@ public class SourceDiscoverer
 	private boolean isFileParticolare(String file)
 	{
 		boolean ret = false;
-		for (Iterator<ConfType> it = this.conf.typesIterator(); it.hasNext();)
+		Iterator<ConfType> it = this.conf.typesIterator();
+		while (it.hasNext())
 		{
 			ret = it.next().containsNotevole(StringUtils.trimDir(file));
 			if (ret)
@@ -146,7 +148,8 @@ public class SourceDiscoverer
 	private Vector<String> getNotableFileLangs(String notablefile)
 	{
 		Vector<String> ret = new Vector<String>();
-		for (Iterator<ConfType> it = this.conf.typesIterator(); it.hasNext();)
+		Iterator<ConfType> it = this.conf.typesIterator();
+		while (it.hasNext())
 		{
 			ConfType ct = it.next();
 			if (ct.containsNotevole(StringUtils.trimDir(notablefile)))
@@ -214,7 +217,6 @@ public class SourceDiscoverer
 				command.add(delimiter);
 			}
 		}
-
 		tn.getAssociatedCU().addInstruction(CoreUtils.merge(command, " "), null);
 	}
 
@@ -342,12 +344,18 @@ public class SourceDiscoverer
 
 	private String getBestScore(Vector<Additive> additives, SrcFile file)
 	{
+		String ret = "";
 		EntriesScorer<String> es = new EntriesScorer<String>(true);
 		for (Additive additive : additives)
 		{
 			es.add(additive.execMethod(file));
 		}
-		return es.getBestScore().getKey();
+		Entry<String, Integer> en = es.getBestScore();
+		if (en != null)
+		{
+			ret = en.getKey();
+		}
+		return ret;
 	}
 
 	private HashMap<InfoType, Vector<Additive>> getTypedAdditives(Vector<Additive> additives)

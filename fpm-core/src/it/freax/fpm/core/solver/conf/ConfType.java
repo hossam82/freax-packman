@@ -65,7 +65,8 @@ public class ConfType
 	{
 		boolean ret = false;
 		String notable = notablefile.substring(notablefile.indexOf('/') + 1);
-		for (Iterator<NotableFile> it = this.notevoli.iterator(); it.hasNext();)
+		Iterator<NotableFile> it = this.notevoli.iterator();
+		while (it.hasNext())
 		{
 			if (ret = it.next().getName().equalsIgnoreCase(notable))
 			{

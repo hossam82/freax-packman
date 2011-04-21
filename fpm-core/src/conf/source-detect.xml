@@ -43,8 +43,8 @@
 	<type src="C" ebnf="ebnf/C.ebnf" ext=".c:.cc:.h:.hh" opts="">
 		<notevoli>
 			<file id="1" name="configure"/>
-			<file id="2" name="Makefile"/>
-			<file id="3" name="Changelog"/>
+			<file id="2" name="MakeFile"/>
+			<file id="3" name="ChangeLog"/>
 		</notevoli>
 		<instructionSet>
 			<instruction id="0" action="gcc ${OPTS} ${EXT} -o ${PROGNAME}" permissions="user"/>
@@ -64,9 +64,9 @@
 	<type src="C++" ebnf="ebnf/C++.ebnf" ext=".cpp:.cxx:.hpp:.hxx" opts="-x c++">
 		<notevoli>
 			<file id="1" name="configure"/>
-			<file id="2" name="Makefile"/>
+			<file id="2" name="MakeFile"/>
 			<file id="3" name="CMakeLists.txt"/>
-			<file id="4" name="Changelog"/>
+			<file id="4" name="ChangeLog"/>
 		</notevoli>
 		<instructionSet>
 			<instruction id="0" action="gcc ${OPTS} ${EXT} -o ${PROGNAME}" permissions="user"/>

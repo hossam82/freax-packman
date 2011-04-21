@@ -75,4 +75,10 @@ public class SrcFile
 	{
 		this.langs.addAll(langs);
 	}
+
+	@Override
+	public String toString()
+	{
+		return this.name + "; isNotable: " + this.isNotable;
+	}
 }
