@@ -137,7 +137,8 @@ public class Additive
 				}
 				case KeyValue:
 				{
-					parsed = StringUtils.KeyValue(val, mp.getDivider(), mp.getIndex());
+
+					parsed = StringUtils.KeyValue(val, mp.getDivider());
 					break;
 				}
 			}

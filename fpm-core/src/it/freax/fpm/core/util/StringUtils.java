@@ -167,10 +167,51 @@ public class StringUtils
 		return ret;
 	}
 
-	public static String KeyValue(String input, String delim, int opid)
+	private static int getOpID(String input)
+	{
+		int opid = 0;
+		char first = input.charAt(0);
+		switch (first)
+		{
+			case '"':
+			{
+				opid = 1;
+				break;
+			}
+			case '\'':
+			{
+				opid = 2;
+				break;
+			}
+			case '<':
+			{
+				opid = 3;
+				break;
+			}
+			case '{':
+			{
+				opid = 4;
+				break;
+			}
+			case '[':
+			{
+				opid = 5;
+				break;
+			}
+			case '(':
+			{
+				opid = 6;
+				break;
+			}
+		}
+		return opid;
+	}
+
+	public static String KeyValue(String input, String delim)
 	{
 		String ret = "";
 		ret = getStringFromKeyValue(input, delim, false);
+		int opid = getOpID(ret);
 		switch (opid)
 		//gli esempi sono tutti con uguale anche se il delimiter è dinamico
 		{

@@ -26,10 +26,10 @@ public enum MethodType
 		String mp = StringUtils.getStringInsideDelimiters(method, "(", ")");
 		String[] split = mp.split(",", 3);
 		String s = StringUtils.getStringInsideDelimiters(split[0], "'", "'");
-		int i = Integer.parseInt(split[1]);
-		MethodParams ret = new MethodParams(this, s, i);
+		MethodParams ret = new MethodParams(this, s);
 		if (this == Split)
 		{
+			ret.setIndex(Integer.parseInt(split[1]));
 			ret.setExtension(Boolean.parseBoolean(split[2]));
 		}
 		return ret;

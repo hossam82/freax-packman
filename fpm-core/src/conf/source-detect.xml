@@ -17,16 +17,7 @@
 											sarà eseguito e spezza la catena
 
 		Split('carattere split',indice elemento da tenere,elimina estensione)
-		KeyValue('divisore chiave-valore',indice dell'operazione)
-		Operazioni:
-			- -1: Tenta tutti
-			-  0: Non quotato (es.: Chiave=valore)
-			-  1: Quotato con virgolette (es.: Chiave="valore")
-			-  2: Quotato con apici (es.: Chiave='valore')
-			-  3: Quotato con parentesi angolari (es.: Chiave=<valore>)
-			-  4: Quotato con parentesi graffe (es.: Chiave={valore})
-			-  5: Quotato con parentesi quadre (es.: Chiave=[valore])
-			-  6: Quotato con parentesi tonde (es.: Chiave=(valore))
+		KeyValue('divisore chiave-valore')
 	-->
 	<!--
 		Template:
@@ -61,18 +52,10 @@
 			<instruction id="2" action="make install" permissions="root"/>
 		</instructionSet>
 		<additives>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',0)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',0)"/>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',1)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',1)"/>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',2)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',2)"/>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PACKAGE_NAME" howtoparse="KeyValue('=',0)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="PACKAGE_VERSION" howtoparse="KeyValue('=',0)"/>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PACKAGE_NAME" howtoparse="KeyValue('=',1)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="PACKAGE_VERSION" howtoparse="KeyValue('=',1)"/>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PACKAGE_NAME" howtoparse="KeyValue('=',2)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="PACKAGE_VERSION" howtoparse="KeyValue('=',2)"/>
+			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=')"/>
+			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=')"/>
+			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PACKAGE_NAME" howtoparse="KeyValue('=')"/>
+			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="PACKAGE_VERSION" howtoparse="KeyValue('=')"/>
 			<additive id="3" infotype="Changelog" wheretoparse="Nothing" whattoparse="" howtoparse=""/>
 		</additives>
 	</type>
@@ -98,18 +81,10 @@
 			<instruction id="3" action="make install" permissions="root"/>
 		</instructionSet>
 		<additives>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',0)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',0)"/>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',1)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',1)"/>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=',2)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=',2)"/>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PACKAGE_NAME" howtoparse="KeyValue('=',0)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="PACKAGE_VERSION" howtoparse="KeyValue('=',0)"/>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PACKAGE_NAME" howtoparse="KeyValue('=',1)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="PACKAGE_VERSION" howtoparse="KeyValue('=',1)"/>
-			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PACKAGE_NAME" howtoparse="KeyValue('=',2)"/>
-			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="PACKAGE_VERSION" howtoparse="KeyValue('=',2)"/>
+			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PRODUCT" howtoparse="KeyValue('=')"/>
+			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="VERSION" howtoparse="KeyValue('=')"/>
+			<additive id="1" infotype="PackageName" wheretoparse="Content" whattoparse="PACKAGE_NAME" howtoparse="KeyValue('=')"/>
+			<additive id="1" infotype="Version" wheretoparse="Content" whattoparse="PACKAGE_VERSION" howtoparse="KeyValue('=')"/>
 			<additive id="4" infotype="Changelog" wheretoparse="Nothing" whattoparse="" howtoparse=""/>
 		</additives>
 	</type>

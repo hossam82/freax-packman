@@ -21,8 +21,9 @@ public class TestArchives
 		// path = args[0];
 		// goRec = args[1];
 
-		//		path = "/home/kLeZ-hAcK/Scaricati/hexedit-1.2.12.src.tgz";
-		path = "/home/kLeZ-hAcK/Scaricati/hexedit-1.2.12.src.tgz";
+		// path = "/home/kLeZ-hAcK/Scaricati/hexedit-1.2.12.src.tgz";
+		// path = "/home/kLeZ-hAcK/Scaricati/samba-latest.tar.gz";
+		path = "/home/kLeZ-hAcK/Scaricati/samba-latest.tar.gz";
 		goRec = "false";
 
 		File file = new File(path);

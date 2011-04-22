@@ -9,11 +9,10 @@ public class MethodParams
 	private int index;
 	private boolean extension;
 
-	public MethodParams(MethodType type, String divider, int index)
+	public MethodParams(MethodType type, String divider)
 	{
 		this.type = type;
 		this.divider = divider;
-		this.index = index;
 	}
 
 	public MethodType getType()
