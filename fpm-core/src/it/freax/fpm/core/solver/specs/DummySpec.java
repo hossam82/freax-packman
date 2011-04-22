@@ -60,7 +60,24 @@ public class DummySpec extends Spec
 	@Override
 	public String toString()
 	{
-		return "I'm dummy, boy!";
+		StringBuilder builder = new StringBuilder();
+		builder.append("DummySpec [File=");
+		builder.append(this.File);
+		builder.append(", Package=");
+		builder.append(this.Package);
+		builder.append(", Scripts=");
+		builder.append(this.Scripts);
+		builder.append(", ChangeLog=");
+		builder.append(this.ChangeLog);
+		builder.append(", Provides=");
+		builder.append(this.Provides);
+		builder.append(", Requires=");
+		builder.append(this.Requires);
+		builder.append(", ConfigFiles=");
+		builder.append(this.ConfigFiles);
+		builder.append(", DocFiles=");
+		builder.append(this.DocFiles);
+		builder.append("]");
+		return builder.toString();
 	}
-
 }

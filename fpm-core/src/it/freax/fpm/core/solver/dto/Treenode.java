@@ -22,7 +22,7 @@ public class Treenode implements Comparable<Treenode>
 		return this.AssociatedCU;
 	}
 
-	public boolean getIsCU()
+	public boolean isCU()
 	{
 		return this.IsCU;
 	}

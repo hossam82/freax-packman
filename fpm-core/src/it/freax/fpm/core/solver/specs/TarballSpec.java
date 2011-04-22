@@ -41,8 +41,6 @@ public class TarballSpec extends Spec
 				this.ArchType = reader.getType();
 				SourceDiscoverer srcdsx = new SourceDiscoverer(reader);
 				this.pakInfo = srcdsx.discover();
-				System.out.print(this.pakInfo.getPackageName());
-				System.out.println(" v" + this.pakInfo.getPackageVersion());
 			}
 			catch (ArchiveNotSupportedException e)
 			{

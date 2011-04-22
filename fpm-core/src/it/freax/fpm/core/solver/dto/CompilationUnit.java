@@ -98,14 +98,19 @@ public class CompilationUnit
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("CompilationUnit:\n- Name --> ");
+		builder.append("CompilationUnit [Name=");
 		builder.append(this.Name);
-		builder.append("\n- PrincipalLang --> ");
+		builder.append(", dummySpec=");
+		builder.append(this.dummySpec);
+		builder.append(", PrincipalLang=");
 		builder.append(this.PrincipalLang);
-		builder.append("\n- ContainedFiles --> ");
+		builder.append(", Langs=");
+		builder.append(this.Langs);
+		builder.append(", ContainedFiles=");
 		builder.append(this.ContainedFiles);
-		builder.append("\n- InstructionSet --> ");
+		builder.append(", InstructionSet=");
 		builder.append(this.InstructionSet);
+		builder.append("]");
 		return builder.toString();
 	}
 }

@@ -66,15 +66,12 @@ public class SourceDiscoverer
 			Vector<SrcFile> srcfiles = this.makeSrcFileList(tn, this.getFiles(tn.getName()));
 			this.makeInstructionSet(tn, this.cleanSrcFiles(srcfiles));
 			CompilationUnit cu = tn.getAssociatedCU();
-			this.setPackageInfos(cu, srcfiles);
+			this.setCompilationUnit(cu, srcfiles);
 			tn.updateCU(cu);
 			this.log.debug(cu.getDummySpec().getPackage().getPackageName());
 			this.log.debug(cu.getDummySpec().getPackage().getVersion());
 		}
-		Treenode tn = ret.getArchiveSpecification().first();
-		DummySpec ds = tn.getAssociatedCU().getDummySpec();
-		ret.setPackageName(ds.getPackage().getPackageName());
-		ret.setPackageVersion(ds.getPackage().getVersion());
+		ret.setDummy(this.getGlobalDummySpec(ret.getArchiveSpecification()));
 		this.log.debug("Tempo impiegato: " + (this.time() - start));
 		return ret;
 	}
@@ -286,16 +283,16 @@ public class SourceDiscoverer
 		PackageInfos ret = new PackageInfos();
 		if ((this.packageName != null) && !this.packageName.isEmpty())
 		{
-			ret.setPackageName(this.packageName);
+			ret.getDummy().setPackageName(this.packageName);
 		}
 		if ((this.version != null) && !this.version.isEmpty())
 		{
-			ret.setPackageVersion(this.version);
+			ret.getDummy().setVersion(this.version);
 		}
 		return ret;
 	}
 
-	private void setPackageInfos(CompilationUnit cu, Vector<SrcFile> files)
+	private void setCompilationUnit(CompilationUnit cu, Vector<SrcFile> files)
 	{
 		this.log.debug(files.size());
 		for (SrcFile file : files)
@@ -328,6 +325,9 @@ public class SourceDiscoverer
 								break;
 							}
 							case Changelog:
+							{
+								cu.getDummySpec().setChangeLog(best);
+							}
 							case InfoPage:
 							case ManPage:
 							case Readme:
@@ -371,5 +371,27 @@ public class SourceDiscoverer
 			typedAdditives.get(additive.getInfoType()).add(additive);
 		}
 		return typedAdditives;
+	}
+
+	private DummySpec getGlobalDummySpec(TreeSet<Treenode> set)
+	{
+		DummySpec ret = new DummySpec();
+		Iterator<Treenode> it = set.descendingIterator();
+		EntriesScorer<String> namesEs = new EntriesScorer<String>(true);
+		EntriesScorer<String> versEs = new EntriesScorer<String>(true);
+		while (it.hasNext())
+		{
+			Treenode tn = it.next();
+			if (tn.isCU())
+			{
+				DummySpec ds = tn.getAssociatedCU().getDummySpec();
+				namesEs.add(ds.getPackage().getPackageName());
+				versEs.add(ds.getPackage().getVersion());
+				ret.setChangeLog(ds.getChangeLog());
+			}
+		}
+		ret.setPackageName(namesEs.getBestScore().getKey());
+		ret.setVersion(versEs.getBestScore().getKey());
+		return ret;
 	}
 }
