@@ -8,16 +8,37 @@ import java.util.regex.Pattern;
 
 public class StringUtils
 {
-	public static final int rangeExtMin = 2;
+	public static final int rangeExtMin = 1;
 	public static final int rangeExtMax = 4;
 	public static final String extSeparator = ".";
+
+	public static boolean checkExtensions(String path, Vector<String> exts)
+	{
+		boolean ret = false;
+		if (!getExtension(path).isEmpty())
+		{
+			for (String ext : exts)
+			{
+				if (ret = checkExtension(path, ext))
+				{
+					break;
+				}
+			}
+		}
+		return ret;
+	}
+
+	public static boolean checkExtension(String path, String ext)
+	{
+		return ext.equalsIgnoreCase(getExtension(path));
+	}
 
 	public static String getExtension(String path)
 	{
 		String ext = "";
 		Vector<String> candidates = new Vector<String>();
-		String[] splitted = path.split(extSeparator);
-		for (int i = 0; i < splitted.length - 1; i++)
+		String[] splitted = path.split("\\" + extSeparator);
+		for (int i = 0; i < splitted.length; i++)
 		{
 			if (!splitted[i].isEmpty() && inRangeExt(splitted[i]))
 			{
@@ -25,6 +46,7 @@ public class StringUtils
 			}
 		}
 		if (!path.endsWith(ext)) { throw new NullPointerException("Extension decoding failed!"); }
+		if (candidates.size() > 0) { ext = extSeparator + candidates.lastElement(); }
 		return ext;
 	}
 

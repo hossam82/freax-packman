@@ -75,6 +75,14 @@ public class EbnfParser
 		//TODO: Implementare metodo di parsing!!!
 		this.imports = new Vector<String>();
 		this.ebnfContent = "Dummy text!";
-		return this.ebnfContent.equalsIgnoreCase(fileToMatch);
+		boolean matches = false;
+		matches = this.ebnfContent.equalsIgnoreCase(fileToMatch);
+		/*		Vector<String> incl = StringUtils.grep(fileToMatch, "#include[\\p{Space}\\p{Graph}\\p{Punct}]+", false);
+				for (String s : incl)
+				{
+					s = StringUtils.KeyValue(s, "");
+					this.imports.add(s);
+				}*/
+		return matches;
 	}
 }

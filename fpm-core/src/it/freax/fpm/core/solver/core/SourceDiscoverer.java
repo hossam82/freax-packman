@@ -267,11 +267,14 @@ public class SourceDiscoverer
 			while (typeit.hasNext())
 			{
 				ConfType type = typeit.next();
-				parser = getEbnfParser(parser, type.getEbnf(), true);
-				if (parser.parse(content))
+				if (StringUtils.checkExtensions(file, type.getExts()))
 				{
-					srcfile.addLang(type.getSource());
-					srcfile.addAllIncludes(parser.getImports());
+					parser = getEbnfParser(parser, type.getEbnf(), true);
+					if (parser.parse(content))
+					{
+						srcfile.addLang(type.getSource());
+						srcfile.addAllIncludes(parser.getImports());
+					}
 				}
 			}
 		}
