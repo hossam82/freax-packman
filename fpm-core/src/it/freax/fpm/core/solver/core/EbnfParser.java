@@ -77,12 +77,14 @@ public class EbnfParser
 		this.ebnfContent = "Dummy text!";
 		boolean matches = false;
 		matches = this.ebnfContent.equalsIgnoreCase(fileToMatch);
-		/*		Vector<String> incl = StringUtils.grep(fileToMatch, "#include[\\p{Space}\\p{Graph}\\p{Punct}]+", false);
+		/*
+				Vector<String> incl = StringUtils.grep(fileToMatch, "#include[\\p{Space}\\p{Graph}\\p{Punct}]+", false);
 				for (String s : incl)
 				{
 					s = StringUtils.KeyValue(s, "");
 					this.imports.add(s);
-				}*/
+				}
+		*/
 		return matches;
 	}
 }
