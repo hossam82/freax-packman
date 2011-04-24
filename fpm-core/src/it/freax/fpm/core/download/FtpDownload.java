@@ -1,3 +1,11 @@
+/**
+ * This class extends AbstractDownload class for downloading file
+ * from FTP protocol.
+ * 
+ * @author kLeZ-hAcK
+ * @version 0.1
+ */
+
 package it.freax.fpm.core.download;
 
 import java.io.BufferedInputStream;
@@ -10,122 +18,118 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
-public class FtpDownload extends AbstractDownload
-{
+public class FtpDownload extends AbstractDownload {
 
-	public FtpDownload(URL url, String path)
-	{
+	/**
+	 * Costructor for FtpDownload.
+	 * 
+	 * @param url
+	 * @param path
+	 */
+	public FtpDownload(URL url, String path) {
 		super(url, path);
-		download();
+		this.download();
 	}
 
-	public FtpDownload(URL url, String path, String proxyUrl, int port)
-	{
+	/**
+	 * Costructor for FtpDownload.
+	 * 
+	 * @param url
+	 * @param path
+	 * @param proxyUrl
+	 * @param port
+	 */
+	public FtpDownload(URL url, String path, String proxyUrl, int port) {
 		super(url, path, proxyUrl, port);
-		download();
+		this.download();
 	}
 
-	public FtpDownload(URL url, String path, String proxyUrl, int port, String userName, String password)
-	{
+	/**
+	 * Costructor for FtpDownload.
+	 * 
+	 * @param url
+	 * @param path
+	 * @param proxyUrl
+	 * @param port
+	 * @param userName
+	 * @param password
+	 */
+	public FtpDownload(URL url, String path, String proxyUrl, int port,
+			String userName, String password) {
 		super(url, path, proxyUrl, port, userName, password);
-		download();
+		this.download();
 	}
 
+	/**
+	 * This method downloading a file from url through FTP protocol.
+	 */
 	@Override
-	public void run()
-	{
+	public void run() {
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
 
-		try
-		{
-			if (useProxy)
-			{
+		try {
+			if (this.useProxy) {
 				Properties systemProperties = System.getProperties();
-				systemProperties.setProperty("ftp.proxyHost", proxyUrl);
-				systemProperties.setProperty("ftp.proxyPort", String.valueOf(port));
+				systemProperties.setProperty("ftp.proxyHost", this.proxyUrl);
+				systemProperties.setProperty("ftp.proxyPort",
+						String.valueOf(this.port));
 
-				if (useAuthentication)
-				{
-					Authenticator.setDefault(new SimpleAuthenticator(userName, password));
-				}
+				if (this.useAuthentication)
+					Authenticator.setDefault(new SimpleAuthenticator(
+							this.userName, this.password));
 			}
 
 			StringBuilder sb = new StringBuilder();
-			sb.append(path);
-			if (!path.endsWith(System.getProperty("file.separator")))
-			{
+			sb.append(this.path);
+			if (!this.path.endsWith(System.getProperty("file.separator")))
 				sb.append(System.getProperty("file.separator"));
-			}
-			sb.append(getFileName(url));
+			sb.append(this.getFileName(this.url));
 
-			status = DOWNLOADING;
+			this.status = DOWNLOADING;
 
-			URLConnection urlc = url.openConnection();
+			URLConnection urlc = this.url.openConnection();
 
 			bis = new BufferedInputStream(urlc.getInputStream());
 			bos = new BufferedOutputStream(new FileOutputStream(sb.toString()));
 
-			while (status == DOWNLOADING)
-			{
+			while (this.status == DOWNLOADING) {
 				byte[] buffer = new byte[MAX_BUFFER_SIZE];
 
 				// Read from server into buffer.
 				int read = bis.read(buffer);
 				if (read == -1)
-				{
 					break;
-				}
 
 				// Write buffer to file.
 				bos.write(buffer, 0, read);
-				downloaded += read;
+				this.downloaded += read;
 			}
-			status = COMPLETE;
-			stateChanged();
-		}
-		catch (MalformedURLException e)
-		{
-			if (debug)
-			{
+			this.status = COMPLETE;
+			this.stateChanged();
+		} catch (MalformedURLException e) {
+			if (this.debug)
 				e.printStackTrace();
-			}
-			setDebugMessage(e.toString(), true);
-			error();
-		}
-		catch (IOException e)
-		{
-			if (debug)
-			{
+			this.setDebugMessage(e.toString(), true);
+			this.error();
+		} catch (IOException e) {
+			if (this.debug)
 				e.printStackTrace();
-			}
-			setDebugMessage(e.toString(), true);
-			error();
-		}
-		finally
-		{
+			this.setDebugMessage(e.toString(), true);
+			this.error();
+		} finally {
 			if (bis != null)
-			{
-				try
-				{
+				try {
 					bis.close();
-				}
-				catch (IOException ioe)
-				{
+				} catch (IOException ioe) {
 					ioe.printStackTrace();
 				}
-			}
 			if (bos != null)
-			{
-				try
-				{
+				try {
 					bos.close();
-				}
-				catch (IOException ioe)
-				{
+				} catch (IOException ioe) {
 					ioe.printStackTrace();
 				}
-			}
 		}
 	}
 }

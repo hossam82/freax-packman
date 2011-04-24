@@ -1,3 +1,10 @@
+/**
+ * This class extends AbstractDownload class for downloading file
+ * from HTTP protocol.
+ * 
+ * @author kLeZ-hAcK
+ * @version 0.1
+ */
 package it.freax.fpm.core.download;
 
 import java.io.InputStream;
@@ -7,186 +14,179 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
 
-public final class HttpDownload extends AbstractDownload
-{
-	public HttpDownload(URL url, String path)
-	{
+public final class HttpDownload extends AbstractDownload {
+
+	/**
+	 * Costructor for HttpDownload.
+	 * 
+	 * @param url
+	 * @param path
+	 */
+	public HttpDownload(URL url, String path) {
 		super(url, path);
-		download();
+		this.download();
 	}
 
-	public HttpDownload(URL url, String path, String proxyUrl, int port)
-	{
+	/**
+	 * Costructor for HttpDownload.
+	 * 
+	 * @param url
+	 * @param path
+	 * @param proxyUrl
+	 * @param port
+	 */
+	public HttpDownload(URL url, String path, String proxyUrl, int port) {
 		super(url, path, proxyUrl, port);
-		download();
+		this.download();
 	}
 
-	public HttpDownload(URL url, String path, String proxyUrl, int port, String userName, String password)
-	{
+	/**
+	 * Costructor for HttpDownload.
+	 * 
+	 * @param url
+	 * @param path
+	 * @param proxyUrl
+	 * @param port
+	 * @param userName
+	 * @param password
+	 */
+	public HttpDownload(URL url, String path, String proxyUrl, int port,
+			String userName, String password) {
 		super(url, path, proxyUrl, port, userName, password);
-		download();
+		this.download();
 	}
 
+	/**
+	 * This method downloading a file from url through HTTP protocol.
+	 */
 	@Override
-	public void run()
-	{
+	public void run() {
 		RandomAccessFile rafile = null;
 		InputStream stream = null;
 		HttpURLConnection connection = null;
 
-		try
-		{
-			if (useProxy)
-			{
+		try {
+			if (this.useProxy) {
 				Properties systemProperties = System.getProperties();
-				systemProperties.setProperty("http.proxyHost", proxyUrl);
-				systemProperties.setProperty("http.proxyPort", String.valueOf(port));
+				systemProperties.setProperty("http.proxyHost", this.proxyUrl);
+				systemProperties.setProperty("http.proxyPort",
+						String.valueOf(this.port));
 
-				if (useAuthentication)
-				{
-					Authenticator.setDefault(new SimpleAuthenticator(userName, password));
-				}
+				if (this.useAuthentication)
+					Authenticator.setDefault(new SimpleAuthenticator(
+							this.userName, this.password));
 			}
 
-			connection = (HttpURLConnection) url.openConnection();
+			connection = (HttpURLConnection) this.url.openConnection();
 
 			connection.setRequestMethod("GET");
 			connection.setInstanceFollowRedirects(true);
 
 			StringBuilder sb = new StringBuilder();
-			sb.append(path);
-			if (!path.endsWith(System.getProperty("file.separator")))
-			{
+			sb.append(this.path);
+			if (!this.path.endsWith(System.getProperty("file.separator")))
 				sb.append(System.getProperty("file.separator"));
-			}
-			sb.append(getFileName(url));
+			sb.append(this.getFileName(this.url));
 
 			// Specify what portion of file to download if we are resuming a
 			// download.
-			if (downloaded > 0)
-			{
-				connection.setRequestProperty("Range", "bytes=" + downloaded + "-");
-			}
+			if (this.downloaded > 0)
+				connection.setRequestProperty("Range", "bytes="
+						+ this.downloaded + "-");
 
 			// Connect to server.
 			connection.connect();
 			int responseCode = connection.getResponseCode();
 
 			// Make sure response code is in the 200 range.
-			if (responseCode != HttpURLConnection.HTTP_OK)
-			{
-				setDebugMessage("Response code is not 200: ", true);
-				setDebugMessage(String.valueOf(connection.getResponseCode()), true);
-				setDebugMessage(String.valueOf(connection.getResponseMessage()), true);
-				if (responseCode >= 300)
-				{
-					error();
+			if (responseCode != HttpURLConnection.HTTP_OK) {
+				this.setDebugMessage("Response code is not 200: ", true);
+				this.setDebugMessage(
+						String.valueOf(connection.getResponseCode()), true);
+				this.setDebugMessage(
+						String.valueOf(connection.getResponseMessage()), true);
+				if (responseCode >= 300) {
+					this.error();
 					return;
 				}
 			}
 
 			// Check for valid content length.
-			long contentLength = Long.parseLong(connection.getHeaderField("content-length"));
-			if (contentLength < 1)
-			{
-				setDebugMessage("Content length is not valid.", false);
-				error();
+			long contentLength = Long.parseLong(connection
+					.getHeaderField("content-length"));
+			if (contentLength < 1) {
+				this.setDebugMessage("Content length is not valid.", false);
+				this.error();
 				return;
 			}
 
 			/*
 			 * Set the size for this download if it hasn't been already set.
 			 */
-			if (size == -1)
-			{
-				size = contentLength;
-				stateChanged();
+			if (this.size == -1) {
+				this.size = contentLength;
+				this.stateChanged();
 			}
 
 			// Open file and seek to the end of it.
 			rafile = new RandomAccessFile(sb.toString(), "rw");
-			rafile.seek(downloaded);
+			rafile.seek(this.downloaded);
 
 			stream = connection.getInputStream();
 
-			while (status == DOWNLOADING)
-			{
+			while (this.status == DOWNLOADING) {
 				/*
 				 * Size buffer according to how much of the file is left to
 				 * download.
 				 */
 				byte buffer[];
 
-				if (size - downloaded > MAX_BUFFER_SIZE)
-				{
+				if (this.size - this.downloaded > MAX_BUFFER_SIZE)
 					buffer = new byte[MAX_BUFFER_SIZE];
-				}
-				else if ((size - downloaded < MAX_BUFFER_SIZE) && (size - downloaded > 0))
-				{
-					buffer = new byte[(int) (size - downloaded)];
-				}
+				else if (this.size - this.downloaded < MAX_BUFFER_SIZE
+						&& this.size - this.downloaded > 0)
+					buffer = new byte[(int) (this.size - this.downloaded)];
 				else
-				{
 					break;
-				}
 
 				// Read from server into buffer.
 				int read = stream.read(buffer);
 				if (read == -1)
-				{
 					break;
-				}
 
 				// Write buffer to file.
 				rafile.write(buffer, 0, read);
-				downloaded += read;
-				stateChanged();
+				this.downloaded += read;
+				this.stateChanged();
 			}
 
 			/*
 			 * Change status to complete if this point was reached because
 			 * downloading has finished.
 			 */
-			if ((status == DOWNLOADING))
-			{
-				status = COMPLETE;
-				stateChanged();
+			if (this.status == DOWNLOADING) {
+				this.status = COMPLETE;
+				this.stateChanged();
 			}
-		}
-		catch (Exception e)
-		{
-			if (debug)
-			{
+		} catch (Exception e) {
+			if (this.debug)
 				e.printStackTrace();
-			}
-			setDebugMessage(e.toString(), true);
-			error();
-		}
-		finally
-		{
+			this.setDebugMessage(e.toString(), true);
+			this.error();
+		} finally {
 			// Close file.
 			if (rafile != null)
-			{
-				try
-				{
+				try {
 					rafile.close();
+				} catch (Exception e) {
 				}
-				catch (Exception e)
-				{
-				}
-			}
 
 			// Close connection to server.
 			if (stream != null)
-			{
-				try
-				{
+				try {
 					stream.close();
+				} catch (Exception e) {
 				}
-				catch (Exception e)
-				{
-				}
-			}
 		}
 	}
 }
