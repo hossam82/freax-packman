@@ -1,11 +1,3 @@
-/**
- * This class extends AbstractDownload class for downloading file
- * from FTP protocol.
- * 
- * @author kLeZ-hAcK
- * @version 0.1
- */
-
 package it.freax.fpm.core.download;
 
 import java.io.BufferedInputStream;
@@ -18,7 +10,15 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Properties;
 
-public class FtpDownload extends AbstractDownload {
+/**
+ * This class extends AbstractDownload class for downloading file
+ * from FTP protocol.
+ * 
+ * @author kLeZ-hAcK
+ * @version 0.1
+ */
+public class FtpDownload extends AbstractDownload
+{
 
 	/**
 	 * Costructor for FtpDownload.
@@ -26,7 +26,8 @@ public class FtpDownload extends AbstractDownload {
 	 * @param url
 	 * @param path
 	 */
-	public FtpDownload(URL url, String path) {
+	public FtpDownload(URL url, String path)
+	{
 		super(url, path);
 		this.download();
 	}
@@ -39,7 +40,8 @@ public class FtpDownload extends AbstractDownload {
 	 * @param proxyUrl
 	 * @param port
 	 */
-	public FtpDownload(URL url, String path, String proxyUrl, int port) {
+	public FtpDownload(URL url, String path, String proxyUrl, int port)
+	{
 		super(url, path, proxyUrl, port);
 		this.download();
 	}
@@ -54,36 +56,42 @@ public class FtpDownload extends AbstractDownload {
 	 * @param userName
 	 * @param password
 	 */
-	public FtpDownload(URL url, String path, String proxyUrl, int port,
-			String userName, String password) {
+	public FtpDownload(URL url, String path, String proxyUrl, int port, String userName, String password)
+	{
 		super(url, path, proxyUrl, port, userName, password);
 		this.download();
 	}
 
 	/**
-	 * This method downloading a file from url through FTP protocol.
+	 * This method permits the download of a file from a url through FTP
+	 * protocol.
 	 */
 	@Override
-	public void run() {
+	public void run()
+	{
 		BufferedInputStream bis = null;
 		BufferedOutputStream bos = null;
 
-		try {
-			if (this.useProxy) {
+		try
+		{
+			if (this.useProxy)
+			{
 				Properties systemProperties = System.getProperties();
 				systemProperties.setProperty("ftp.proxyHost", this.proxyUrl);
-				systemProperties.setProperty("ftp.proxyPort",
-						String.valueOf(this.port));
+				systemProperties.setProperty("ftp.proxyPort", String.valueOf(this.port));
 
 				if (this.useAuthentication)
-					Authenticator.setDefault(new SimpleAuthenticator(
-							this.userName, this.password));
+				{
+					Authenticator.setDefault(new SimpleAuthenticator(this.userName, this.password));
+				}
 			}
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(this.path);
 			if (!this.path.endsWith(System.getProperty("file.separator")))
+			{
 				sb.append(System.getProperty("file.separator"));
+			}
 			sb.append(this.getFileName(this.url));
 
 			this.status = DOWNLOADING;
@@ -93,13 +101,16 @@ public class FtpDownload extends AbstractDownload {
 			bis = new BufferedInputStream(urlc.getInputStream());
 			bos = new BufferedOutputStream(new FileOutputStream(sb.toString()));
 
-			while (this.status == DOWNLOADING) {
+			while (this.status == DOWNLOADING)
+			{
 				byte[] buffer = new byte[MAX_BUFFER_SIZE];
 
 				// Read from server into buffer.
 				int read = bis.read(buffer);
 				if (read == -1)
+				{
 					break;
+				}
 
 				// Write buffer to file.
 				bos.write(buffer, 0, read);
@@ -107,29 +118,49 @@ public class FtpDownload extends AbstractDownload {
 			}
 			this.status = COMPLETE;
 			this.stateChanged();
-		} catch (MalformedURLException e) {
+		}
+		catch (MalformedURLException e)
+		{
 			if (this.debug)
+			{
 				e.printStackTrace();
+			}
 			this.setDebugMessage(e.toString(), true);
 			this.error();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			if (this.debug)
+			{
 				e.printStackTrace();
+			}
 			this.setDebugMessage(e.toString(), true);
 			this.error();
-		} finally {
+		}
+		finally
+		{
 			if (bis != null)
-				try {
+			{
+				try
+				{
 					bis.close();
-				} catch (IOException ioe) {
+				}
+				catch (IOException ioe)
+				{
 					ioe.printStackTrace();
 				}
+			}
 			if (bos != null)
-				try {
+			{
+				try
+				{
 					bos.close();
-				} catch (IOException ioe) {
+				}
+				catch (IOException ioe)
+				{
 					ioe.printStackTrace();
 				}
+			}
 		}
 	}
 }

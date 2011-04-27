@@ -1,17 +1,17 @@
-/**
- * This class downloads a file from a URL.
- * 
- * @author kLeZ-hAcK
- * @version 0.1
- */
-
 package it.freax.fpm.core.download;
 
 import java.io.File;
 import java.net.URL;
 import java.util.Observable;
 
-public abstract class AbstractDownload extends Observable implements Runnable {
+/**
+ * This class downloads a file from a URL.
+ * 
+ * @author kLeZ-hAcK
+ * @version 0.1
+ */
+public abstract class AbstractDownload extends Observable implements Runnable
+{
 	public static final int CANCELLED = 3;
 	public static final int COMPLETE = 2;
 	public static final int DOWNLOADING = 0; // These are the status codes.
@@ -20,8 +20,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	protected static final int MAX_BUFFER_SIZE = 10 * 1024;
 	public static final int PAUSED = 1;
 	// These are the status names.
-	public static final String[] STATUSES = { "Downloading", "Paused",
-			"Complete", "Cancelled", "Error" };
+	public static final String[] STATUSES =
+	{ "Downloading", "Paused", "Complete", "Cancelled", "Error" };
 
 	public boolean debug = false;
 	protected StringBuilder debugMessage; // message for debugging purposes
@@ -49,7 +49,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * @param url
 	 * @param path
 	 */
-	public AbstractDownload(URL url, String path) {
+	public AbstractDownload(URL url, String path)
+	{
 		this.url = url;
 		this.path = path;
 		this.size = -1;
@@ -66,7 +67,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * @param proxyUrl
 	 * @param port
 	 */
-	public AbstractDownload(URL url, String path, String proxyUrl, int port) {
+	public AbstractDownload(URL url, String path, String proxyUrl, int port)
+	{
 		this(url, path);
 		this.useProxy = true;
 		this.useAuthentication = false;
@@ -84,8 +86,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * @param userName
 	 * @param password
 	 */
-	public AbstractDownload(URL url, String path, String proxyUrl, int port,
-			String userName, String password) {
+	public AbstractDownload(URL url, String path, String proxyUrl, int port, String userName, String password)
+	{
 		this(url, path, proxyUrl, port);
 		this.useAuthentication = true;
 		this.userName = userName;
@@ -95,7 +97,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	/**
 	 * Cancel this download
 	 */
-	public void cancel() {
+	public void cancel()
+	{
 		this.status = CANCELLED;
 		this.stateChanged();
 	}
@@ -103,7 +106,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	/**
 	 * Start or resume downloading
 	 */
-	protected void download() {
+	protected void download()
+	{
 		Thread thread = new Thread(this);
 		thread.start();
 	}
@@ -111,7 +115,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	/**
 	 * Mark this download as having an error
 	 */
-	protected void error() {
+	protected void error()
+	{
 		this.status = ERROR;
 		this.stateChanged();
 	}
@@ -121,7 +126,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * 
 	 * @return debug messages
 	 */
-	public String getDebugMessages() {
+	public String getDebugMessages()
+	{
 		return this.debugMessage.toString().trim();
 	}
 
@@ -130,7 +136,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * 
 	 * @return size
 	 */
-	public long getDownloaded() {
+	public long getDownloaded()
+	{
 		return this.downloaded;
 	}
 
@@ -140,19 +147,25 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * @param url
 	 * @return name's file
 	 */
-	protected String getFileName(URL url) {
+	protected String getFileName(URL url)
+	{
 		String fileName = url.getFile();
 		int endFileName = 0;
 
 		if (fileName.lastIndexOf('?') > 0)
+		{
 			endFileName = fileName.lastIndexOf('?');
+		}
 		else if (fileName.lastIndexOf(';') > 0)
+		{
 			endFileName = fileName.lastIndexOf(';');
+		}
 		else
+		{
 			endFileName = fileName.length();
+		}
 
-		fileName = fileName.substring(fileName.lastIndexOf('/') + 1,
-				endFileName);
+		fileName = fileName.substring(fileName.lastIndexOf('/') + 1, endFileName);
 		return fileName;
 	}
 
@@ -161,7 +174,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * 
 	 * @return value for progress bar
 	 */
-	public float getProgress() {
+	public float getProgress()
+	{
 		return (float) this.downloaded / this.size * 100;
 	}
 
@@ -170,7 +184,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * 
 	 * @return size
 	 */
-	public long getSize() {
+	public long getSize()
+	{
 		return this.size;
 	}
 
@@ -179,7 +194,8 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * 
 	 * @return current status
 	 */
-	public int getStatus() {
+	public int getStatus()
+	{
 		return this.status;
 	}
 
@@ -188,14 +204,16 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * 
 	 * @return url of this download
 	 */
-	public String getUrl() {
+	public String getUrl()
+	{
 		return this.url.toString();
 	}
 
 	/**
 	 * Pause this download.
 	 */
-	public void pause() {
+	public void pause()
+	{
 		this.status = PAUSED;
 		this.stateChanged();
 	}
@@ -203,16 +221,21 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	/**
 	 * Resume this download.
 	 */
-	public void resume() {
+	public void resume()
+	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(this.path);
 		if (!this.path.endsWith(System.getProperty("file.separator")))
+		{
 			sb.append(System.getProperty("file.separator"));
+		}
 		sb.append(this.getFileName(this.url));
 
 		File file = new File(sb.toString());
 		if (file.exists())
+		{
 			this.downloaded = file.length();
+		}
 
 		this.status = DOWNLOADING;
 		this.stateChanged();
@@ -220,7 +243,7 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	}
 
 	/**
-	 * Implements this method for downloading package for specific protocol.
+	 * Implements this method for downloading a file with a specific protocol.
 	 */
 	@Override
 	public abstract void run();
@@ -232,19 +255,27 @@ public abstract class AbstractDownload extends Observable implements Runnable {
 	 * @param debugMessage
 	 * @param append
 	 */
-	protected void setDebugMessage(String debugMessage, boolean append) {
+	protected void setDebugMessage(String debugMessage, boolean append)
+	{
 		if (!append)
+		{
 			this.debugMessage.delete(0, this.debugMessage.length() - 1);
+		}
 		if (this.debugMessage.length() > 0)
+		{
 			if (this.debugMessage.charAt(this.debugMessage.length() - 1) != ' ')
+			{
 				this.debugMessage.append(' ');
+			}
+		}
 		this.debugMessage.append(debugMessage);
 	}
 
 	/**
 	 * Notify observers that this download's status has changed.
 	 */
-	protected void stateChanged() {
+	protected void stateChanged()
+	{
 		this.setChanged();
 		this.notifyObservers();
 	}
