@@ -53,10 +53,10 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	{
 		this.url = url;
 		this.path = path;
-		this.size = -1;
-		this.downloaded = 0;
-		this.status = DOWNLOADING;
-		this.debugMessage = new StringBuilder();
+		size = -1;
+		downloaded = 0;
+		status = DOWNLOADING;
+		debugMessage = new StringBuilder();
 	}
 
 	/**
@@ -70,8 +70,8 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	public AbstractDownload(URL url, String path, String proxyUrl, int port)
 	{
 		this(url, path);
-		this.useProxy = true;
-		this.useAuthentication = false;
+		useProxy = true;
+		useAuthentication = false;
 		this.proxyUrl = proxyUrl;
 		this.port = port;
 	}
@@ -89,7 +89,7 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	public AbstractDownload(URL url, String path, String proxyUrl, int port, String userName, String password)
 	{
 		this(url, path, proxyUrl, port);
-		this.useAuthentication = true;
+		useAuthentication = true;
 		this.userName = userName;
 		this.password = password;
 	}
@@ -99,8 +99,8 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	 */
 	public void cancel()
 	{
-		this.status = CANCELLED;
-		this.stateChanged();
+		status = CANCELLED;
+		stateChanged();
 	}
 
 	/**
@@ -117,8 +117,8 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	 */
 	protected void error()
 	{
-		this.status = ERROR;
-		this.stateChanged();
+		status = ERROR;
+		stateChanged();
 	}
 
 	/**
@@ -128,7 +128,7 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	 */
 	public String getDebugMessages()
 	{
-		return this.debugMessage.toString().trim();
+		return debugMessage.toString().trim();
 	}
 
 	/**
@@ -138,7 +138,7 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	 */
 	public long getDownloaded()
 	{
-		return this.downloaded;
+		return downloaded;
 	}
 
 	/**
@@ -176,7 +176,7 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	 */
 	public float getProgress()
 	{
-		return (float) this.downloaded / this.size * 100;
+		return (float) downloaded / size * 100;
 	}
 
 	/**
@@ -186,7 +186,7 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	 */
 	public long getSize()
 	{
-		return this.size;
+		return size;
 	}
 
 	/**
@@ -196,7 +196,7 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	 */
 	public int getStatus()
 	{
-		return this.status;
+		return status;
 	}
 
 	/**
@@ -206,7 +206,7 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	 */
 	public String getUrl()
 	{
-		return this.url.toString();
+		return url.toString();
 	}
 
 	/**
@@ -214,8 +214,8 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	 */
 	public void pause()
 	{
-		this.status = PAUSED;
-		this.stateChanged();
+		status = PAUSED;
+		stateChanged();
 	}
 
 	/**
@@ -224,22 +224,22 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	public void resume()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(this.path);
-		if (!this.path.endsWith(System.getProperty("file.separator")))
+		sb.append(path);
+		if (!path.endsWith(System.getProperty("file.separator")))
 		{
 			sb.append(System.getProperty("file.separator"));
 		}
-		sb.append(this.getFileName(this.url));
+		sb.append(getFileName(url));
 
 		File file = new File(sb.toString());
 		if (file.exists())
 		{
-			this.downloaded = file.length();
+			downloaded = file.length();
 		}
 
-		this.status = DOWNLOADING;
-		this.stateChanged();
-		this.download();
+		status = DOWNLOADING;
+		stateChanged();
+		download();
 	}
 
 	/**
@@ -276,7 +276,7 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	 */
 	protected void stateChanged()
 	{
-		this.setChanged();
+		setChanged();
 		this.notifyObservers();
 	}
 }

@@ -6,7 +6,6 @@ import it.freax.fpm.core.util.FileUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Vector;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -19,28 +18,28 @@ public class BZip2ArchiveReader extends ArchiveReader
 	public BZip2ArchiveReader(File file) throws IOException
 	{
 		super(file);
-		this.type = ArchiveType.BZip2;
+		type = ArchiveType.BZip2;
 	}
 
 	@Override
 	protected void setEntryVector() throws IOException
 	{
-		this.entries = new Vector<String>();
-		TarArchiveInputStream tarin = new TarArchiveInputStream(new BZip2CompressorInputStream(this.openStream()));
+		entries = new Vector<String>();
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new BZip2CompressorInputStream(openStream()));
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
 		{
-			this.entries.add(entry.getName());
+			entries.add(entry.getName());
 		}
 		tarin.close();
-		this.closeStream();
+		closeStream();
 	}
 
 	@Override
 	public String readEntry(String entryName) throws IOException
 	{
 		String lines = "";
-		TarArchiveInputStream tarin = new TarArchiveInputStream(new BZip2CompressorInputStream(this.openStream()));
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new BZip2CompressorInputStream(openStream()));
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
 		{
@@ -54,7 +53,7 @@ public class BZip2ArchiveReader extends ArchiveReader
 			}
 		}
 		tarin.close();
-		this.closeStream();
+		closeStream();
 		return lines;
 	}
 
@@ -62,7 +61,7 @@ public class BZip2ArchiveReader extends ArchiveReader
 	public int countEntries(String entryName) throws IOException
 	{
 		int counter = 0;
-		TarArchiveInputStream tarin = new TarArchiveInputStream(new BZip2CompressorInputStream(this.openStream()));
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new BZip2CompressorInputStream(openStream()));
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
 		{
@@ -72,7 +71,7 @@ public class BZip2ArchiveReader extends ArchiveReader
 			}
 		}
 		tarin.close();
-		this.closeStream();
+		closeStream();
 		return counter;
 	}
 
@@ -80,7 +79,7 @@ public class BZip2ArchiveReader extends ArchiveReader
 	public Vector<String> readEntries(String entryName, boolean excludeRoot, String root) throws IOException
 	{
 		Vector<String> ret = new Vector<String>();
-		TarArchiveInputStream tarin = new TarArchiveInputStream(new BZip2CompressorInputStream(this.openStream()));
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new BZip2CompressorInputStream(openStream()));
 		TarArchiveEntry entry = null;
 		boolean isRoot = excludeRoot;
 		while ((entry = tarin.getNextTarEntry()) != null)
@@ -96,24 +95,23 @@ public class BZip2ArchiveReader extends ArchiveReader
 			}
 		}
 		tarin.close();
-		this.closeStream();
+		closeStream();
 		return ret;
 	}
 
 	@Override
-	public HashMap<String, String> readEntries() throws IOException
+	protected void readEntriesContent() throws IOException
 	{
-		TarArchiveInputStream tarin = new TarArchiveInputStream(new BZip2CompressorInputStream(this.openStream()));
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new BZip2CompressorInputStream(openStream()));
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
 		{
 			byte[] buf = new byte[(int) entry.getSize()];
 			tarin.read(buf, 0, (int) entry.getSize());
 			ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-			this.filecontents.put(entry.getName(), FileUtils.read(bais));
+			filecontents.put(entry.getName(), FileUtils.read(bais));
 		}
 		tarin.close();
-		this.closeStream();
-		return this.filecontents;
+		closeStream();
 	}
 }

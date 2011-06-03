@@ -18,47 +18,59 @@ public abstract class ArchiveReader
 	protected Vector<String> entries;
 	protected HashMap<String, String> filecontents;
 	protected ArchiveType type;
+	protected boolean hasRead;
 
 	public ArchiveReader(File file) throws IOException
 	{
 		this.file = file;
-		this.fis = new FileInputStream(this.file);
-		this.filecontents = new HashMap<String, String>();
-		this.setEntryVector();
+		fis = new FileInputStream(this.file);
+		filecontents = new HashMap<String, String>();
+		hasRead = false;
+		setEntryVector();
 	}
 
 	public File getFile()
 	{
-		return this.file;
+		return file;
 	}
 
 	public ArchiveType getType()
 	{
-		return this.type;
+		return type;
 	}
 
 	public Vector<String> getEntries()
 	{
-		return this.entries;
+		return entries;
 	}
 
 	public HashMap<String, String> getFilesContents()
 	{
-		return this.filecontents;
+		return filecontents;
 	}
 
 	public String getEntryContent(String entryName)
 	{
-		return this.filecontents.get(entryName);
+		return filecontents.get(entryName);
+	}
+
+	public boolean hasRead()
+	{
+		return hasRead;
+	}
+
+	public void setHasRead(boolean hasRead)
+	{
+		this.hasRead = hasRead;
 	}
 
 	protected FileInputStream openStream()
 	{
-		if (this.fis == null)
+		if (fis == null)
 		{
 			try
 			{
-				this.fis = new FileInputStream(this.file);
+				fis = new FileInputStream(file);
 			}
 			catch (FileNotFoundException e)
 			{
@@ -67,22 +79,22 @@ public abstract class ArchiveReader
 		}
 		else
 		{
-			this.closeStream();
-			this.fis = this.openStream();
+			closeStream();
+			fis = openStream();
 		}
-		return this.fis;
+		return fis;
 	}
 
 	protected void closeStream()
 	{
 		try
 		{
-			this.fis.close();
+			fis.close();
 		}
 		catch (IOException e)
 		{
 		}
-		this.fis = null;
+		fis = null;
 	}
 
 	/**
@@ -195,7 +207,22 @@ public abstract class ArchiveReader
 	 * @return Un HashMap contenente coppie che hanno come chiave il nome
 	 *         del file completo di percorso, e come valore il suo contenuto.
 	 */
-	public abstract HashMap<String, String> readEntries() throws IOException;
+	public HashMap<String, String> readEntries() throws IOException
+	{
+		if (!hasRead)
+		{
+			readEntriesContent();
+			hasRead = true;
+		}
+		return filecontents;
+	}
+
+	/**
+	 * Questo metodo permette di leggere tutti i file di testo
+	 * all'interno di un archivio senza scompattarlo.
+	 * I contenuti vengono via via inseriti nell'attributo filecontents
+	 */
+	protected abstract void readEntriesContent() throws IOException;
 
 	/**
 	 * Questo metodo permette di contare le occorrenze di un file

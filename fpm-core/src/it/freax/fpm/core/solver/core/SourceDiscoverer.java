@@ -3,16 +3,13 @@ package it.freax.fpm.core.solver.core;
 import it.freax.fpm.core.archives.ArchiveReader;
 import it.freax.fpm.core.solver.conf.*;
 import it.freax.fpm.core.solver.dto.CompilationUnit;
-import it.freax.fpm.core.solver.dto.PackageInfos;
 import it.freax.fpm.core.solver.dto.SrcFile;
 import it.freax.fpm.core.solver.dto.Treenode;
 import it.freax.fpm.core.solver.specs.DummySpec;
+import it.freax.fpm.core.solver.specs.TarballSpec;
 import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.RootExecution;
-import it.freax.fpm.core.util.CoreUtils;
-import it.freax.fpm.core.util.EntriesScorer;
-import it.freax.fpm.core.util.LogConfigurator;
-import it.freax.fpm.core.util.StringUtils;
+import it.freax.fpm.core.util.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -24,55 +21,64 @@ public class SourceDiscoverer
 {
 	private Vector<String> entries;
 	private ArchiveReader reader;
+	private TarballSpec spec;
 	private Configuration conf;
-	private String packageName;
-	private String version;
-	private Logger log = LogConfigurator.configure(this.getClass());
+	private Logger log = LogConfigurator.configure(this.getClass(), false);
 
-	public SourceDiscoverer(ArchiveReader reader)
+	public SourceDiscoverer(ArchiveReader reader, TarballSpec spec)
 	{
 		this.reader = reader;
-		this.entries = reader.getEntries();
-		this.conf = Configuration.load("conf/source-detect.xml");
+		this.spec = spec;
+		entries = reader.getEntries();
+		conf = Configuration.load("conf/source-detect.xml");
 	}
 
 	public void setPackageName(String packageName)
 	{
-		this.packageName = packageName;
+		spec.setPackageName(packageName);
 	}
 
 	public void setVersion(String version)
 	{
-		this.version = version;
+		spec.setVersion(version);
 	}
 
-	public PackageInfos discover() throws IOException
+	public TreeSet<Treenode> discover() throws IOException
 	{
-		long start = this.time();
-		PackageInfos ret = this.initPackInfo();
+		long start = time();
+		TreeSet<Treenode> ret;
 
-		// Per problemi di performance devo leggere tutte le entry in un colpo solo
-		start = this.time();
-		this.reader.readEntries();
-		this.log.debug("Read all entries: " + (this.time() - start));
-		ret.setArchiveSpecification(this.initTreeSet());
+		if (!reader.hasRead())
+		{
+			start = time();
+			reader.readEntries();
+			log.debug("Read all entries: " + TimeSpan.format(time() - start, TimeSpan.MILLISECOND));
+		}
+		log.debug("Inizializzo il treeset");
+		ret = initTreeSet();
 
-		start = this.time();
+		start = time();
 
-		Iterator<Treenode> it = ret.getArchiveSpecification().iterator();
+		Iterator<Treenode> it = ret.iterator();
+		log.debug("Itero tutti i treenode");
 		while (it.hasNext())
 		{
 			Treenode tn = it.next();
-			Vector<SrcFile> srcfiles = this.makeSrcFileList(tn, this.getFiles(tn.getName()));
-			this.makeInstructionSet(tn, this.cleanSrcFiles(srcfiles));
+			log.debug("Tento di riempire il nodo " + tn.getName());
+			Vector<SrcFile> srcfiles = makeSrcFileList(tn, getFiles(tn.getName()));
+			makeInstructionSet(tn, cleanSrcFiles(srcfiles));
 			CompilationUnit cu = tn.getAssociatedCU();
-			this.setCompilationUnit(cu, srcfiles);
+			setCompilationUnit(cu, srcfiles);
+			log.debug("Dopo aver fatto tutto questo aggiorno la Compilation Unit che ho appena settato sul treenode padre");
 			tn.updateCU(cu);
-			this.log.debug(cu.getDummySpec().getPackage().getPackageName());
-			this.log.debug(cu.getDummySpec().getPackage().getVersion());
+			log.debug("Emerge che il nome della Compilation Unit e la sua versione sono:");
+			log.debug(tn.getAssociatedCU().getDummySpec().getPackage().getPackageName());
+			log.debug(tn.getAssociatedCU().getDummySpec().getPackage().getVersion());
 		}
-		ret.setDummy(this.getGlobalDummySpec(ret.getArchiveSpecification()));
-		this.log.debug("Tempo impiegato: " + (this.time() - start));
+		log.debug("Una volta processati tutti i nodi setto il DummySpec");
+		spec.map(getGlobalDummySpec(ret));
+		log.debug(spec);
+		log.debug("Tempo impiegato: " + TimeSpan.format(time() - start, TimeSpan.MILLISECOND));
 		return ret;
 	}
 
@@ -84,13 +90,13 @@ public class SourceDiscoverer
 	private Vector<String> getFiles(String directory)
 	{
 		Vector<String> ret = new Vector<String>();
-		TreeSet<String> files = new TreeSet<String>(this.entries);
+		TreeSet<String> files = new TreeSet<String>(entries);
 		int dirsplitlen = directory.split("/").length;
 		Iterator<String> it = files.iterator();
 		while (it.hasNext())
 		{
 			String entry = it.next();
-			if (entry.startsWith(directory) && !entry.equalsIgnoreCase(directory) && (dirsplitlen + 1 == entry.split("/").length) && !this.isDirectory(entry))
+			if (entry.startsWith(directory) && !entry.equalsIgnoreCase(directory) && (dirsplitlen + 1 == entry.split("/").length) && !isDirectory(entry))
 			{
 				ret.add(entry);
 			}
@@ -101,16 +107,16 @@ public class SourceDiscoverer
 	private TreeSet<Treenode> initTreeSet()
 	{
 		TreeSet<Treenode> ret = new TreeSet<Treenode>();
-		for (String entry : this.entries)
+		for (String entry : entries)
 		{
-			if (this.isDirectory(entry))
+			if (isDirectory(entry))
 			{
 				ret.add(new Treenode(entry));
 			}
 		}
-		if ((this.entries.size() > 0) && (ret.size() <= 0))
+		if ((entries.size() > 0) && (ret.size() <= 0))
 		{
-			String dir = this.entries.get(0);
+			String dir = entries.get(0);
 			dir = dir.substring(0, dir.indexOf('/') + 1);
 			ret.add(new Treenode(dir));
 		}
@@ -130,7 +136,7 @@ public class SourceDiscoverer
 	private boolean isFileParticolare(String file)
 	{
 		boolean ret = false;
-		Iterator<ConfType> it = this.conf.typesIterator();
+		Iterator<ConfType> it = conf.typesIterator();
 		while (it.hasNext())
 		{
 			ret = it.next().containsNotevole(StringUtils.trimDir(file));
@@ -145,7 +151,7 @@ public class SourceDiscoverer
 	private Vector<String> getNotableFileLangs(String notablefile)
 	{
 		Vector<String> ret = new Vector<String>();
-		Iterator<ConfType> it = this.conf.typesIterator();
+		Iterator<ConfType> it = conf.typesIterator();
 		while (it.hasNext())
 		{
 			ConfType ct = it.next();
@@ -181,23 +187,28 @@ public class SourceDiscoverer
 		{
 			for (String lang : file.getLangs())
 			{
-				ConfType type = this.conf.getType(lang);
+				log.debug("Cicli annidati: Per ogni file su tutti i linguaggi associati for (files) { for (files.linguaggi) { \"" + lang + "\" } }");
+				ConfType type = conf.getType(lang);
 				if (file.isNotable())
 				{
 					NotableFile notable = type.getNotableFile(StringUtils.trimDir(file.getName()));
 					instructions.addAll(type.getInstructionsById(notable.getId()));
+					log.debug("Dato che è notevole prendo l'instruction set " + notable.getId() + " dalla configurazione");
 				}
 				else
 				{
+					log.debug("Dato che non è notevole prendo l'instruction set 0 dalla configurazione");
 					instructions.addAll(type.getInstructionsById(0));
 				}
+				log.debug("A prescindere prendo l'instruction set -1 dalla configurazione");
 				instructions.addAll(type.getInstructionsById(-1));
 			}
 		}
-		General genInfo = this.conf.getGeneralInfo();
+		General genInfo = conf.getGeneralInfo();
 		Vector<String> command = new Vector<String>();
 		String delimiter = CoreUtils.getDelimiter(genInfo.getExitCodeControl());
 		Iterator<Instruction> it = instructions.descendingIterator();
+		log.debug("Aggiungo i comandi di Privilege Excalation quando necessari nell'instruction set");
 		while (it.hasNext())
 		{
 			Instruction instruction = it.next();
@@ -214,18 +225,20 @@ public class SourceDiscoverer
 				command.add(delimiter);
 			}
 		}
+		log.debug("Aggiungo l'istruzione alla Compilation Unit facendo un merge dinamico di tutto l'instruction set");
 		tn.getAssociatedCU().addInstruction(CoreUtils.merge(command, " "), null);
 	}
 
 	private Vector<SrcFile> makeSrcFileList(Treenode tn, Vector<String> files)
 	{
+		log.debug("Costruisco la lista di SrcFile");
 		Vector<SrcFile> srcfiles = new Vector<SrcFile>();
 		for (String file : files)
 		{
-			this.log.debug("Processo il file " + file);
-			SrcFile srcfile = this.makeSrcFile(file);
+			SrcFile srcfile = makeSrcFile(file);
 			if (srcfile.isNotable() || (srcfile.getLangs().size() > 0))
 			{
+				log.debug("Il file è buono quindi setto la Compilation Unit");
 				tn.setIsCU(true);
 				tn.getAssociatedCU().addCUFile(srcfile);
 				tn.getAssociatedCU().addAllLangs(srcfile.getLangs());
@@ -237,6 +250,7 @@ public class SourceDiscoverer
 
 	private Vector<SrcFile> cleanSrcFiles(Vector<SrcFile> srcfiles)
 	{
+		log.debug("Pulisco la lista di SrcFiles dagli oggetti inutili (non-notevoli e non-linguaggi)");
 		for (int i = 0; i < srcfiles.size(); i++)
 		{
 			SrcFile file = srcfiles.get(i);
@@ -250,28 +264,36 @@ public class SourceDiscoverer
 
 	private SrcFile makeSrcFile(String file)
 	{
+		log.debug("Creo e valorizzo il SrcFile con nome \"" + file + "\"");
 		SrcFile srcfile = new SrcFile();
 		srcfile.setName(file);
-		srcfile.setNotable(this.isFileParticolare(file));
-		Iterator<ConfType> typeit = this.conf.typesIterator();
-		String content = this.reader.getEntryContent(file);
+		srcfile.setNotable(isFileParticolare(file));
+		log.debug("Il file" + (srcfile.isNotable() ? " " : " non ") + "è notevole");
+		String content = reader.getEntryContent(file);
+		log.debug("Setto il contenuto del file");
 		srcfile.setContent(content);
-
 		if (srcfile.isNotable())
 		{
-			srcfile.addAllLangs(this.getNotableFileLangs(file));
+			log.debug("Dato che è notevole trovo tutti i linguaggi per i quali è notevole");
+			srcfile.addAllLangs(getNotableFileLangs(file));
+			log.debug("che sono:\n" + srcfile.getLangs());
 		}
 		else
 		{
+			log.debug("Dato che non è notevole devo usare altri metodi per verificare che file è");
+			Iterator<ConfType> typeit = conf.typesIterator();
 			EbnfParser parser = getEbnfParser(null, null, false);
 			while (typeit.hasNext())
 			{
 				ConfType type = typeit.next();
+				log.debug("Provo col tipo " + type.getSource());
 				if (StringUtils.checkExtensions(file, type.getExts()))
 				{
+					log.debug("Il file ricade nelle estensioni del tipo, quindi posso provare il parsing con l'ebnf " + type.getEbnf());
 					parser = getEbnfParser(parser, type.getEbnf(), true);
 					if (parser.parse(content))
 					{
+						log.debug("Sono riuscito a parsare il contenuto! Il file è di tipo \"" + type.getSource() + "\" e i suoi imports sono:\n" + parser.getImports());
 						srcfile.addLang(type.getSource());
 						srcfile.addAllIncludes(parser.getImports());
 					}
@@ -281,60 +303,54 @@ public class SourceDiscoverer
 		return srcfile;
 	}
 
-	private PackageInfos initPackInfo()
-	{
-		PackageInfos ret = new PackageInfos();
-		if ((this.packageName != null) && !this.packageName.isEmpty())
-		{
-			ret.getDummy().setPackageName(this.packageName);
-		}
-		if ((this.version != null) && !this.version.isEmpty())
-		{
-			ret.getDummy().setVersion(this.version);
-		}
-		return ret;
-	}
-
 	private void setCompilationUnit(CompilationUnit cu, Vector<SrcFile> files)
 	{
-		this.log.debug(files.size());
+		log.debug("Setto la Compilation Unit con " + files.size() + " SrcFile(s), di questi scelgo solo quelli notevoli");
 		for (SrcFile file : files)
 		{
 			if (file.isNotable())
 			{
 				for (String lang : file.getLangs())
 				{
-					ConfType type = this.conf.getType(lang);
+					log.debug("Controllo se il file notevole contiene informazioni additive nel linguaggio " + lang);
+					ConfType type = conf.getType(lang);
 					Vector<Additive> additives = new Vector<Additive>();
 					NotableFile notable = type.getNotableFile(StringUtils.trimDir(file.getName()));
 					additives = type.getAdditivesById(notable.getId());
 
+					log.debug("A questo punto devo fare una cosa particolare: dato che gli additives sono categorizzati, devo intanto dividerli per categoria");
 					Iterator<Entry<InfoType, Vector<Additive>>> it;
-					it = this.getTypedAdditives(additives).entrySet().iterator();
+					it = getTypedAdditives(additives).entrySet().iterator();
 					while (it.hasNext())
 					{
 						Entry<InfoType, Vector<Additive>> elem = it.next();
-						String best = this.getBestScore(elem.getValue(), file);
+						log.debug("Poi per ogni tipo di additive prendo tutti quelli della categoria " + elem.getKey() + " e trovo quale risulta essere il migliore");
+						String best = getBestScore(elem.getValue(), file);
+						log.debug("La parte importante arriva qui: setto il payload nell'attributo specifico a seconda del tipo di additive che ho processato");
 						switch (elem.getKey())
 						{
 							case PackageName:
 							{
+								log.debug("Setto " + elem.getKey() + " come " + best);
 								cu.getDummySpec().setPackageName(best);
 								break;
 							}
 							case Version:
 							{
+								log.debug("Setto " + elem.getKey() + " come " + best);
 								cu.getDummySpec().setVersion(best);
 								break;
 							}
 							case Changelog:
 							{
+								log.debug("Setto " + elem.getKey());
 								cu.getDummySpec().setChangeLog(best);
 							}
 							case InfoPage:
 							case ManPage:
 							case Readme:
 							{
+								log.debug("Setto " + elem.getKey() + " come " + file.getName());
 								cu.getDummySpec().addDocFile(file.getName(), best);
 								break;
 							}
@@ -348,7 +364,10 @@ public class SourceDiscoverer
 	private String getBestScore(Vector<Additive> additives, SrcFile file)
 	{
 		String ret = "";
+		log.debug("Istanzio un EntriesScorer, cioè un oggetto che sa trovare il più (o meno) presente tra gli elementi che gli vengono passati");
 		EntriesScorer<String> es = new EntriesScorer<String>(true);
+		log.debug("L'algoritmo lavora in modo da ottenere l'output del metodo che l'additive deve eseguire sul file per trovare il suo payload");
+		log.debug("Poi il payload viene inserito nell'EntriesScorer che analizza quale payload sia più presente, e lo segnala come più plausibile");
 		for (Additive additive : additives)
 		{
 			es.add(additive.execMethod(file));
@@ -365,6 +384,7 @@ public class SourceDiscoverer
 	{
 		HashMap<InfoType, Vector<Additive>> typedAdditives;
 		typedAdditives = new HashMap<InfoType, Vector<Additive>>();
+		log.debug("Riempio un HashMap<InfoType, Vector<Additive>> che divida i set di Additive in categorie");
 		for (Additive additive : additives)
 		{
 			if (!typedAdditives.containsKey(additive.getInfoType()))
@@ -382,6 +402,10 @@ public class SourceDiscoverer
 		Iterator<Treenode> it = set.descendingIterator();
 		EntriesScorer<String> namesEs = new EntriesScorer<String>(true);
 		EntriesScorer<String> versEs = new EntriesScorer<String>(true);
+		log.warn("PORK AROUND!!!");
+		log.debug("Ciclo nuovamente il treeset, sta volta controllo che il treenode sia una CU, visto che ho trovato il dato");
+		log.debug("Se è una CU prendo il suo DummySpec e da quello prendo il packageName e la versione");
+		log.debug("Passo questi dati a due EntriesScorer settati apposta per poter capire qual'è il nome del software, tra tutte le CU");
 		while (it.hasNext())
 		{
 			Treenode tn = it.next();
@@ -390,9 +414,10 @@ public class SourceDiscoverer
 				DummySpec ds = tn.getAssociatedCU().getDummySpec();
 				namesEs.add(ds.getPackage().getPackageName());
 				versEs.add(ds.getPackage().getVersion());
-				ret.setChangeLog(ds.getChangeLog());
+				ret.setChangeLog(((ds.getChangeLog() == null ? "" : ds.getChangeLog()).isEmpty() ? ret.getChangeLog() : ds.getChangeLog()));
 			}
 		}
+		log.debug("E in fine setto il best dei due EntriesScorer");
 		ret.setPackageName(namesEs.getBestScore().getKey());
 		ret.setVersion(versEs.getBestScore().getKey());
 		return ret;

@@ -12,13 +12,19 @@ public class SrcFile
 
 	public SrcFile()
 	{
-		this.langs = new Vector<String>();
-		this.includes = new Vector<String>();
+		langs = new Vector<String>();
+		includes = new Vector<String>();
+	}
+
+	public SrcFile(String name)
+	{
+		this();
+		this.name = name;
 	}
 
 	public String getName()
 	{
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name)
@@ -28,7 +34,7 @@ public class SrcFile
 
 	public String getContent()
 	{
-		return this.content;
+		return content;
 	}
 
 	public void setContent(String content)
@@ -38,17 +44,17 @@ public class SrcFile
 
 	public Vector<String> getLangs()
 	{
-		return this.langs;
+		return langs;
 	}
 
 	public Vector<String> getIncludes()
 	{
-		return this.includes;
+		return includes;
 	}
 
 	public boolean isNotable()
 	{
-		return this.isNotable;
+		return isNotable;
 	}
 
 	public void setNotable(boolean isNotable)
@@ -58,12 +64,12 @@ public class SrcFile
 
 	public void addLang(String lang)
 	{
-		this.langs.add(lang);
+		langs.add(lang);
 	}
 
-	public void addInclude(String include)
+	public void addImport(String include)
 	{
-		this.includes.add(include);
+		includes.add(include);
 	}
 
 	public void addAllIncludes(Vector<String> includes)
@@ -79,6 +85,6 @@ public class SrcFile
 	@Override
 	public String toString()
 	{
-		return this.name + "; isNotable: " + this.isNotable;
+		return name + "; isNotable: " + isNotable;
 	}
 }

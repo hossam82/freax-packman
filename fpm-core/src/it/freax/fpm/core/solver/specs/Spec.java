@@ -1,6 +1,6 @@
 package it.freax.fpm.core.solver.specs;
 
-import it.freax.fpm.core.solver.dto.SubPackage;
+import it.freax.fpm.core.solver.dto.BasicInfos;
 
 import java.io.File;
 import java.util.HashMap;
@@ -14,65 +14,105 @@ import java.util.Vector;
  */
 public abstract class Spec
 {
+	protected boolean mapped;
 	protected File File;
-	protected SubPackage Package;
+	protected BasicInfos Package;
 	protected String Scripts;
 	protected String ChangeLog;
-	protected Vector<SubPackage> Provides;
-	protected Vector<SubPackage> Requires;
+	protected Vector<BasicInfos> Provides;
+	protected Vector<BasicInfos> Requires;
 	protected HashMap<String, String> ConfigFiles;
 	protected HashMap<String, String> DocFiles;
 
 	public Spec()
 	{
-		this.Provides = new Vector<SubPackage>();
-		this.Requires = new Vector<SubPackage>();
-		this.ConfigFiles = new HashMap<String, String>();
-		this.DocFiles = new HashMap<String, String>();
+		File = null;
+		ChangeLog = "";
+		Scripts = "";
+		Package = new BasicInfos();
+
+		Provides = new Vector<BasicInfos>();
+		Requires = new Vector<BasicInfos>();
+		ConfigFiles = new HashMap<String, String>();
+		DocFiles = new HashMap<String, String>();
 	}
 
 	public File getFile()
 	{
-		return this.File;
+		return File;
 	}
 
-	public SubPackage getPackage()
+	public BasicInfos getPackage()
 	{
-		return this.Package;
+		return Package;
 	}
 
 	public String getScripts()
 	{
-		return this.Scripts;
+		return Scripts;
 	}
 
 	public String getChangeLog()
 	{
-		return this.ChangeLog;
+		return ChangeLog;
 	}
 
-	public Vector<SubPackage> getProvides()
+	public Vector<BasicInfos> getProvides()
 	{
-		return this.Provides;
+		return Provides;
 	}
 
-	public Vector<SubPackage> getRequires()
+	public Vector<BasicInfos> getRequires()
 	{
-		return this.Requires;
+		return Requires;
 	}
 
 	public HashMap<String, String> getConfigFiles()
 	{
-		return this.ConfigFiles;
+		return ConfigFiles;
 	}
 
 	public HashMap<String, String> getDocFiles()
 	{
-		return this.DocFiles;
+		return DocFiles;
+	}
+
+	public void map(Spec spec)
+	{
+		File = spec.getFile();
+		Package = spec.getPackage();
+		Scripts = spec.getScripts();
+		ChangeLog = spec.getChangeLog();
+		Provides = spec.getProvides();
+		Requires = spec.getRequires();
+		ConfigFiles = spec.getConfigFiles();
+		DocFiles = spec.getDocFiles();
+		mapped = true;
 	}
 
 	public abstract void Load(File file);
 
 	@Override
-	public abstract String toString();
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getClass().getSimpleName() + ":\n");
+		builder.append("\n- File --> ");
+		builder.append(File);
+		builder.append("\n- Package --> ");
+		builder.append(Package);
+		builder.append("\n- Scripts --> ");
+		builder.append(Scripts);
+		builder.append("\n- ChangeLog --> ");
+		builder.append(ChangeLog);
+		builder.append("\n- Provides --> ");
+		builder.append(Provides);
+		builder.append("\n- Requires --> ");
+		builder.append(Requires);
+		builder.append("\n- ConfigFiles --> ");
+		builder.append(ConfigFiles);
+		builder.append("\n- DocFiles --> ");
+		builder.append(DocFiles);
+		return builder.toString();
+	}
 }

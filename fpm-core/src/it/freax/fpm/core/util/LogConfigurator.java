@@ -2,15 +2,16 @@ package it.freax.fpm.core.util;
 
 import java.io.IOException;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
+import org.apache.log4j.*;
 
 public class LogConfigurator
 {
 	public static Logger configure(Class<?> clazz)
+	{
+		return configure(clazz, true);
+	}
+
+	public static Logger configure(Class<?> clazz, boolean logToConsole)
 	{
 		Logger log = Logger.getLogger(clazz);
 		String logPath = System.getProperty("user.dir");
@@ -19,12 +20,17 @@ public class LogConfigurator
 			logPath = logPath + System.getProperty("file.separator");
 		}
 		logPath = logPath + "fpm-install.log";
-		String pattern = "%r [%t] %-5p %c - %m%n";
+		String pattern = "%-8r [%t] %-5p %c - %m%n";
 		PatternLayout layout = new PatternLayout(pattern);
-		ConsoleAppender consapp = new ConsoleAppender(layout);
-		consapp.setTarget("System.out");
 		log.setLevel(Level.ALL);
-		log.addAppender(consapp);
+
+		if (logToConsole)
+		{
+			ConsoleAppender consapp = new ConsoleAppender(layout);
+			consapp.setTarget("System.out");
+			log.addAppender(consapp);
+		}
+
 		FileAppender fileapp;
 		try
 		{

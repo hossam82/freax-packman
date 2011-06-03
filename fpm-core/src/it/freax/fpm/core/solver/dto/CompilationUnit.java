@@ -14,31 +14,31 @@ public class CompilationUnit
 	private DummySpec dummySpec;
 	private String PrincipalLang;
 	private HashSet<String> Langs;
-	private Vector<CUFile> ContainedFiles;
+	private Vector<SrcFile> ContainedFiles;
 	private LinkedList<Instruction> InstructionSet;
 
 	public CompilationUnit(String Name)
 	{
 		this.Name = Name;
-		this.dummySpec = new DummySpec();
-		this.Langs = new HashSet<String>();
-		this.ContainedFiles = new Vector<CUFile>();
-		this.InstructionSet = new LinkedList<Instruction>();
+		dummySpec = new DummySpec();
+		Langs = new HashSet<String>();
+		ContainedFiles = new Vector<SrcFile>();
+		InstructionSet = new LinkedList<Instruction>();
 	}
 
 	public String getName()
 	{
-		return this.Name;
+		return Name;
 	}
 
 	public void setName(String value)
 	{
-		this.Name = value;
+		Name = value;
 	}
 
 	public DummySpec getDummySpec()
 	{
-		return this.dummySpec;
+		return dummySpec;
 	}
 
 	public void setDummySpec(DummySpec dummySpec)
@@ -48,17 +48,17 @@ public class CompilationUnit
 
 	public String getPrincipalLang()
 	{
-		return this.PrincipalLang;
+		return PrincipalLang;
 	}
 
 	public void setPrincipalLang(String value)
 	{
-		this.PrincipalLang = value;
+		PrincipalLang = value;
 	}
 
 	public void addCUFile(SrcFile file)
 	{
-		CUFile e = new CUFile(file.getName());
+		SrcFile e = new SrcFile(file.getName());
 		e.setNotable(file.isNotable());
 		for (String lang : file.getLangs())
 		{
@@ -68,30 +68,30 @@ public class CompilationUnit
 		{
 			e.addImport(include);
 		}
-		this.ContainedFiles.add(e);
+		ContainedFiles.add(e);
 	}
 
 	public void addInstruction(String command, String workingDir)
 	{
-		this.InstructionSet.add(new Instruction(command, workingDir));
+		InstructionSet.add(new Instruction(command, workingDir));
 	}
 
 	public void addLang(String lang)
 	{
-		this.Langs.add(lang);
+		Langs.add(lang);
 	}
 
 	public void addAllLangs(Collection<String> langs)
 	{
 		for (String lang : langs)
 		{
-			this.addLang(lang);
+			addLang(lang);
 		}
 	}
 
 	public HashSet<String> getLangs()
 	{
-		return this.Langs;
+		return Langs;
 	}
 
 	@Override
@@ -99,17 +99,17 @@ public class CompilationUnit
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("CompilationUnit [Name=");
-		builder.append(this.Name);
+		builder.append(Name);
 		builder.append(", dummySpec=");
-		builder.append(this.dummySpec);
+		builder.append(dummySpec);
 		builder.append(", PrincipalLang=");
-		builder.append(this.PrincipalLang);
+		builder.append(PrincipalLang);
 		builder.append(", Langs=");
-		builder.append(this.Langs);
+		builder.append(Langs);
 		builder.append(", ContainedFiles=");
-		builder.append(this.ContainedFiles);
+		builder.append(ContainedFiles);
 		builder.append(", InstructionSet=");
-		builder.append(this.InstructionSet);
+		builder.append(InstructionSet);
 		builder.append("]");
 		return builder.toString();
 	}

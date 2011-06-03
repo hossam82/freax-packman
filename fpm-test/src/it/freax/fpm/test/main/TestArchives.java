@@ -1,6 +1,7 @@
 package it.freax.fpm.test.main;
 
 import it.freax.fpm.core.solver.specs.TarballSpec;
+import it.freax.fpm.core.util.TimeSpan;
 
 import java.io.File;
 import java.util.Calendar;
@@ -23,7 +24,7 @@ public class TestArchives
 
 		// path = "/home/kLeZ-hAcK/Scaricati/hexedit-1.2.12.src.tgz";
 		// path = "/home/kLeZ-hAcK/Scaricati/samba-latest.tar.gz";
-		path = "/home/kLeZ-hAcK/Scaricati/samba-latest.tar.gz";
+		path = "/home/kLeZ-hAcK/Scaricati/hexedit-1.2.12.src.tgz";
 		goRec = "false";
 
 		File file = new File(path);
@@ -36,14 +37,15 @@ public class TestArchives
 		}
 		else if (file.isFile())
 		{
+			counter++;
 			TarballSpec spec = new TarballSpec(null);
 			spec.Load(file);
-			System.out.println(spec.toString());
+			//System.out.println(spec.toString());
 		}
 		long stop = Calendar.getInstance().getTimeInMillis();
 		long diff = stop - start;
 		System.out.print("Il programma ha impiegato ");
-		System.out.print(diff);
+		System.out.print(TimeSpan.format(diff, TimeSpan.MILLISECOND));
 		System.out.print(" millisecondi per rilevare ");
 		System.out.print(counter);
 		System.out.println(" archivi");
@@ -60,7 +62,7 @@ public class TestArchives
 			{
 				TarballSpec spec = new TarballSpec(null);
 				spec.Load(child);
-				System.out.println(spec.toString());
+				//System.out.println(spec.toString());
 			}
 			else
 			{
@@ -80,12 +82,5 @@ public class TestArchives
 			}
 			counter++;
 		}
-	}
-
-	public static TarballSpec GetArchiveType(File child)
-	{
-		TarballSpec spec = new TarballSpec(null);
-		spec.Load(child);
-		return spec;
 	}
 }

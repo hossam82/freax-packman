@@ -34,26 +34,26 @@ public class Executor implements Runnable
 
 	public void execute()
 	{
-		this.status = WORKING;
+		status = WORKING;
 		Thread t = new Thread(this);
 		t.start();
 	}
 
 	public int getStatus()
 	{
-		return this.status;
+		return status;
 	}
 
 	@Override
 	public void run()
 	{
-		String delimiter = CoreUtils.getDelimiter(this.instruction.getExitCodecontrol());
+		String delimiter = CoreUtils.getDelimiter(instruction.getExitCodecontrol());
 		String command = "";
 		int exitStatus = 0;
 
 		try
 		{
-			StringTokenizer st = new StringTokenizer(this.instruction.getCommand());
+			StringTokenizer st = new StringTokenizer(instruction.getCommand());
 			List<String> cmds = new ArrayList<String>();
 
 			while (st.hasMoreTokens())
@@ -63,7 +63,7 @@ public class Executor implements Runnable
 
 			int end = 0;
 			Runtime env = Runtime.getRuntime();
-			File pwd = new File(this.instruction.getWorkingDir());
+			File pwd = new File(instruction.getWorkingDir());
 
 			while (end < cmds.size())
 			{
@@ -163,17 +163,17 @@ public class Executor implements Runnable
 					break;
 				}
 			}
-			this.status = COMPLETED;
-			this.instruction.setExitCode(exitStatus);
+			status = COMPLETED;
+			instruction.setExitCode(exitStatus);
 		}
 		catch (IOException e)
 		{
-			this.status = ERROR;
+			status = ERROR;
 			log.error(null, e);
 		}
 		catch (InterruptedException e)
 		{
-			this.status = ERROR;
+			status = ERROR;
 			log.error(null, e);
 		}
 	}

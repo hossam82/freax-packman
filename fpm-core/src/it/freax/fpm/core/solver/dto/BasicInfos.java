@@ -1,6 +1,6 @@
 package it.freax.fpm.core.solver.dto;
 
-public class SubPackage
+public class BasicInfos
 {
 	protected String PackageName;
 	protected String Version;

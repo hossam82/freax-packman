@@ -17,31 +17,31 @@ public class EbnfParser
 	public EbnfParser(String ebnf, boolean asResourceStream)
 	{
 		this.ebnf = ebnf;
-		this.ebnfContent = "";
-		this.loadEbnf(asResourceStream);
+		ebnfContent = "";
+		loadEbnf(asResourceStream);
 	}
 
 	public String getEbnf()
 	{
-		return this.ebnf;
+		return ebnf;
 	}
 
 	public void setEbnf(String ebnf)
 	{
 		this.ebnf = ebnf;
-		this.loadEbnf(true);
+		loadEbnf(true);
 	}
 
 	public void setEbnf(String ebnf, boolean asResourceStream)
 	{
 		this.ebnf = ebnf;
-		this.imports.clear();
-		this.loadEbnf(asResourceStream);
+		imports.clear();
+		loadEbnf(asResourceStream);
 	}
 
 	public Vector<String> getImports()
 	{
-		return this.imports;
+		return imports;
 	}
 
 	private void loadEbnf(boolean asResourceStream)
@@ -50,18 +50,18 @@ public class EbnfParser
 		{
 			if (asResourceStream)
 			{
-				InputStream is = ClassLoader.getSystemResourceAsStream(this.ebnf);
+				InputStream is = ClassLoader.getSystemResourceAsStream(ebnf);
 				if (is != null)
 				{
-					this.ebnfContent = FileUtils.read(is);
+					ebnfContent = FileUtils.read(is);
 				}
 			}
 			else
 			{
-				File f = new File(this.ebnf);
+				File f = new File(ebnf);
 				if (f.exists() && f.isFile())
 				{
-					this.ebnfContent = FileUtils.read(f);
+					ebnfContent = FileUtils.read(f);
 				}
 			}
 		}
@@ -74,15 +74,15 @@ public class EbnfParser
 	public boolean parse(String fileToMatch)
 	{
 		//TODO: Implementare metodo di parsing!!!
-		this.imports = new Vector<String>();
-		this.ebnfContent = "Dummy text!";
+		imports = new Vector<String>();
+		ebnfContent = "Dummy text!";
 		boolean matches = false;
-		matches = this.ebnfContent.equalsIgnoreCase(fileToMatch);
+		matches = ebnfContent.equalsIgnoreCase(fileToMatch);
 		Vector<String> incl = StringUtils.grep(fileToMatch, "#include[\\p{Space}\\p{Graph}\\p{Punct}]+", false);
 		for (String s : incl)
 		{
 			s = StringUtils.KeyValue(s, " ");
-			this.imports.add(s);
+			imports.add(s);
 		}
 		return matches;
 	}

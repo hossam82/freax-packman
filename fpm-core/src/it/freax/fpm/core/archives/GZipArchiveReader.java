@@ -6,7 +6,6 @@ import it.freax.fpm.core.util.FileUtils;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Vector;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -18,29 +17,29 @@ public class GZipArchiveReader extends ArchiveReader
 	public GZipArchiveReader(File file) throws IOException
 	{
 		super(file);
-		this.type = ArchiveType.GZip;
+		type = ArchiveType.GZip;
 	}
 
 	@Override
 	protected void setEntryVector() throws IOException
 	{
-		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(this.openStream()));
-		this.entries = new Vector<String>();
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(openStream()));
+		entries = new Vector<String>();
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
 		{
-			this.entries.add(entry.getName());
+			entries.add(entry.getName());
 		}
 
 		tarin.close();
-		this.closeStream();
+		closeStream();
 	}
 
 	@Override
 	public String readEntry(String entryName) throws IOException
 	{
 		String lines = "";
-		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(this.openStream()));
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(openStream()));
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
 		{
@@ -54,7 +53,7 @@ public class GZipArchiveReader extends ArchiveReader
 			}
 		}
 		tarin.close();
-		this.closeStream();
+		closeStream();
 		return lines;
 	}
 
@@ -62,7 +61,7 @@ public class GZipArchiveReader extends ArchiveReader
 	public int countEntries(String entryName) throws IOException
 	{
 		int counter = 0;
-		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(this.openStream()));
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(openStream()));
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
 		{
@@ -72,7 +71,7 @@ public class GZipArchiveReader extends ArchiveReader
 			}
 		}
 		tarin.close();
-		this.closeStream();
+		closeStream();
 		return counter;
 	}
 
@@ -80,7 +79,7 @@ public class GZipArchiveReader extends ArchiveReader
 	public Vector<String> readEntries(String entryName, boolean excludeRoot, String root) throws IOException
 	{
 		Vector<String> ret = new Vector<String>();
-		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(this.openStream()));
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(openStream()));
 		TarArchiveEntry entry = null;
 		boolean isRoot = excludeRoot;
 		while ((entry = tarin.getNextTarEntry()) != null)
@@ -96,24 +95,26 @@ public class GZipArchiveReader extends ArchiveReader
 			}
 		}
 		tarin.close();
-		this.closeStream();
+		closeStream();
 		return ret;
 	}
 
 	@Override
-	public HashMap<String, String> readEntries() throws IOException
+	protected void readEntriesContent() throws IOException
 	{
-		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(this.openStream()));
-		TarArchiveEntry entry = null;
-		while ((entry = tarin.getNextTarEntry()) != null)
+		if (!hasRead)
 		{
-			byte[] buf = new byte[(int) entry.getSize()];
-			tarin.read(buf, 0, (int) entry.getSize());
-			ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-			this.filecontents.put(entry.getName(), FileUtils.read(bais));
+			TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(openStream()));
+			TarArchiveEntry entry = null;
+			while ((entry = tarin.getNextTarEntry()) != null)
+			{
+				byte[] buf = new byte[(int) entry.getSize()];
+				tarin.read(buf, 0, (int) entry.getSize());
+				ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+				filecontents.put(entry.getName(), FileUtils.read(bais));
+			}
+			tarin.close();
+			closeStream();
 		}
-		tarin.close();
-		this.closeStream();
-		return this.filecontents;
 	}
 }
