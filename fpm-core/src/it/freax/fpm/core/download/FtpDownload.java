@@ -29,7 +29,7 @@ public class FtpDownload extends AbstractDownload
 	public FtpDownload(URL url, String path)
 	{
 		super(url, path);
-		this.download();
+		download();
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class FtpDownload extends AbstractDownload
 	public FtpDownload(URL url, String path, String proxyUrl, int port)
 	{
 		super(url, path, proxyUrl, port);
-		this.download();
+		download();
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class FtpDownload extends AbstractDownload
 	public FtpDownload(URL url, String path, String proxyUrl, int port, String userName, String password)
 	{
 		super(url, path, proxyUrl, port, userName, password);
-		this.download();
+		download();
 	}
 
 	/**
@@ -74,34 +74,34 @@ public class FtpDownload extends AbstractDownload
 
 		try
 		{
-			if (this.useProxy)
+			if (useProxy)
 			{
 				Properties systemProperties = System.getProperties();
-				systemProperties.setProperty("ftp.proxyHost", this.proxyUrl);
-				systemProperties.setProperty("ftp.proxyPort", String.valueOf(this.port));
+				systemProperties.setProperty("ftp.proxyHost", proxyUrl);
+				systemProperties.setProperty("ftp.proxyPort", String.valueOf(port));
 
-				if (this.useAuthentication)
+				if (useAuthentication)
 				{
-					Authenticator.setDefault(new SimpleAuthenticator(this.userName, this.password));
+					Authenticator.setDefault(new SimpleAuthenticator(userName, password));
 				}
 			}
 
 			StringBuilder sb = new StringBuilder();
-			sb.append(this.path);
-			if (!this.path.endsWith(System.getProperty("file.separator")))
+			sb.append(path);
+			if (!path.endsWith(System.getProperty("file.separator")))
 			{
 				sb.append(System.getProperty("file.separator"));
 			}
-			sb.append(this.getFileName(this.url));
+			sb.append(getFileName(url));
 
-			this.status = DOWNLOADING;
+			status = DOWNLOADING;
 
-			URLConnection urlc = this.url.openConnection();
+			URLConnection urlc = url.openConnection();
 
 			bis = new BufferedInputStream(urlc.getInputStream());
 			bos = new BufferedOutputStream(new FileOutputStream(sb.toString()));
 
-			while (this.status == DOWNLOADING)
+			while (status == DOWNLOADING)
 			{
 				byte[] buffer = new byte[MAX_BUFFER_SIZE];
 
@@ -114,28 +114,28 @@ public class FtpDownload extends AbstractDownload
 
 				// Write buffer to file.
 				bos.write(buffer, 0, read);
-				this.downloaded += read;
+				downloaded += read;
 			}
-			this.status = COMPLETE;
-			this.stateChanged();
+			status = COMPLETE;
+			stateChanged();
 		}
 		catch (MalformedURLException e)
 		{
-			if (this.debug)
+			if (debug)
 			{
 				e.printStackTrace();
 			}
-			this.setDebugMessage(e.toString(), true);
-			this.error();
+			setDebugMessage(e.toString(), true);
+			error();
 		}
 		catch (IOException e)
 		{
-			if (this.debug)
+			if (debug)
 			{
 				e.printStackTrace();
 			}
-			this.setDebugMessage(e.toString(), true);
-			this.error();
+			setDebugMessage(e.toString(), true);
+			error();
 		}
 		finally
 		{

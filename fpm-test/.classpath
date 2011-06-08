@@ -14,5 +14,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="fpm-test/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/bnf.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

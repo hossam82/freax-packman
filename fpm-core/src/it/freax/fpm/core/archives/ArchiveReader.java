@@ -2,6 +2,8 @@ package it.freax.fpm.core.archives;
 
 import it.freax.fpm.core.exceptions.ArchiveNotSupportedException;
 import it.freax.fpm.core.types.ArchiveType;
+import it.freax.fpm.core.util.Constants;
+import it.freax.fpm.core.util.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,9 +11,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.Vector;
 
-public abstract class ArchiveReader
+public abstract class ArchiveReader extends Constants
 {
 	private FileInputStream fis;
 	protected File file;
@@ -20,7 +23,7 @@ public abstract class ArchiveReader
 	protected ArchiveType type;
 	protected boolean hasRead;
 
-	public ArchiveReader(File file) throws IOException
+	protected ArchiveReader(File file) throws IOException
 	{
 		this.file = file;
 		fis = new FileInputStream(this.file);
@@ -159,22 +162,9 @@ public abstract class ArchiveReader
 	{
 		ArchiveType ret = ArchiveType.Unsupported;
 		FileInputStream input = new FileInputStream(file);
-		int b1 = 0, b2 = 0;
-		b1 = input.read();
-		b2 = input.read();
-
-		if ((b1 == 0x1f) && (b2 == 0x8b))
-		{
-			ret = ArchiveType.GZip;
-		}
-		else if ((b1 == 0x42) && (b2 == 0x5a))
-		{
-			ret = ArchiveType.BZip2;
-		}
-		else if ((b1 == 0x50) && (b2 == 0x4b))
-		{
-			ret = ArchiveType.Zip;
-		}
+		String type = String.format("%h%h", input.read(), input.read());
+		Properties properties = FileUtils.getProperties(getArchivesConf());
+		ret = ArchiveType.valueOf(properties.getProperty(type));
 		input.close();
 		return ret;
 	}

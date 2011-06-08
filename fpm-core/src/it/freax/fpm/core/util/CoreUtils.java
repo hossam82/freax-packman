@@ -2,11 +2,8 @@ package it.freax.fpm.core.util;
 
 import it.freax.fpm.core.types.ExitCodeControl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.Vector;
 
 public class CoreUtils
@@ -56,20 +53,6 @@ public class CoreUtils
 		return merged.toString();
 	}
 
-	public static Properties getProperties(String filename) throws IOException
-	{
-		Properties props = null;
-		// ClassLoader cl = filename.getClass().getClassLoader();
-		// InputStream is = cl.getResourceAsStream(filename);
-		InputStream is = ClassLoader.getSystemResourceAsStream(filename);
-		if (is != null)
-		{
-			props = new Properties();
-			props.load(is);
-		}
-		return props;
-	}
-
 	public static String getDelimiter(ExitCodeControl exitCodecontrol)
 	{
 		String ret = "&&";
@@ -84,6 +67,28 @@ public class CoreUtils
 			case Inverted:
 				ret = "||";
 				break;
+		}
+		return ret;
+	}
+
+	public static String concatPaths(String... args)
+	{
+		String ret = "";
+		final String FS = System.getProperty("file.separator");
+		for (int i = 0; i < args.length; i++)
+		{
+			if (!ret.endsWith(FS))
+			{
+				ret += FS;
+			}
+			if (args[i].endsWith(FS))
+			{
+				ret += args[i];
+			}
+			else
+			{
+				ret += args[i] + FS;
+			}
 		}
 		return ret;
 	}

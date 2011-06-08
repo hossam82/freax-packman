@@ -3,7 +3,6 @@ package it.freax.fpm.core.solver.core;
 import it.freax.fpm.core.util.FileUtils;
 import it.freax.fpm.core.util.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
@@ -14,11 +13,11 @@ public class EbnfParser
 	private String ebnfContent;
 	private Vector<String> imports;
 
-	public EbnfParser(String ebnf, boolean asResourceStream)
+	public EbnfParser(String ebnf)
 	{
 		this.ebnf = ebnf;
 		ebnfContent = "";
-		loadEbnf(asResourceStream);
+		loadEbnf();
 	}
 
 	public String getEbnf()
@@ -29,14 +28,8 @@ public class EbnfParser
 	public void setEbnf(String ebnf)
 	{
 		this.ebnf = ebnf;
-		loadEbnf(true);
-	}
-
-	public void setEbnf(String ebnf, boolean asResourceStream)
-	{
-		this.ebnf = ebnf;
 		imports.clear();
-		loadEbnf(asResourceStream);
+		loadEbnf();
 	}
 
 	public Vector<String> getImports()
@@ -44,25 +37,14 @@ public class EbnfParser
 		return imports;
 	}
 
-	private void loadEbnf(boolean asResourceStream)
+	private void loadEbnf()
 	{
 		try
 		{
-			if (asResourceStream)
+			InputStream is = FileUtils.getResource(ebnf);
+			if (is != null)
 			{
-				InputStream is = ClassLoader.getSystemResourceAsStream(ebnf);
-				if (is != null)
-				{
-					ebnfContent = FileUtils.read(is);
-				}
-			}
-			else
-			{
-				File f = new File(ebnf);
-				if (f.exists() && f.isFile())
-				{
-					ebnfContent = FileUtils.read(f);
-				}
+				ebnfContent = FileUtils.read(is);
 			}
 		}
 		catch (IOException e)

@@ -1,12 +1,10 @@
 package it.freax.fpm.core.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.Properties;
 import java.util.Scanner;
 
-public class FileUtils
+public class FileUtils extends Constants
 {
 	public static String read(File file) throws FileNotFoundException
 	{
@@ -33,5 +31,35 @@ public class FileUtils
 		scanner.close();
 		is.close();
 		return ret.toString();
+	}
+
+	private static Properties getPropertiesFromInputStream(InputStream is) throws IOException
+	{
+		Properties props = null;
+		if (is != null)
+		{
+			props = new Properties();
+			props.load(is);
+		}
+		return props;
+	}
+
+	public static Properties getProperties(String filename) throws IOException
+	{
+		return getPropertiesFromInputStream(getResource(filename));
+	}
+
+	public static InputStream getResource(String filename) throws FileNotFoundException
+	{
+		InputStream is = null;
+		if (isSystemResource())
+		{
+			is = ClassLoader.getSystemResourceAsStream(filename);
+		}
+		else
+		{
+			is = new FileInputStream(filename);
+		}
+		return is;
 	}
 }

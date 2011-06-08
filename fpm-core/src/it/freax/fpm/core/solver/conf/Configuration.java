@@ -5,7 +5,9 @@ import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.RootExecution;
 import it.freax.fpm.core.types.WhereToParseType;
 import it.freax.fpm.core.util.CoreUtils;
+import it.freax.fpm.core.util.FileUtils;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -23,16 +25,16 @@ public class Configuration
 
 	public Iterator<ConfType> typesIterator()
 	{
-		return this.types.iterator();
+		return types.iterator();
 	}
 
-	public static Configuration load(String conf_path)
+	public static Configuration load(String conf_path) throws FileNotFoundException
 	{
 		Configuration conf = new Configuration();
 		conf.types = new Vector<ConfType>();
 		conf.generalInfo = new General();
 
-		InputStream is = ClassLoader.getSystemResourceAsStream(conf_path);
+		InputStream is = FileUtils.getResource(conf_path);
 		if (is != null)
 		{
 			SAXBuilder builder = new SAXBuilder();
@@ -131,7 +133,7 @@ public class Configuration
 	public ConfType getType(String lang)
 	{
 		ConfType ret = null;
-		Iterator<ConfType> it = this.typesIterator();
+		Iterator<ConfType> it = typesIterator();
 		while (it.hasNext())
 		{
 			ConfType type = it.next();
@@ -145,7 +147,7 @@ public class Configuration
 
 	public General getGeneralInfo()
 	{
-		return this.generalInfo;
+		return generalInfo;
 	}
 
 	public void setGeneralInfo(General generalInfo)

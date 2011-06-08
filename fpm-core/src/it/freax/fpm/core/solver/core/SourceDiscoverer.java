@@ -11,13 +11,14 @@ import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.RootExecution;
 import it.freax.fpm.core.util.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
-public class SourceDiscoverer
+public class SourceDiscoverer extends Constants
 {
 	private Vector<String> entries;
 	private ArchiveReader reader;
@@ -30,7 +31,14 @@ public class SourceDiscoverer
 		this.reader = reader;
 		this.spec = spec;
 		entries = reader.getEntries();
-		conf = Configuration.load("conf/source-detect.xml");
+		try
+		{
+			conf = Configuration.load(getSourceDiscoverConf());
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void setPackageName(String packageName)
@@ -163,7 +171,7 @@ public class SourceDiscoverer
 		return ret;
 	}
 
-	private static EbnfParser getEbnfParser(EbnfParser parser, String ebnf, boolean asResourceStream)
+	private static EbnfParser getEbnfParser(EbnfParser parser, String ebnf)
 	{
 		if (ebnf == null)
 		{
@@ -171,11 +179,11 @@ public class SourceDiscoverer
 		}
 		else if (parser == null)
 		{
-			parser = new EbnfParser(ebnf, asResourceStream);
+			parser = new EbnfParser(ebnf);
 		}
 		else
 		{
-			parser.setEbnf(ebnf, asResourceStream);
+			parser.setEbnf(ebnf);
 		}
 		return parser;
 	}
@@ -282,7 +290,7 @@ public class SourceDiscoverer
 		{
 			log.debug("Dato che non è notevole devo usare altri metodi per verificare che file è");
 			Iterator<ConfType> typeit = conf.typesIterator();
-			EbnfParser parser = getEbnfParser(null, null, false);
+			EbnfParser parser = getEbnfParser(null, null);
 			while (typeit.hasNext())
 			{
 				ConfType type = typeit.next();
@@ -290,7 +298,7 @@ public class SourceDiscoverer
 				if (StringUtils.checkExtensions(file, type.getExts()))
 				{
 					log.debug("Il file ricade nelle estensioni del tipo, quindi posso provare il parsing con l'ebnf " + type.getEbnf());
-					parser = getEbnfParser(parser, type.getEbnf(), true);
+					parser = getEbnfParser(parser, type.getEbnf());
 					if (parser.parse(content))
 					{
 						log.debug("Sono riuscito a parsare il contenuto! Il file è di tipo \"" + type.getSource() + "\" e i suoi imports sono:\n" + parser.getImports());
