@@ -19,11 +19,14 @@ package it.freax.fpm.test.main;
 *
 */
 
+import it.freax.fpm.core.util.Constants;
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
 
-public class ebnf
+public class ebnf extends Constants
 {
 	PushbackInputStream is;
 	String ident;
@@ -49,10 +52,19 @@ public class ebnf
 
 	public static void main(String args[])
 	{
-		ebnf parser = new ebnf(null);
-		parser.dotrace = (args.length > 0) && args[0].equals("-v");
-		parser.S();
-		System.out.println("// parsing was successful");
+		try
+		{
+			setSystemResource(false);
+			String path = getFullConfPath() + "java.ebnf";
+			ebnf parser = new ebnf(new FileInputStream(path));
+			parser.dotrace = (args.length > 0) && args[0].equals("-v");
+			parser.S();
+			System.out.println("// parsing was successful");
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public ebnf(InputStream is)
@@ -66,7 +78,7 @@ public class ebnf
 
 	public void trace(int lev, String s)
 	{
-		if (!this.dotrace) { return; }
+		if (!dotrace) { return; }
 		while (lev-- > 0)
 		{
 			System.out.print("  ");
@@ -76,25 +88,25 @@ public class ebnf
 
 	public int getToken()
 	{
-		if (this.lasttok >= 0)
+		if (lasttok >= 0)
 		{
-			int t = this.lasttok;
-			this.lasttok = -1;
+			int t = lasttok;
+			lasttok = -1;
 			return t;
 		}
 		try
 		{
-			this.ident = "";
+			ident = "";
 			while (true)
 			{
-				int c = this.is.read();
+				int c = is.read();
 				switch (c)
 				{
 					case -1:
 						return EOF;
 					case '\r':
 					case '\n':
-						this.lineno++;
+						lineno++;
 						break;
 					case ' ':
 					case '\t':
@@ -120,29 +132,29 @@ public class ebnf
 					case '}':
 						return RBRACE;
 					case '\"':
-						c = this.is.read();
+						c = is.read();
 						if ((c < '!') || (c > '~'))
 						{
-							this.error("expected quoted char");
+							error("expected quoted char");
 						}
-						this.ident += (char) c;
-						if (this.is.read() != '\"')
+						ident += (char) c;
+						if (is.read() != '\"')
 						{
-							this.error("expected double quote");
+							error("expected double quote");
 						}
 						return QUOTEDCHAR;
 					default:
-						while ((c >= 'A') && (c <= 'Z'))
+						while (((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')))
 						{
-							this.ident += (char) c;
-							c = this.is.read();
+							ident += (char) c;
+							c = is.read();
 						}
-						if (this.ident.length() != 0)
+						if (ident.length() != 0)
 						{
-							this.is.unread(c);
+							is.unread(c);
 							return IDENT;
 						}
-						this.ident += (char) c;
+						ident += (char) c;
 						return OTHERSYM;
 				}
 			}
@@ -155,107 +167,107 @@ public class ebnf
 
 	public void ungetToken(int t)
 	{
-		this.lasttok = t;
+		lasttok = t;
 	}
 
 	public void error(String s)
 	{
-		System.out.println("EBNF error at line " + this.lineno + ": " + s);
+		System.out.println("EBNF error at line " + lineno + ": " + s);
 		System.exit(-1);
 	}
 
 	public void S()
 	{
-		this.trace(this.lev++, "==> S");
+		trace(lev++, "==> S");
 		while (true)
 		{
-			this.P();
-			int t = this.getToken();
+			P();
+			int t = getToken();
 			if (t == HASH)
 			{
 				break;
 			}
-			this.ungetToken(t);
+			ungetToken(t);
 		}
-		if (this.getToken() != EOF)
+		if (getToken() != EOF)
 		{
-			this.error("expected EOF");
+			error("expected EOF");
 		}
-		this.trace(--this.lev, "<== S");
+		trace(--lev, "<== S");
 	}
 
 	public void P()
 	{
-		this.trace(this.lev++, "==> P");
-		if (this.getToken() != IDENT)
+		trace(lev++, "==> P");
+		if (getToken() != IDENT)
 		{
-			this.error("expected an identifier");
+			error("expected an identifier");
 		}
-		if (this.getToken() != EQUAL)
+		if (getToken() != EQUAL)
 		{
-			this.error("expected an equal sign");
+			error("expected an equal sign");
 		}
-		this.A();
-		if (this.getToken() != DOT)
+		A();
+		if (getToken() != DOT)
 		{
-			this.error("expected a dot");
+			error("expected a dot");
 		}
-		this.trace(--this.lev, "<== P");
+		trace(--lev, "<== P");
 	}
 
 	public void A()
 	{
-		this.trace(this.lev++, "==> A");
+		trace(lev++, "==> A");
 		while (true)
 		{
-			this.T();
-			int t = this.getToken();
+			T();
+			int t = getToken();
 			if (t != BAR)
 			{
-				this.ungetToken(t);
+				ungetToken(t);
 				break;
 			}
 		}
-		this.trace(--this.lev, "<== A");
+		trace(--lev, "<== A");
 	}
 
 	public void T()
 	{
-		this.trace(this.lev++, "==> T");
-		if (!this.F())
+		trace(lev++, "==> T");
+		if (!F())
 		{
-			this.error("expected a factor");
+			error("expected a factor");
 		}
-		while (this.F())
+		while (F())
 		{
 			;
 		}
-		this.trace(--this.lev, "<== T");
+		trace(--lev, "<== T");
 	}
 
 	public boolean F()
 	{
-		this.trace(this.lev, "F");
-		int t = this.getToken();
+		trace(lev, "F");
+		int t = getToken();
 
 		switch (t)
 		{
 			case IDENT:
-				this.trace(this.lev + 1, "ident: " + this.ident);
+				trace(lev + 1, "ident: " + ident);
 				return true;
 			case QUOTEDCHAR:
 				return true;
 			case LPARENT:
 			case LBRACKET:
 			case LBRACE:
-				this.A();
-				if ((t + 1) != this.getToken())
+				A();
+				if ((t + 1) != getToken())
 				{
-					this.error("missmatch with opening parenthesis/bracket/brace");
+					error("missmatch with opening parenthesis/bracket/brace");
 				}
 				return true;
 			default:
-				this.ungetToken(t);
+				ungetToken(t);
 				break;
 		}
 		return false;

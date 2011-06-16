@@ -73,9 +73,9 @@ public class CoreUtils
 
 	public static String concatPaths(String... args)
 	{
-		String ret = "";
+		String ret = args[0];
 		final String FS = System.getProperty("file.separator");
-		for (int i = 0; i < args.length; i++)
+		for (int i = 1; i < args.length; i++)
 		{
 			if (!ret.endsWith(FS))
 			{

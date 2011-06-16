@@ -17,9 +17,9 @@ public abstract class Constants
 		return ret;
 	}
 
-	public static void setSystemResource(boolean systemResource)
+	public static String getFullConfPath()
 	{
-		Constants.systemResource = systemResource;
+		return CoreUtils.concatPaths(getDirPrefix(), getConfdir());
 	}
 
 	public static boolean isSystemResource()
@@ -27,24 +27,9 @@ public abstract class Constants
 		return systemResource;
 	}
 
-	public static void setArchivesConf(String archives_conf)
+	public static void setSystemResource(boolean systemResource)
 	{
-		Constants.archives_conf = archives_conf;
-	}
-
-	public static String getArchivesConf()
-	{
-		return CoreUtils.concatPaths(getDirPrefix(), getConfdir(), archives_conf);
-	}
-
-	public static void setSourceDiscoverConf(String sourcediscoverconf)
-	{
-		Constants.sourcediscoverconf = sourcediscoverconf;
-	}
-
-	public static String getSourceDiscoverConf()
-	{
-		return sourcediscoverconf;
+		Constants.systemResource = systemResource;
 	}
 
 	public static String getConfdir()
@@ -55,5 +40,25 @@ public abstract class Constants
 	public static void setConfdir(String confdir)
 	{
 		Constants.confdir = confdir;
+	}
+
+	public static String getArchivesConf()
+	{
+		return archives_conf;
+	}
+
+	public static void setArchivesConf(String archives_conf)
+	{
+		Constants.archives_conf = archives_conf;
+	}
+
+	public static String getSourceDiscoverConf()
+	{
+		return sourcediscoverconf;
+	}
+
+	public static void setSourceDiscoverConf(String sourcediscoverconf)
+	{
+		Constants.sourcediscoverconf = sourcediscoverconf;
 	}
 }

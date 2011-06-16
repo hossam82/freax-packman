@@ -163,7 +163,8 @@ public abstract class ArchiveReader extends Constants
 		ArchiveType ret = ArchiveType.Unsupported;
 		FileInputStream input = new FileInputStream(file);
 		String type = String.format("%h%h", input.read(), input.read());
-		Properties properties = FileUtils.getProperties(getArchivesConf());
+		String archives_conf = getFullConfPath() + getArchivesConf();
+		Properties properties = FileUtils.getProperties(archives_conf);
 		ret = ArchiveType.valueOf(properties.getProperty(type));
 		input.close();
 		return ret;
