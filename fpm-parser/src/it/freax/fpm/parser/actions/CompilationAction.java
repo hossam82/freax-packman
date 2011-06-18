@@ -6,15 +6,17 @@ package it.freax.fpm.parser.actions;
 
 import it.freax.fpm.parser.edo.TargetCode;
 import it.freax.fpm.parser.interfaces.IAction;
+import it.freax.fpm.parser.interfaces.IElement;
+import it.freax.fpm.parser.syntesis.Synthesis;
 
 /**
  * @author kLeZ-hAcK
  */
-public class CompilationAction<K, V> implements IAction<String, TargetCode>
+public class CompilationAction implements IAction<String, TargetCode>
 {
 	@Override
 	public TargetCode run(String sourceText)
 	{
-		return new SynthesisAction<K, V>().run(new AnalysisAction<K, V>().run(sourceText));
+		return new Synthesis<Integer, IElement>().synthesise(new AnalysisAction<Integer, IElement>().run(sourceText));
 	}
 }

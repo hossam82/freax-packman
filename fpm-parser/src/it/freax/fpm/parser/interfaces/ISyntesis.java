@@ -11,5 +11,5 @@ import it.freax.fpm.parser.edo.TargetCode;
  */
 public interface ISyntesis<K, V>
 {
-	public TargetCode performSynthesis(StructureTree<K, V> structureTree);
+	public TargetCode synthesise(StructureTree<K, V> structureTree);
 }

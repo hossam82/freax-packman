@@ -23,7 +23,7 @@ public class Compiler
 	 */
 	public static void main(String[] args) throws IOException
 	{
-		CompilationAction<String, String> compilationAction = new CompilationAction<String, String>();
+		CompilationAction compilationAction = new CompilationAction();
 		TargetCode targetCode = compilationAction.run(read(new File(args[0])));
 		for (ErrorReport report : targetCode.getErrorReports())
 		{
@@ -31,16 +31,25 @@ public class Compiler
 		}
 		if (targetCode.getErrorReports().isEmpty())
 		{
-			String path = System.getProperty("user.dir") + System.getProperty("file.separator");
-			File file = new File(path + args[1]);
-			if (file.createNewFile())
-			{
-				FileOutputStream fileOutputStream = new FileOutputStream(file);
-				fileOutputStream.write(targetCode.getOutputPayload());
-				fileOutputStream.close();
-				file.setExecutable(true);
-			}
+			String path = System.getProperty("user.dir") + args[1];
+			write(path, targetCode.getOutputPayload()).setExecutable(true);
 		}
+	}
+
+	public static File write(String path, byte[] toWrite) throws IOException
+	{
+		File file = new File(path);
+		if (file.exists() || file.createNewFile())
+		{
+			FileOutputStream fileOutputStream = new FileOutputStream(file);
+			fileOutputStream.write(toWrite);
+			fileOutputStream.close();
+		}
+		else
+		{
+			throw new IOException("File not exists and cannot be created, aborting");
+		}
+		return file;
 	}
 
 	public static String read(File file) throws FileNotFoundException
