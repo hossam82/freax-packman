@@ -106,4 +106,10 @@ public class Generics<T>
 		}
 		return ret;
 	}
+
+	@SuppressWarnings("unchecked")
+	public <C> C cast(T t)
+	{
+		return (C) t;
+	}
 }

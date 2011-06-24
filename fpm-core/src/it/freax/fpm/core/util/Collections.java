@@ -75,6 +75,17 @@ public class Collections<E>
 		return (E[]) ((ArrayList<E>) toList()).toArray();
 	}
 
+	public <T> Collection<T> castAll()
+	{
+		Collections<T> ret = Collections.getOne(new ArrayList<T>());
+		Generics<E> g = Generics.getOne();
+		for (E element : coll)
+		{
+			ret.add(g.<T> cast(element));
+		}
+		return ret.getCollection();
+	}
+
 	public void add(E e)
 	{
 		coll.add(e);
