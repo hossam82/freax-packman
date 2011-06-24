@@ -1,23 +1,16 @@
 package it.freax.fpm.test.main;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Event;
 import java.awt.BorderLayout;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.KeyStroke;
+import java.awt.Event;
 import java.awt.Point;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JMenuItem;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JFrame;
-import javax.swing.JDialog;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
-public class MainBoard {
+import javax.swing.*;
+
+public class MainBoard
+{
 
 	private JFrame jFrame = null;
 	private JPanel jContentPane = null;
@@ -40,8 +33,10 @@ public class MainBoard {
 	 * 
 	 * @return javax.swing.JFrame
 	 */
-	private JFrame getJFrame() {
-		if (jFrame == null) {
+	private JFrame getJFrame()
+	{
+		if (jFrame == null)
+		{
 			jFrame = new JFrame();
 			jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			jFrame.setJMenuBar(getJJMenuBar());
@@ -57,8 +52,10 @@ public class MainBoard {
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getJContentPane() {
-		if (jContentPane == null) {
+	private JPanel getJContentPane()
+	{
+		if (jContentPane == null)
+		{
 			jContentPane = new JPanel();
 			jContentPane.setLayout(new BorderLayout());
 		}
@@ -66,12 +63,14 @@ public class MainBoard {
 	}
 
 	/**
-	 * This method initializes jJMenuBar	
-	 * 	
-	 * @return javax.swing.JMenuBar	
+	 * This method initializes jJMenuBar
+	 * 
+	 * @return javax.swing.JMenuBar
 	 */
-	private JMenuBar getJJMenuBar() {
-		if (jJMenuBar == null) {
+	private JMenuBar getJJMenuBar()
+	{
+		if (jJMenuBar == null)
+		{
 			jJMenuBar = new JMenuBar();
 			jJMenuBar.add(getFileMenu());
 			jJMenuBar.add(getEditMenu());
@@ -81,12 +80,14 @@ public class MainBoard {
 	}
 
 	/**
-	 * This method initializes jMenu	
-	 * 	
-	 * @return javax.swing.JMenu	
+	 * This method initializes jMenu
+	 * 
+	 * @return javax.swing.JMenu
 	 */
-	private JMenu getFileMenu() {
-		if (fileMenu == null) {
+	private JMenu getFileMenu()
+	{
+		if (fileMenu == null)
+		{
 			fileMenu = new JMenu();
 			fileMenu.setText("File");
 			fileMenu.add(getSaveMenuItem());
@@ -96,12 +97,14 @@ public class MainBoard {
 	}
 
 	/**
-	 * This method initializes jMenu	
-	 * 	
-	 * @return javax.swing.JMenu	
+	 * This method initializes jMenu
+	 * 
+	 * @return javax.swing.JMenu
 	 */
-	private JMenu getEditMenu() {
-		if (editMenu == null) {
+	private JMenu getEditMenu()
+	{
+		if (editMenu == null)
+		{
 			editMenu = new JMenu();
 			editMenu.setText("Edit");
 			editMenu.add(getCutMenuItem());
@@ -112,12 +115,14 @@ public class MainBoard {
 	}
 
 	/**
-	 * This method initializes jMenu	
-	 * 	
-	 * @return javax.swing.JMenu	
+	 * This method initializes jMenu
+	 * 
+	 * @return javax.swing.JMenu
 	 */
-	private JMenu getHelpMenu() {
-		if (helpMenu == null) {
+	private JMenu getHelpMenu()
+	{
+		if (helpMenu == null)
+		{
 			helpMenu = new JMenu();
 			helpMenu.setText("Help");
 			helpMenu.add(getAboutMenuItem());
@@ -126,16 +131,21 @@ public class MainBoard {
 	}
 
 	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
+	 * This method initializes jMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
 	 */
-	private JMenuItem getExitMenuItem() {
-		if (exitMenuItem == null) {
+	private JMenuItem getExitMenuItem()
+	{
+		if (exitMenuItem == null)
+		{
 			exitMenuItem = new JMenuItem();
 			exitMenuItem.setText("Exit");
-			exitMenuItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+			exitMenuItem.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
 					System.exit(0);
 				}
 			});
@@ -144,16 +154,21 @@ public class MainBoard {
 	}
 
 	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
+	 * This method initializes jMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
 	 */
-	private JMenuItem getAboutMenuItem() {
-		if (aboutMenuItem == null) {
+	private JMenuItem getAboutMenuItem()
+	{
+		if (aboutMenuItem == null)
+		{
 			aboutMenuItem = new JMenuItem();
 			aboutMenuItem.setText("About");
-			aboutMenuItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+			aboutMenuItem.addActionListener(new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent e)
+				{
 					JDialog aboutDialog = getAboutDialog();
 					aboutDialog.pack();
 					Point loc = getJFrame().getLocation();
@@ -167,12 +182,14 @@ public class MainBoard {
 	}
 
 	/**
-	 * This method initializes aboutDialog	
-	 * 	
+	 * This method initializes aboutDialog
+	 * 
 	 * @return javax.swing.JDialog
 	 */
-	private JDialog getAboutDialog() {
-		if (aboutDialog == null) {
+	private JDialog getAboutDialog()
+	{
+		if (aboutDialog == null)
+		{
 			aboutDialog = new JDialog(getJFrame(), true);
 			aboutDialog.setTitle("About");
 			aboutDialog.setContentPane(getAboutContentPane());
@@ -185,8 +202,10 @@ public class MainBoard {
 	 * 
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getAboutContentPane() {
-		if (aboutContentPane == null) {
+	private JPanel getAboutContentPane()
+	{
+		if (aboutContentPane == null)
+		{
 			aboutContentPane = new JPanel();
 			aboutContentPane.setLayout(new BorderLayout());
 			aboutContentPane.add(getAboutVersionLabel(), BorderLayout.CENTER);
@@ -195,75 +214,81 @@ public class MainBoard {
 	}
 
 	/**
-	 * This method initializes aboutVersionLabel	
-	 * 	
-	 * @return javax.swing.JLabel	
+	 * This method initializes aboutVersionLabel
+	 * 
+	 * @return javax.swing.JLabel
 	 */
-	private JLabel getAboutVersionLabel() {
-		if (aboutVersionLabel == null) {
+	private JLabel getAboutVersionLabel()
+	{
+		if (aboutVersionLabel == null)
+		{
 			aboutVersionLabel = new JLabel();
-			aboutVersionLabel.setText("Version 1.0");
+			aboutVersionLabel.setText("Freax Package Manager Version 1.0");
 			aboutVersionLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		}
 		return aboutVersionLabel;
 	}
 
 	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
+	 * This method initializes jMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
 	 */
-	private JMenuItem getCutMenuItem() {
-		if (cutMenuItem == null) {
+	private JMenuItem getCutMenuItem()
+	{
+		if (cutMenuItem == null)
+		{
 			cutMenuItem = new JMenuItem();
 			cutMenuItem.setText("Cut");
-			cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-					Event.CTRL_MASK, true));
+			cutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK, true));
 		}
 		return cutMenuItem;
 	}
 
 	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
+	 * This method initializes jMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
 	 */
-	private JMenuItem getCopyMenuItem() {
-		if (copyMenuItem == null) {
+	private JMenuItem getCopyMenuItem()
+	{
+		if (copyMenuItem == null)
+		{
 			copyMenuItem = new JMenuItem();
 			copyMenuItem.setText("Copy");
-			copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
-					Event.CTRL_MASK, true));
+			copyMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK, true));
 		}
 		return copyMenuItem;
 	}
 
 	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
+	 * This method initializes jMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
 	 */
-	private JMenuItem getPasteMenuItem() {
-		if (pasteMenuItem == null) {
+	private JMenuItem getPasteMenuItem()
+	{
+		if (pasteMenuItem == null)
+		{
 			pasteMenuItem = new JMenuItem();
 			pasteMenuItem.setText("Paste");
-			pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
-					Event.CTRL_MASK, true));
+			pasteMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK, true));
 		}
 		return pasteMenuItem;
 	}
 
 	/**
-	 * This method initializes jMenuItem	
-	 * 	
-	 * @return javax.swing.JMenuItem	
+	 * This method initializes jMenuItem
+	 * 
+	 * @return javax.swing.JMenuItem
 	 */
-	private JMenuItem getSaveMenuItem() {
-		if (saveMenuItem == null) {
+	private JMenuItem getSaveMenuItem()
+	{
+		if (saveMenuItem == null)
+		{
 			saveMenuItem = new JMenuItem();
 			saveMenuItem.setText("Save");
-			saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-					Event.CTRL_MASK, true));
+			saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK, true));
 		}
 		return saveMenuItem;
 	}
@@ -271,11 +296,14 @@ public class MainBoard {
 	/**
 	 * Launches this application
 	 */
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				MainBoard application = new MainBoard();
-				application.getJFrame().setVisible(true);
+	public static void main(String[] args)
+	{
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				new MainBoard().getJFrame().setVisible(true);
 			}
 		});
 	}
