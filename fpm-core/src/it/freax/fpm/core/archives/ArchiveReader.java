@@ -1,26 +1,25 @@
 package it.freax.fpm.core.archives;
 
 import it.freax.fpm.core.exceptions.ArchiveNotSupportedException;
-import it.freax.fpm.core.types.ArchiveType;
 import it.freax.fpm.core.util.Constants;
-import it.freax.fpm.core.util.FileUtils;
+import it.freax.fpm.core.util.Generics;
+import it.freax.fpm.core.util.Streams;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.Vector;
 
 public abstract class ArchiveReader extends Constants
 {
 	private FileInputStream fis;
 	protected File file;
-	protected Vector<String> entries;
+	protected ArrayList<String> entries;
 	protected HashMap<String, String> filecontents;
-	protected ArchiveType type;
+	protected String type;
 	protected boolean hasRead;
 
 	protected ArchiveReader(File file) throws IOException
@@ -29,7 +28,7 @@ public abstract class ArchiveReader extends Constants
 		fis = new FileInputStream(this.file);
 		filecontents = new HashMap<String, String>();
 		hasRead = false;
-		setEntryVector();
+		setEntryArrayList();
 	}
 
 	public File getFile()
@@ -37,12 +36,12 @@ public abstract class ArchiveReader extends Constants
 		return file;
 	}
 
-	public ArchiveType getType()
+	public String getType()
 	{
 		return type;
 	}
 
-	public Vector<String> getEntries()
+	public ArrayList<String> getEntries()
 	{
 		return entries;
 	}
@@ -109,63 +108,23 @@ public abstract class ArchiveReader extends Constants
 	 * @return un'istanza di un oggetto che eredita da ArchiveReader
 	 * @throws ArchiveNotSupportedException
 	 */
-	public static ArchiveReader getRightInstance(File file) throws ArchiveNotSupportedException
+	public static ArchiveReader getRightInstance(File file) throws ArchiveNotSupportedException, IOException
 	{
-		ArchiveReader ret = null;
-		try
-		{
-			ArchiveType type = null;
-			type = ArchiveReader.getArchiveType(file);
-			if (type == ArchiveType.Unsupported) { throw new ArchiveNotSupportedException("Formato dell'archivio non supportato!"); }
-			String className = ArchiveReader.class.getPackage().getName() + "." + type.name() + ArchiveReader.class.getSimpleName();
-			Class<?> c = Class.forName(className);
-			Class<?>[] ctorParams = new Class[]
-			{ File.class };
-			ret = (ArchiveReader) c.getConstructor(ctorParams).newInstance(file);
-		}
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		catch (SecurityException e)
-		{
-			e.printStackTrace();
-		}
-		catch (NoSuchMethodException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IllegalArgumentException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InstantiationException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IllegalAccessException e)
-		{
-			e.printStackTrace();
-		}
-		catch (InvocationTargetException e)
-		{
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		return ret;
+		String type = ArchiveReader.getArchiveType(file);
+		String msg = "Formato dell'archivio non supportato!";
+		if (type == "Unsupported") { throw new ArchiveNotSupportedException(msg); }
+		return Generics.getOne(ArchiveReader.class).getChildInstance(type, file);
 	}
 
-	private static ArchiveType getArchiveType(File file) throws IOException
+	private static String getArchiveType(File file) throws IOException
 	{
-		ArchiveType ret = ArchiveType.Unsupported;
+		Constants consts = Constants.getOne();
+		String ret = "Unsupported";
 		FileInputStream input = new FileInputStream(file);
 		String type = String.format("%h%h", input.read(), input.read());
-		String archives_conf = getFullConfPath() + getArchivesConf();
-		Properties properties = FileUtils.getProperties(archives_conf);
-		ret = ArchiveType.valueOf(properties.getProperty(type));
+		String archives_conf = consts.getFullConfPath() + consts.getArchivesConf();
+		Properties properties = Streams.getOne(archives_conf).getProperties();
+		ret = properties.getProperty(type);
 		input.close();
 		return ret;
 	}
@@ -189,7 +148,7 @@ public abstract class ArchiveReader extends Constants
 	 * @return
 	 * @throws IOException
 	 */
-	public abstract Vector<String> readEntries(String entryName, boolean excludeRoot, String root) throws IOException;
+	public abstract ArrayList<String> readEntries(String entryName, boolean excludeRoot, String root) throws IOException;
 
 	/**
 	 * Questo metodo permette di leggere tutti i file di testo
@@ -238,5 +197,5 @@ public abstract class ArchiveReader extends Constants
 	 * 
 	 * @throws IOException
 	 */
-	protected abstract void setEntryVector() throws IOException;
+	protected abstract void setEntryArrayList() throws IOException;
 }

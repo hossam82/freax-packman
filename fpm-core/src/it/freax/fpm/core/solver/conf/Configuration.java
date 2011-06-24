@@ -4,14 +4,14 @@ import it.freax.fpm.core.types.ExitCodeControl;
 import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.RootExecution;
 import it.freax.fpm.core.types.WhereToParseType;
-import it.freax.fpm.core.util.CoreUtils;
-import it.freax.fpm.core.util.FileUtils;
+import it.freax.fpm.core.util.Streams;
+import it.freax.fpm.core.util.Strings;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -21,7 +21,7 @@ import org.jdom.input.SAXBuilder;
 public class Configuration
 {
 	private General generalInfo;
-	private Vector<ConfType> types;
+	private ArrayList<ConfType> types;
 
 	public Iterator<ConfType> typesIterator()
 	{
@@ -31,10 +31,10 @@ public class Configuration
 	public static Configuration load(String conf_path) throws FileNotFoundException
 	{
 		Configuration conf = new Configuration();
-		conf.types = new Vector<ConfType>();
+		conf.types = new ArrayList<ConfType>();
 		conf.generalInfo = new General();
 
-		InputStream is = FileUtils.getResource(conf_path);
+		InputStream is = Streams.getOne(conf_path).getResource();
 		if (is != null)
 		{
 			SAXBuilder builder = new SAXBuilder();
@@ -80,7 +80,7 @@ public class Configuration
 		ConfType ret = new ConfType();
 		ret.setSource(getAttributeValueIgnoreCase(type, "src"));
 		ret.setEbnf(getAttributeValueIgnoreCase(type, "ebnf"));
-		ret.setExts(CoreUtils.split(getAttributeValueIgnoreCase(type, "ext"), ":"));
+		ret.setExts(Strings.getOne().split(getAttributeValueIgnoreCase(type, "ext"), ":"));
 		ret.setCompiler_opts(getAttributeValueIgnoreCase(type, "opts"));
 
 		Iterator<Element> ntblit = getChildrenIteratorIgnoreCase(getChildIgnoreCase(type, "notevoli"), "file");

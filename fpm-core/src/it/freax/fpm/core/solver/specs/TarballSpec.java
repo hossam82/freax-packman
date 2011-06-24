@@ -3,14 +3,13 @@ package it.freax.fpm.core.solver.specs;
 import it.freax.fpm.core.archives.ArchiveReader;
 import it.freax.fpm.core.exceptions.ArchiveNotSupportedException;
 import it.freax.fpm.core.solver.core.SourceDiscoverer;
-import it.freax.fpm.core.types.ArchiveType;
 
 import java.io.File;
 import java.io.IOException;
 
 public class TarballSpec extends Spec
 {
-	private ArchiveType ArchType;
+	private String ArchType;
 
 	public TarballSpec(Spec spec)
 	{
@@ -51,11 +50,11 @@ public class TarballSpec extends Spec
 		DocFiles.put(docName, docContent);
 	}
 
-	public ArchiveType getArchType()
+	public String getArchType()
 	{
-		if (ArchType == null)
+		if ((ArchType == null) || ArchType.isEmpty())
 		{
-			ArchType = ArchiveType.Unsupported;
+			ArchType = "Unsupported";
 		}
 		return ArchType;
 	}
@@ -76,7 +75,7 @@ public class TarballSpec extends Spec
 			}
 			catch (ArchiveNotSupportedException e)
 			{
-				ArchType = ArchiveType.Unsupported;
+				ArchType = "Unsupported";
 			}
 			catch (IOException e)
 			{

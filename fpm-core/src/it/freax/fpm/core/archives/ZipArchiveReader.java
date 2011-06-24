@@ -1,12 +1,11 @@
 package it.freax.fpm.core.archives;
 
-import it.freax.fpm.core.types.ArchiveType;
-import it.freax.fpm.core.util.FileUtils;
+import it.freax.fpm.core.util.Streams;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -16,14 +15,14 @@ public class ZipArchiveReader extends ArchiveReader
 	public ZipArchiveReader(File file) throws IOException
 	{
 		super(file);
-		type = ArchiveType.Zip;
+		type = "Zip";
 	}
 
 	@Override
-	protected void setEntryVector() throws IOException
+	protected void setEntryArrayList() throws IOException
 	{
 		ZipInputStream in = new ZipInputStream(openStream());
-		entries = new Vector<String>();
+		entries = new ArrayList<String>();
 		ZipEntry entry = null;
 		while ((entry = in.getNextEntry()) != null)
 		{
@@ -46,7 +45,7 @@ public class ZipArchiveReader extends ArchiveReader
 				byte[] buf = new byte[(int) entry.getSize()];
 				in.read(buf, 0, (int) entry.getSize());
 				ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-				lines = FileUtils.read(bais);
+				lines = Streams.getOne(bais).read();
 				break;
 			}
 		}
@@ -74,9 +73,9 @@ public class ZipArchiveReader extends ArchiveReader
 	}
 
 	@Override
-	public Vector<String> readEntries(String entryName, boolean excludeRoot, String root) throws IOException
+	public ArrayList<String> readEntries(String entryName, boolean excludeRoot, String root) throws IOException
 	{
-		Vector<String> ret = new Vector<String>();
+		ArrayList<String> ret = new ArrayList<String>();
 		ZipInputStream in = new ZipInputStream(openStream());
 		ZipEntry entry = null;
 		boolean isRoot = excludeRoot;
@@ -107,7 +106,7 @@ public class ZipArchiveReader extends ArchiveReader
 			byte[] buf = new byte[(int) entry.getSize()];
 			in.read(buf, 0, (int) entry.getSize());
 			ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-			filecontents.put(entry.getName(), FileUtils.read(bais));
+			filecontents.put(entry.getName(), Streams.getOne(bais).read());
 		}
 		in.close();
 		closeStream();

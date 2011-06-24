@@ -5,10 +5,10 @@ import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.MethodType;
 import it.freax.fpm.core.types.WhereToParseType;
 import it.freax.fpm.core.util.EntriesScorer;
-import it.freax.fpm.core.util.StringUtils;
+import it.freax.fpm.core.util.Strings;
 
+import java.util.List;
 import java.util.Map.Entry;
-import java.util.Vector;
 
 public class Additive
 {
@@ -29,7 +29,7 @@ public class Additive
 
 	public int getId()
 	{
-		return this.id;
+		return id;
 	}
 
 	public void setId(int id)
@@ -39,7 +39,7 @@ public class Additive
 
 	public InfoType getInfoType()
 	{
-		return this.infoType;
+		return infoType;
 	}
 
 	public void setInfoType(InfoType infoType)
@@ -49,7 +49,7 @@ public class Additive
 
 	public WhereToParseType getWhereToParse()
 	{
-		return this.whereToParse;
+		return whereToParse;
 	}
 
 	public void setWhereToParse(WhereToParseType whereToParse)
@@ -59,7 +59,7 @@ public class Additive
 
 	public String getWhatToParse()
 	{
-		return this.whatToParse;
+		return whatToParse;
 	}
 
 	public void setWhatToParse(String whatToParse)
@@ -69,7 +69,7 @@ public class Additive
 
 	public String getHowToParse()
 	{
-		return this.howToParse;
+		return howToParse;
 	}
 
 	public void setHowToParse(String howToParse)
@@ -79,31 +79,31 @@ public class Additive
 
 	public MethodParams getMethodParams()
 	{
-		MethodType type = MethodType.getMethodType(this.howToParse);
-		return type.getParams(this.howToParse);
+		MethodType type = MethodType.getMethodType(howToParse);
+		return type.getParams(howToParse);
 	}
 
 	public String execMethod(SrcFile file)
 	{
 		String ret = "";
-		if ((this.howToParse != null) && !this.howToParse.isEmpty())
+		if ((howToParse != null) && !howToParse.isEmpty())
 		{
-			MethodType type = MethodType.getMethodType(this.howToParse);
-			MethodParams mp = type.getParams(this.howToParse);
+			MethodType type = MethodType.getMethodType(howToParse);
+			MethodParams mp = type.getParams(howToParse);
 			String input = "";
 
-			switch (this.whereToParse)
+			switch (whereToParse)
 			{
 				case Content:
 				{
 					input = file.getContent();
-					ret = this.getValue(type, mp, input);
+					ret = getValue(type, mp, input);
 					break;
 				}
 				case FileName:
 				{
 					input = file.getName();
-					ret = this.getValue(type, mp, input);
+					ret = getValue(type, mp, input);
 					break;
 				}
 				case Nothing:
@@ -122,8 +122,9 @@ public class Additive
 	private String getValue(MethodType type, MethodParams mp, String input)
 	{
 		String ret = "";
-		String pattern = this.whatToParse + mp.getDivider();
-		Vector<String> grepped = StringUtils.grep(input, pattern + "\\p{Graph}+", false);
+		String pattern = whatToParse + mp.getDivider();
+		Strings strings = Strings.getOne();
+		List<String> grepped = strings.grep(input, pattern + "\\p{Graph}+", false);
 		EntriesScorer<String> es = new EntriesScorer<String>(true);
 		for (String val : grepped)
 		{
@@ -132,13 +133,13 @@ public class Additive
 			{
 				case Split:
 				{
-					parsed = StringUtils.Split(val, mp.getDivider(), mp.getIndex(), mp.isExtension());
+					parsed = strings.Split(val, mp.getDivider(), mp.getIndex(), mp.isExtension());
 					break;
 				}
 				case KeyValue:
 				{
 
-					parsed = StringUtils.KeyValue(val, mp.getDivider());
+					parsed = strings.KeyValue(val, mp.getDivider());
 					break;
 				}
 			}

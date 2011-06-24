@@ -6,7 +6,7 @@ import it.freax.fpm.core.solver.specs.DummySpec;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class CompilationUnit
 {
@@ -14,7 +14,7 @@ public class CompilationUnit
 	private DummySpec dummySpec;
 	private String PrincipalLang;
 	private HashSet<String> Langs;
-	private Vector<SrcFile> ContainedFiles;
+	private ArrayList<SrcFile> ContainedFiles;
 	private LinkedList<Instruction> InstructionSet;
 
 	public CompilationUnit(String Name)
@@ -22,7 +22,7 @@ public class CompilationUnit
 		this.Name = Name;
 		dummySpec = new DummySpec();
 		Langs = new HashSet<String>();
-		ContainedFiles = new Vector<SrcFile>();
+		ContainedFiles = new ArrayList<SrcFile>();
 		InstructionSet = new LinkedList<Instruction>();
 	}
 

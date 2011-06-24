@@ -1,6 +1,6 @@
 package it.freax.fpm.core.executor;
 
-import it.freax.fpm.core.util.CoreUtils;
+import it.freax.fpm.core.types.ExitCodeControl;
 import it.freax.fpm.core.util.LogConfigurator;
 
 import java.io.BufferedReader;
@@ -23,7 +23,7 @@ public class Executor implements Runnable
 	public static final int COMPLETED = 3;
 
 	private Instruction instruction;
-	private static Logger log = LogConfigurator.configure(Executor.class);
+	private static Logger log = LogConfigurator.getOne(Executor.class).configure();
 
 	private int status = IDLE;
 
@@ -47,7 +47,7 @@ public class Executor implements Runnable
 	@Override
 	public void run()
 	{
-		String delimiter = CoreUtils.getDelimiter(instruction.getExitCodecontrol());
+		String delimiter = ExitCodeControl.getDelimiter(instruction.getExitCodecontrol());
 		String command = "";
 		int exitStatus = 0;
 

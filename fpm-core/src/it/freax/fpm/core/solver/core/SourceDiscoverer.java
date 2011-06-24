@@ -1,12 +1,14 @@
 package it.freax.fpm.core.solver.core;
 
 import it.freax.fpm.core.archives.ArchiveReader;
+import it.freax.fpm.core.exceptions.ExtensionDecodingException;
 import it.freax.fpm.core.solver.conf.*;
 import it.freax.fpm.core.solver.dto.CompilationUnit;
 import it.freax.fpm.core.solver.dto.SrcFile;
 import it.freax.fpm.core.solver.dto.Treenode;
 import it.freax.fpm.core.solver.specs.DummySpec;
 import it.freax.fpm.core.solver.specs.TarballSpec;
+import it.freax.fpm.core.types.ExitCodeControl;
 import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.RootExecution;
 import it.freax.fpm.core.util.*;
@@ -20,11 +22,11 @@ import org.apache.log4j.Logger;
 
 public class SourceDiscoverer extends Constants
 {
-	private Vector<String> entries;
+	private ArrayList<String> entries;
 	private ArchiveReader reader;
 	private TarballSpec spec;
 	private Configuration conf;
-	private Logger log = LogConfigurator.configure(this.getClass(), false);
+	private Logger log = LogConfigurator.getOne(this.getClass()).configure(false);
 
 	public SourceDiscoverer(ArchiveReader reader, TarballSpec spec)
 	{
@@ -73,7 +75,7 @@ public class SourceDiscoverer extends Constants
 		{
 			Treenode tn = it.next();
 			log.debug("Tento di riempire il nodo " + tn.getName());
-			Vector<SrcFile> srcfiles = makeSrcFileList(tn, getFiles(tn.getName()));
+			ArrayList<SrcFile> srcfiles = makeSrcFileList(tn, getFiles(tn.getName()));
 			makeInstructionSet(tn, cleanSrcFiles(srcfiles));
 			CompilationUnit cu = tn.getAssociatedCU();
 			setCompilationUnit(cu, srcfiles);
@@ -95,9 +97,9 @@ public class SourceDiscoverer extends Constants
 		return Calendar.getInstance().getTimeInMillis();
 	}
 
-	private Vector<String> getFiles(String directory)
+	private ArrayList<String> getFiles(String directory)
 	{
-		Vector<String> ret = new Vector<String>();
+		ArrayList<String> ret = new ArrayList<String>();
 		TreeSet<String> files = new TreeSet<String>(entries);
 		int dirsplitlen = directory.split("/").length;
 		Iterator<String> it = files.iterator();
@@ -147,7 +149,7 @@ public class SourceDiscoverer extends Constants
 		Iterator<ConfType> it = conf.typesIterator();
 		while (it.hasNext())
 		{
-			ret = it.next().containsNotevole(StringUtils.trimDir(file));
+			ret = it.next().containsNotevole(Strings.getOne().trimDir(file));
 			if (ret)
 			{
 				break;
@@ -156,14 +158,14 @@ public class SourceDiscoverer extends Constants
 		return ret;
 	}
 
-	private Vector<String> getNotableFileLangs(String notablefile)
+	private ArrayList<String> getNotableFileLangs(String notablefile)
 	{
-		Vector<String> ret = new Vector<String>();
+		ArrayList<String> ret = new ArrayList<String>();
 		Iterator<ConfType> it = conf.typesIterator();
 		while (it.hasNext())
 		{
 			ConfType ct = it.next();
-			if (ct.containsNotevole(StringUtils.trimDir(notablefile)))
+			if (ct.containsNotevole(Strings.getOne().trimDir(notablefile)))
 			{
 				ret.add(ct.getSource());
 			}
@@ -188,7 +190,7 @@ public class SourceDiscoverer extends Constants
 		return parser;
 	}
 
-	private void makeInstructionSet(Treenode tn, Vector<SrcFile> files)
+	private void makeInstructionSet(Treenode tn, ArrayList<SrcFile> files)
 	{
 		TreeSet<Instruction> instructions = new TreeSet<Instruction>();
 		for (SrcFile file : files)
@@ -199,7 +201,7 @@ public class SourceDiscoverer extends Constants
 				ConfType type = conf.getType(lang);
 				if (file.isNotable())
 				{
-					NotableFile notable = type.getNotableFile(StringUtils.trimDir(file.getName()));
+					NotableFile notable = type.getNotableFile(Strings.getOne().trimDir(file.getName()));
 					instructions.addAll(type.getInstructionsById(notable.getId()));
 					log.debug("Dato che è notevole prendo l'instruction set " + notable.getId() + " dalla configurazione");
 				}
@@ -213,8 +215,8 @@ public class SourceDiscoverer extends Constants
 			}
 		}
 		General genInfo = conf.getGeneralInfo();
-		Vector<String> command = new Vector<String>();
-		String delimiter = CoreUtils.getDelimiter(genInfo.getExitCodeControl());
+		ArrayList<String> command = new ArrayList<String>();
+		String delimiter = ExitCodeControl.getDelimiter(genInfo.getExitCodeControl());
 		Iterator<Instruction> it = instructions.descendingIterator();
 		log.debug("Aggiungo i comandi di Privilege Excalation quando necessari nell'instruction set");
 		while (it.hasNext())
@@ -234,13 +236,13 @@ public class SourceDiscoverer extends Constants
 			}
 		}
 		log.debug("Aggiungo l'istruzione alla Compilation Unit facendo un merge dinamico di tutto l'instruction set");
-		tn.getAssociatedCU().addInstruction(CoreUtils.merge(command, " "), null);
+		tn.getAssociatedCU().addInstruction(Strings.getOne().merge(command, " "), null);
 	}
 
-	private Vector<SrcFile> makeSrcFileList(Treenode tn, Vector<String> files)
+	private ArrayList<SrcFile> makeSrcFileList(Treenode tn, ArrayList<String> files)
 	{
 		log.debug("Costruisco la lista di SrcFile");
-		Vector<SrcFile> srcfiles = new Vector<SrcFile>();
+		ArrayList<SrcFile> srcfiles = new ArrayList<SrcFile>();
 		for (String file : files)
 		{
 			SrcFile srcfile = makeSrcFile(file);
@@ -256,7 +258,7 @@ public class SourceDiscoverer extends Constants
 		return srcfiles;
 	}
 
-	private Vector<SrcFile> cleanSrcFiles(Vector<SrcFile> srcfiles)
+	private ArrayList<SrcFile> cleanSrcFiles(ArrayList<SrcFile> srcfiles)
 	{
 		log.debug("Pulisco la lista di SrcFiles dagli oggetti inutili (non-notevoli e non-linguaggi)");
 		for (int i = 0; i < srcfiles.size(); i++)
@@ -295,23 +297,30 @@ public class SourceDiscoverer extends Constants
 			{
 				ConfType type = typeit.next();
 				log.debug("Provo col tipo " + type.getSource());
-				if (StringUtils.checkExtensions(file, type.getExts()))
+				try
 				{
-					log.debug("Il file ricade nelle estensioni del tipo, quindi posso provare il parsing con l'ebnf " + type.getEbnf());
-					parser = getEbnfParser(parser, type.getEbnf());
-					if (parser.parse(content))
+					if (Strings.getOne().checkExtensions(file, type.getExts()))
 					{
-						log.debug("Sono riuscito a parsare il contenuto! Il file è di tipo \"" + type.getSource() + "\" e i suoi imports sono:\n" + parser.getImports());
-						srcfile.addLang(type.getSource());
-						srcfile.addAllIncludes(parser.getImports());
+						log.debug("Il file ricade nelle estensioni del tipo, quindi posso provare il parsing con l'ebnf " + type.getEbnf());
+						parser = getEbnfParser(parser, type.getEbnf());
+						if (parser.parse(content))
+						{
+							log.debug("Sono riuscito a parsare il contenuto! Il file è di tipo \"" + type.getSource() + "\" e i suoi imports sono:\n" + parser.getImports());
+							srcfile.addLang(type.getSource());
+							srcfile.addAllIncludes(parser.getImports());
+						}
 					}
+				}
+				catch (ExtensionDecodingException e)
+				{
+					e.printStackTrace();
 				}
 			}
 		}
 		return srcfile;
 	}
 
-	private void setCompilationUnit(CompilationUnit cu, Vector<SrcFile> files)
+	private void setCompilationUnit(CompilationUnit cu, ArrayList<SrcFile> files)
 	{
 		log.debug("Setto la Compilation Unit con " + files.size() + " SrcFile(s), di questi scelgo solo quelli notevoli");
 		for (SrcFile file : files)
@@ -322,16 +331,16 @@ public class SourceDiscoverer extends Constants
 				{
 					log.debug("Controllo se il file notevole contiene informazioni additive nel linguaggio " + lang);
 					ConfType type = conf.getType(lang);
-					Vector<Additive> additives = new Vector<Additive>();
-					NotableFile notable = type.getNotableFile(StringUtils.trimDir(file.getName()));
+					ArrayList<Additive> additives = new ArrayList<Additive>();
+					NotableFile notable = type.getNotableFile(Strings.getOne().trimDir(file.getName()));
 					additives = type.getAdditivesById(notable.getId());
 
 					log.debug("A questo punto devo fare una cosa particolare: dato che gli additives sono categorizzati, devo intanto dividerli per categoria");
-					Iterator<Entry<InfoType, Vector<Additive>>> it;
+					Iterator<Entry<InfoType, ArrayList<Additive>>> it;
 					it = getTypedAdditives(additives).entrySet().iterator();
 					while (it.hasNext())
 					{
-						Entry<InfoType, Vector<Additive>> elem = it.next();
+						Entry<InfoType, ArrayList<Additive>> elem = it.next();
 						log.debug("Poi per ogni tipo di additive prendo tutti quelli della categoria " + elem.getKey() + " e trovo quale risulta essere il migliore");
 						String best = getBestScore(elem.getValue(), file);
 						log.debug("La parte importante arriva qui: setto il payload nell'attributo specifico a seconda del tipo di additive che ho processato");
@@ -369,7 +378,7 @@ public class SourceDiscoverer extends Constants
 		}
 	}
 
-	private String getBestScore(Vector<Additive> additives, SrcFile file)
+	private String getBestScore(ArrayList<Additive> additives, SrcFile file)
 	{
 		String ret = "";
 		log.debug("Istanzio un EntriesScorer, cioè un oggetto che sa trovare il più (o meno) presente tra gli elementi che gli vengono passati");
@@ -388,16 +397,16 @@ public class SourceDiscoverer extends Constants
 		return ret;
 	}
 
-	private HashMap<InfoType, Vector<Additive>> getTypedAdditives(Vector<Additive> additives)
+	private HashMap<InfoType, ArrayList<Additive>> getTypedAdditives(ArrayList<Additive> additives)
 	{
-		HashMap<InfoType, Vector<Additive>> typedAdditives;
-		typedAdditives = new HashMap<InfoType, Vector<Additive>>();
-		log.debug("Riempio un HashMap<InfoType, Vector<Additive>> che divida i set di Additive in categorie");
+		HashMap<InfoType, ArrayList<Additive>> typedAdditives;
+		typedAdditives = new HashMap<InfoType, ArrayList<Additive>>();
+		log.debug("Riempio un HashMap<InfoType, ArrayList<Additive>> che divida i set di Additive in categorie");
 		for (Additive additive : additives)
 		{
 			if (!typedAdditives.containsKey(additive.getInfoType()))
 			{
-				typedAdditives.put(additive.getInfoType(), new Vector<Additive>());
+				typedAdditives.put(additive.getInfoType(), new ArrayList<Additive>());
 			}
 			typedAdditives.get(additive.getInfoType()).add(additive);
 		}

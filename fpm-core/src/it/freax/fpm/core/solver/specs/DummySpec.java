@@ -4,7 +4,7 @@ import it.freax.fpm.core.solver.dto.BasicInfos;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class DummySpec extends Spec
 {
@@ -14,8 +14,8 @@ public class DummySpec extends Spec
 		ChangeLog = "";
 		Scripts = "";
 		Package = new BasicInfos();
-		Provides = new Vector<BasicInfos>();
-		Requires = new Vector<BasicInfos>();
+		Provides = new ArrayList<BasicInfos>();
+		Requires = new ArrayList<BasicInfos>();
 		ConfigFiles = new HashMap<String, String>();
 		DocFiles = new HashMap<String, String>();
 	}

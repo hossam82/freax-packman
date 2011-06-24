@@ -1,17 +1,18 @@
 package it.freax.fpm.core.solver.core;
 
-import it.freax.fpm.core.util.FileUtils;
-import it.freax.fpm.core.util.StringUtils;
+import it.freax.fpm.core.util.Streams;
+import it.freax.fpm.core.util.Strings;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EbnfParser
 {
 	private String ebnf;
 	private String ebnfContent;
-	private Vector<String> imports;
+	private ArrayList<String> imports;
 
 	public EbnfParser(String ebnf)
 	{
@@ -32,19 +33,20 @@ public class EbnfParser
 		loadEbnf();
 	}
 
-	public Vector<String> getImports()
+	public ArrayList<String> getImports()
 	{
 		return imports;
 	}
 
 	private void loadEbnf()
 	{
+		Streams streams = Streams.getOne(ebnf);
 		try
 		{
-			InputStream is = FileUtils.getResource(ebnf);
+			InputStream is = streams.getResource();
 			if (is != null)
 			{
-				ebnfContent = FileUtils.read(is);
+				ebnfContent = streams.read();
 			}
 		}
 		catch (IOException e)
@@ -56,14 +58,15 @@ public class EbnfParser
 	public boolean parse(String fileToMatch)
 	{
 		//TODO: Implementare metodo di parsing!!!
-		imports = new Vector<String>();
+		imports = new ArrayList<String>();
 		ebnfContent = "Dummy text!";
+		Strings strings = Strings.getOne();
 		boolean matches = false;
 		matches = ebnfContent.equalsIgnoreCase(fileToMatch);
-		Vector<String> incl = StringUtils.grep(fileToMatch, "#include[\\p{Space}\\p{Graph}\\p{Punct}]+", false);
+		List<String> incl = strings.grep(fileToMatch, "#include[\\p{Space}\\p{Graph}\\p{Punct}]+", false);
 		for (String s : incl)
 		{
-			s = StringUtils.KeyValue(s, " ");
+			s = strings.KeyValue(s, " ");
 			imports.add(s);
 		}
 		return matches;

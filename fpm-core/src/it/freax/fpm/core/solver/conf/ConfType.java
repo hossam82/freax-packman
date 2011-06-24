@@ -1,29 +1,30 @@
 package it.freax.fpm.core.solver.conf;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Vector;
+import java.util.List;
 
 public class ConfType
 {
 	private String source;
 	private String ebnf;
 	private String compiler_opts;
-	private Vector<String> exts;
-	private Vector<NotableFile> notevoli;
+	private List<String> exts;
+	private List<NotableFile> notevoli;
 	private LinkedList<Instruction> instr_set;
-	private Vector<Additive> additives;
+	private List<Additive> additives;
 
 	public ConfType()
 	{
-		this.notevoli = new Vector<NotableFile>();
-		this.instr_set = new LinkedList<Instruction>();
-		this.additives = new Vector<Additive>();
+		notevoli = new ArrayList<NotableFile>();
+		instr_set = new LinkedList<Instruction>();
+		additives = new ArrayList<Additive>();
 	}
 
 	public String getSource()
 	{
-		return this.source;
+		return source;
 	}
 
 	public void setSource(String source)
@@ -33,7 +34,7 @@ public class ConfType
 
 	public String getEbnf()
 	{
-		return this.ebnf;
+		return ebnf;
 	}
 
 	public void setEbnf(String ebnf)
@@ -43,7 +44,7 @@ public class ConfType
 
 	public String getCompiler_opts()
 	{
-		return this.compiler_opts;
+		return compiler_opts;
 	}
 
 	public void setCompiler_opts(String compiler_opts)
@@ -51,21 +52,21 @@ public class ConfType
 		this.compiler_opts = compiler_opts;
 	}
 
-	public Vector<String> getExts()
+	public List<String> getExts()
 	{
-		return this.exts;
+		return exts;
 	}
 
-	public void setExts(Vector<String> exts)
+	public void setExts(List<String> list)
 	{
-		this.exts = exts;
+		exts = list;
 	}
 
 	public boolean containsNotevole(String notablefile)
 	{
 		boolean ret = false;
 		String notable = notablefile.substring(notablefile.indexOf('/') + 1);
-		Iterator<NotableFile> it = this.notevoli.iterator();
+		Iterator<NotableFile> it = notevoli.iterator();
 		while (it.hasNext())
 		{
 			if (ret = it.next().getName().equalsIgnoreCase(notable))
@@ -78,23 +79,23 @@ public class ConfType
 
 	public void addNotable(NotableFile ntbl)
 	{
-		this.notevoli.add(ntbl);
+		notevoli.add(ntbl);
 	}
 
 	public void addInstruction(Instruction instr)
 	{
-		this.instr_set.add(instr);
+		instr_set.add(instr);
 	}
 
 	public void addAdditive(Additive add)
 	{
-		this.additives.add(add);
+		additives.add(add);
 	}
 
-	public Vector<Instruction> getInstructionsById(int id)
+	public ArrayList<Instruction> getInstructionsById(int id)
 	{
-		Vector<Instruction> ret = new Vector<Instruction>();
-		for (Instruction instr : this.instr_set)
+		ArrayList<Instruction> ret = new ArrayList<Instruction>();
+		for (Instruction instr : instr_set)
 		{
 			if (instr.getId() == id)
 			{
@@ -104,10 +105,10 @@ public class ConfType
 		return ret;
 	}
 
-	public Vector<Additive> getAdditivesById(int id)
+	public ArrayList<Additive> getAdditivesById(int id)
 	{
-		Vector<Additive> ret = new Vector<Additive>();
-		for (Additive add : this.additives)
+		ArrayList<Additive> ret = new ArrayList<Additive>();
+		for (Additive add : additives)
 		{
 			if (add.getId() == id)
 			{
@@ -120,7 +121,7 @@ public class ConfType
 	public NotableFile getNotableFile(String name)
 	{
 		NotableFile ret = null;
-		for (NotableFile notable : this.notevoli)
+		for (NotableFile notable : notevoli)
 		{
 			if (notable.getName().equalsIgnoreCase(name))
 			{
@@ -130,8 +131,8 @@ public class ConfType
 		return ret;
 	}
 
-	public Vector<Additive> getAdditives()
+	public List<Additive> getAdditives()
 	{
-		return this.additives;
+		return additives;
 	}
 }

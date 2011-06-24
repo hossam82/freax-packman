@@ -1,16 +1,16 @@
 package it.freax.fpm.core.util;
 
 import java.util.Map.Entry;
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class ScorerThread<K, V> implements Runnable
 {
-	private Entry<K, Vector<V>> entry;
+	private Entry<K, ArrayList<V>> entry;
 	private EntriesScorer<V> scorer;
 	private Entry<K, V> best;
 	private Integer bestScore;
 
-	public ScorerThread(Entry<K, Vector<V>> entry, boolean maxCounter)
+	public ScorerThread(Entry<K, ArrayList<V>> entry, boolean maxCounter)
 	{
 		this.entry = entry;
 		this.scorer = new EntriesScorer<V>(maxCounter);

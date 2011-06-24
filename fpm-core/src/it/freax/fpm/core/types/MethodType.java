@@ -1,7 +1,7 @@
 package it.freax.fpm.core.types;
 
 import it.freax.fpm.core.solver.conf.MethodParams;
-import it.freax.fpm.core.util.StringUtils;
+import it.freax.fpm.core.util.Strings;
 
 public enum MethodType
 {
@@ -23,9 +23,10 @@ public enum MethodType
 
 	public MethodParams getParams(String method)
 	{
-		String mp = StringUtils.getStringInsideDelimiters(method, "(", ")");
+		Strings strings = Strings.getOne();
+		String mp = strings.getStringInsideDelimiters(method, "(", ")");
 		String[] split = mp.split(",", 3);
-		String s = StringUtils.getStringInsideDelimiters(split[0], "'", "'");
+		String s = strings.getStringInsideDelimiters(split[0], "'", "'");
 		MethodParams ret = new MethodParams(this, s);
 		if (this == Split)
 		{

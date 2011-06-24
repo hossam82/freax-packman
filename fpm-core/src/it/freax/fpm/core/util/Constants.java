@@ -2,12 +2,25 @@ package it.freax.fpm.core.util;
 
 public abstract class Constants
 {
-	private static boolean systemResource = true;
-	private static String confdir = "conf";
-	private static String archives_conf = "Archives.conf";
-	private static String sourcediscoverconf = "source-detect.xml";
+	public static final int rangeExtMin = 1;
+	public static final int rangeExtMax = 4;
+	public static final String extSeparator = ".";
 
-	public static String getDirPrefix()
+	private boolean systemResource = true;
+	private String confdir = "conf";
+	private String archives_conf = "Archives.conf";
+	private String sourcediscoverconf = "source-detect.xml";
+	private String logfile = "fpm-install.log";
+	private String pattern = "%-8r [%t] %-5p %c - %m%n";
+
+	public static Constants getOne()
+	{
+		return new Constants()
+		{
+		};
+	}
+
+	public String getDirPrefix()
 	{
 		String ret = "";
 		if (!isSystemResource())
@@ -17,48 +30,68 @@ public abstract class Constants
 		return ret;
 	}
 
-	public static String getFullConfPath()
+	public String getFullConfPath()
 	{
-		return CoreUtils.concatPaths(getDirPrefix(), getConfdir());
+		return Strings.getOne().concatPaths(getDirPrefix(), getConfdir());
 	}
 
-	public static boolean isSystemResource()
+	public boolean isSystemResource()
 	{
 		return systemResource;
 	}
 
-	public static void setSystemResource(boolean systemResource)
+	public void setSystemResource(boolean systemResource)
 	{
-		Constants.systemResource = systemResource;
+		this.systemResource = systemResource;
 	}
 
-	public static String getConfdir()
+	public String getConfdir()
 	{
 		return confdir;
 	}
 
-	public static void setConfdir(String confdir)
+	public void setConfdir(String confdir)
 	{
-		Constants.confdir = confdir;
+		this.confdir = confdir;
 	}
 
-	public static String getArchivesConf()
+	public String getArchivesConf()
 	{
 		return archives_conf;
 	}
 
-	public static void setArchivesConf(String archives_conf)
+	public void setArchivesConf(String archives_conf)
 	{
-		Constants.archives_conf = archives_conf;
+		this.archives_conf = archives_conf;
 	}
 
-	public static String getSourceDiscoverConf()
+	public String getSourceDiscoverConf()
 	{
 		return sourcediscoverconf;
 	}
 
-	public static void setSourceDiscoverConf(String sourcediscoverconf)
+	public void setSourceDiscoverConf(String sourcediscoverconf)
 	{
-		Constants.sourcediscoverconf = sourcediscoverconf;
+		this.sourcediscoverconf = sourcediscoverconf;
+	}
+
+	public String getLogFile()
+	{
+		return logfile;
+	}
+
+	public void setLogFile(String logfile)
+	{
+		this.logfile = logfile;
+	}
+
+	public String getPattern()
+	{
+		return pattern;
+	}
+
+	public void setPattern(String pattern)
+	{
+		this.pattern = pattern;
 	}
 }

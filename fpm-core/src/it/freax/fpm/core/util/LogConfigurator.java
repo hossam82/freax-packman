@@ -4,24 +4,30 @@ import java.io.IOException;
 
 import org.apache.log4j.*;
 
-public class LogConfigurator
+public class LogConfigurator extends Constants
 {
-	public static Logger configure(Class<?> clazz)
+	Class<?> clazz;
+
+	public LogConfigurator(Class<?> clazz)
 	{
-		return configure(clazz, true);
+		this.clazz = clazz;
 	}
 
-	public static Logger configure(Class<?> clazz, boolean logToConsole)
+	public static LogConfigurator getOne(Class<?> clazz)
+	{
+		return new LogConfigurator(clazz);
+	}
+
+	public Logger configure()
+	{
+		return configure(true);
+	}
+
+	public Logger configure(boolean logToConsole)
 	{
 		Logger log = Logger.getLogger(clazz);
-		String logPath = System.getProperty("user.dir");
-		if (!logPath.endsWith(System.getProperty("file.separator")))
-		{
-			logPath = logPath + System.getProperty("file.separator");
-		}
-		logPath = logPath + "fpm-install.log";
-		String pattern = "%-8r [%t] %-5p %c - %m%n";
-		PatternLayout layout = new PatternLayout(pattern);
+		String logPath = getDirPrefix() + getLogFile();
+		PatternLayout layout = new PatternLayout(getPattern());
 		log.setLevel(Level.ALL);
 
 		if (logToConsole)

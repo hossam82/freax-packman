@@ -1,12 +1,11 @@
 package it.freax.fpm.core.archives;
 
-import it.freax.fpm.core.types.ArchiveType;
-import it.freax.fpm.core.util.FileUtils;
+import it.freax.fpm.core.util.Streams;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -17,14 +16,14 @@ public class GZipArchiveReader extends ArchiveReader
 	public GZipArchiveReader(File file) throws IOException
 	{
 		super(file);
-		type = ArchiveType.GZip;
+		type = "GZip";
 	}
 
 	@Override
-	protected void setEntryVector() throws IOException
+	protected void setEntryArrayList() throws IOException
 	{
 		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(openStream()));
-		entries = new Vector<String>();
+		entries = new ArrayList<String>();
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
 		{
@@ -48,7 +47,7 @@ public class GZipArchiveReader extends ArchiveReader
 				byte[] buf = new byte[(int) entry.getSize()];
 				tarin.read(buf, 0, (int) entry.getSize());
 				ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-				lines = FileUtils.read(bais);
+				lines = Streams.getOne(bais).read();
 				break;
 			}
 		}
@@ -76,9 +75,9 @@ public class GZipArchiveReader extends ArchiveReader
 	}
 
 	@Override
-	public Vector<String> readEntries(String entryName, boolean excludeRoot, String root) throws IOException
+	public ArrayList<String> readEntries(String entryName, boolean excludeRoot, String root) throws IOException
 	{
-		Vector<String> ret = new Vector<String>();
+		ArrayList<String> ret = new ArrayList<String>();
 		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(openStream()));
 		TarArchiveEntry entry = null;
 		boolean isRoot = excludeRoot;
@@ -111,7 +110,7 @@ public class GZipArchiveReader extends ArchiveReader
 				byte[] buf = new byte[(int) entry.getSize()];
 				tarin.read(buf, 0, (int) entry.getSize());
 				ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-				filecontents.put(entry.getName(), FileUtils.read(bais));
+				filecontents.put(entry.getName(), Streams.getOne(bais).read());
 			}
 			tarin.close();
 			closeStream();

@@ -4,7 +4,7 @@ import it.freax.fpm.core.solver.dto.BasicInfos;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * This is the Spec class, that allows child classes to have same
@@ -19,8 +19,8 @@ public abstract class Spec
 	protected BasicInfos Package;
 	protected String Scripts;
 	protected String ChangeLog;
-	protected Vector<BasicInfos> Provides;
-	protected Vector<BasicInfos> Requires;
+	protected ArrayList<BasicInfos> Provides;
+	protected ArrayList<BasicInfos> Requires;
 	protected HashMap<String, String> ConfigFiles;
 	protected HashMap<String, String> DocFiles;
 
@@ -31,8 +31,8 @@ public abstract class Spec
 		Scripts = "";
 		Package = new BasicInfos();
 
-		Provides = new Vector<BasicInfos>();
-		Requires = new Vector<BasicInfos>();
+		Provides = new ArrayList<BasicInfos>();
+		Requires = new ArrayList<BasicInfos>();
 		ConfigFiles = new HashMap<String, String>();
 		DocFiles = new HashMap<String, String>();
 	}
@@ -57,12 +57,12 @@ public abstract class Spec
 		return ChangeLog;
 	}
 
-	public Vector<BasicInfos> getProvides()
+	public ArrayList<BasicInfos> getProvides()
 	{
 		return Provides;
 	}
 
-	public Vector<BasicInfos> getRequires()
+	public ArrayList<BasicInfos> getRequires()
 	{
 		return Requires;
 	}

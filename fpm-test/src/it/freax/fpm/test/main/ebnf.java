@@ -52,10 +52,11 @@ public class ebnf extends Constants
 
 	public static void main(String args[])
 	{
+		Constants consts = Constants.getOne();
 		try
 		{
-			setSystemResource(false);
-			String path = getFullConfPath() + "java.ebnf";
+			consts.setSystemResource(false);
+			String path = consts.getFullConfPath() + "java.ebnf";
 			ebnf parser = new ebnf(new FileInputStream(path));
 			parser.dotrace = (args.length > 0) && args[0].equals("-v");
 			parser.S();

@@ -1,19 +1,19 @@
 package it.freax.fpm.core.solver.dto;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class SrcFile
 {
 	private String name;
 	private String content;
-	private Vector<String> langs;
-	private Vector<String> includes;
+	private ArrayList<String> langs;
+	private ArrayList<String> includes;
 	private boolean isNotable;
 
 	public SrcFile()
 	{
-		langs = new Vector<String>();
-		includes = new Vector<String>();
+		langs = new ArrayList<String>();
+		includes = new ArrayList<String>();
 	}
 
 	public SrcFile(String name)
@@ -42,12 +42,12 @@ public class SrcFile
 		this.content = content;
 	}
 
-	public Vector<String> getLangs()
+	public ArrayList<String> getLangs()
 	{
 		return langs;
 	}
 
-	public Vector<String> getIncludes()
+	public ArrayList<String> getIncludes()
 	{
 		return includes;
 	}
@@ -72,12 +72,12 @@ public class SrcFile
 		includes.add(include);
 	}
 
-	public void addAllIncludes(Vector<String> includes)
+	public void addAllIncludes(ArrayList<String> includes)
 	{
 		this.includes.addAll(includes);
 	}
 
-	public void addAllLangs(Vector<String> langs)
+	public void addAllLangs(ArrayList<String> langs)
 	{
 		this.langs.addAll(langs);
 	}
