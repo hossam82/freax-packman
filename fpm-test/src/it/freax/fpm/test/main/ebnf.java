@@ -19,7 +19,7 @@ package it.freax.fpm.test.main;
 *
 */
 
-import it.freax.fpm.core.util.Constants;
+import it.freax.fpm.util.Constants;
 
 import java.io.FileInputStream;
 import java.io.IOException;

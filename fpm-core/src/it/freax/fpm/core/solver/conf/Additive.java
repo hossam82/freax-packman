@@ -4,8 +4,8 @@ import it.freax.fpm.core.solver.dto.SrcFile;
 import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.MethodType;
 import it.freax.fpm.core.types.WhereToParseType;
-import it.freax.fpm.core.util.EntriesScorer;
-import it.freax.fpm.core.util.Strings;
+import it.freax.fpm.util.EntriesScorer;
+import it.freax.fpm.util.Strings;
 
 import java.util.List;
 import java.util.Map.Entry;

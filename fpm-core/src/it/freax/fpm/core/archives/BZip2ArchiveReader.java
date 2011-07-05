@@ -1,6 +1,6 @@
 package it.freax.fpm.core.archives;
 
-import it.freax.fpm.core.util.Streams;
+import it.freax.fpm.util.Streams;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

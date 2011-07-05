@@ -1,7 +1,7 @@
 package it.freax.fpm.core.executor;
 
 import it.freax.fpm.core.types.ExitCodeControl;
-import it.freax.fpm.core.util.LogConfigurator;
+import it.freax.fpm.util.LogConfigurator;
 
 import java.io.BufferedReader;
 import java.io.File;

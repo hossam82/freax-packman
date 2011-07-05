@@ -1,8 +1,8 @@
 package it.freax.fpm.core.solver.specs;
 
 import it.freax.fpm.core.archives.ArchiveReader;
-import it.freax.fpm.core.exceptions.ArchiveNotSupportedException;
 import it.freax.fpm.core.solver.core.SourceDiscoverer;
+import it.freax.fpm.util.exceptions.ArchiveNotSupportedException;
 
 import java.io.File;
 import java.io.IOException;

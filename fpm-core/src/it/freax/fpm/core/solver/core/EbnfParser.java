@@ -1,7 +1,7 @@
 package it.freax.fpm.core.solver.core;
 
-import it.freax.fpm.core.util.Streams;
-import it.freax.fpm.core.util.Strings;
+import it.freax.fpm.util.Streams;
+import it.freax.fpm.util.Strings;
 
 import java.io.IOException;
 import java.io.InputStream;

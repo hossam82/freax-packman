@@ -1,7 +1,6 @@
 package it.freax.fpm.core.solver.core;
 
 import it.freax.fpm.core.archives.ArchiveReader;
-import it.freax.fpm.core.exceptions.ExtensionDecodingException;
 import it.freax.fpm.core.solver.conf.*;
 import it.freax.fpm.core.solver.dto.CompilationUnit;
 import it.freax.fpm.core.solver.dto.SrcFile;
@@ -11,7 +10,8 @@ import it.freax.fpm.core.solver.specs.TarballSpec;
 import it.freax.fpm.core.types.ExitCodeControl;
 import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.RootExecution;
-import it.freax.fpm.core.util.*;
+import it.freax.fpm.util.*;
+import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

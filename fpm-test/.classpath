@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/fpm-core"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar" sourcepath="lib/log4j-1.2.15.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/usr/share/javadoc/log4j-1.2.15/"/>
@@ -14,5 +13,7 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="fpm-test/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/fpm-util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/fpm-core"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

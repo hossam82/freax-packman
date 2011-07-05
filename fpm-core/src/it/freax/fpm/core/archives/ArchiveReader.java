@@ -1,9 +1,9 @@
 package it.freax.fpm.core.archives;
 
-import it.freax.fpm.core.exceptions.ArchiveNotSupportedException;
-import it.freax.fpm.core.util.Constants;
-import it.freax.fpm.core.util.Generics;
-import it.freax.fpm.core.util.Streams;
+import it.freax.fpm.util.Constants;
+import it.freax.fpm.util.Generics;
+import it.freax.fpm.util.Streams;
+import it.freax.fpm.util.exceptions.ArchiveNotSupportedException;
 
 import java.io.File;
 import java.io.FileInputStream;

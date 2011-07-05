@@ -1,7 +1,7 @@
 package it.freax.fpm.core.types;
 
 import it.freax.fpm.core.solver.conf.MethodParams;
-import it.freax.fpm.core.util.Strings;
+import it.freax.fpm.util.Strings;
 
 public enum MethodType
 {

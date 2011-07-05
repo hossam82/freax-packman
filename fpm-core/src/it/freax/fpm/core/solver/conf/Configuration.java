@@ -4,8 +4,8 @@ import it.freax.fpm.core.types.ExitCodeControl;
 import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.RootExecution;
 import it.freax.fpm.core.types.WhereToParseType;
-import it.freax.fpm.core.util.Streams;
-import it.freax.fpm.core.util.Strings;
+import it.freax.fpm.util.Streams;
+import it.freax.fpm.util.Strings;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

@@ -25,5 +25,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="fpm-core/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/fpm-util"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

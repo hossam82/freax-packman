@@ -3,13 +3,13 @@
  */
 package it.freax.fpm.parser;
 
-import it.freax.fpm.core.util.Collections;
-import it.freax.fpm.core.util.Constants;
-import it.freax.fpm.core.util.Streams;
-import it.freax.fpm.core.util.Strings;
 import it.freax.fpm.parser.actions.CompilationAction;
 import it.freax.fpm.parser.edo.ErrorReport;
 import it.freax.fpm.parser.edo.TargetCode;
+import it.freax.fpm.util.Collections;
+import it.freax.fpm.util.Constants;
+import it.freax.fpm.util.Streams;
+import it.freax.fpm.util.Strings;
 
 import java.io.IOException;
 
