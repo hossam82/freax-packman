@@ -3,6 +3,8 @@
  */
 package it.freax.fpm.util;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -46,11 +48,40 @@ public class ErrorHandler
 	}
 
 	@SuppressWarnings("unchecked")
-	public <E extends Exception> E rethrow(Throwable t)
+	public <E extends Exception> E rethrow(E e, Throwable t)
 	{
-		Exception e = new Exception(t);
 		handle(t);
-		return (E) e;
+		E ret = null;
+		try
+		{
+			ret = (E) e.getClass().getConstructor(new Class<?>[]
+			{ Exception.class }).newInstance(t);
+		}
+		catch (IllegalArgumentException e1)
+		{
+			handle(e1);
+		}
+		catch (SecurityException e1)
+		{
+			handle(e1);
+		}
+		catch (InstantiationException e1)
+		{
+			handle(e1);
+		}
+		catch (IllegalAccessException e1)
+		{
+			handle(e1);
+		}
+		catch (InvocationTargetException e1)
+		{
+			handle(e1);
+		}
+		catch (NoSuchMethodException e1)
+		{
+			handle(e1);
+		}
+		return ret;
 	}
 
 	@SuppressWarnings("unchecked")

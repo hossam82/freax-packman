@@ -346,4 +346,9 @@ public class Strings extends Constants
 		}
 		return ret;
 	}
+
+	public boolean isNullOrEmpty(String s)
+	{
+		return (s == null) || s.isEmpty();
+	}
 }

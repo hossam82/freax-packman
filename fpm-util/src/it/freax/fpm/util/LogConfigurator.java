@@ -20,7 +20,7 @@ public class LogConfigurator extends Constants
 
 	public Logger configure()
 	{
-		return configure(true);
+		return configure(false);
 	}
 
 	public Logger configure(boolean logToConsole)

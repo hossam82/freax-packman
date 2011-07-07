@@ -55,7 +55,7 @@ public class Generics<T>
 		return t;
 	}
 
-	public T getChildInstance(String childSideName, Object... args)
+	public T getChildInstance(String childSideName, Object... args) throws InstantiationException
 	{
 		StringBuffer className = new StringBuffer(clazz.getPackage().getName());
 		className.append('.');
@@ -64,7 +64,7 @@ public class Generics<T>
 	}
 
 	@SuppressWarnings("unchecked")
-	public T getInstance(String className, Object... args)
+	public T getInstance(String className, Object... args) throws InstantiationException
 	{
 		T ret = null;
 		Collections<Class<?>> colls = Collections.getOne(new ArrayList<Class<?>>());
@@ -81,31 +81,27 @@ public class Generics<T>
 		}
 		catch (ClassNotFoundException e)
 		{
-			ErrorHandler.getOne(getClass()).handle(e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
 		}
 		catch (SecurityException e)
 		{
-			ErrorHandler.getOne(getClass()).handle(e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
 		}
 		catch (NoSuchMethodException e)
 		{
-			ErrorHandler.getOne(getClass()).handle(e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
 		}
 		catch (IllegalArgumentException e)
 		{
-			ErrorHandler.getOne(getClass()).handle(e);
-		}
-		catch (InstantiationException e)
-		{
-			ErrorHandler.getOne(getClass()).handle(e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
 		}
 		catch (IllegalAccessException e)
 		{
-			ErrorHandler.getOne(getClass()).handle(e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
 		}
 		catch (InvocationTargetException e)
 		{
-			ErrorHandler.getOne(getClass()).handle(e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
 		}
 		return ret;
 	}

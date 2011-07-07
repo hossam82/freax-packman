@@ -40,7 +40,7 @@ public class TestArchives
 			counter++;
 			TarballSpec spec = new TarballSpec(null);
 			spec.Load(file);
-			//System.out.println(spec.toString());
+			System.out.println(spec.toString());
 		}
 		long stop = Calendar.getInstance().getTimeInMillis();
 		long diff = stop - start;

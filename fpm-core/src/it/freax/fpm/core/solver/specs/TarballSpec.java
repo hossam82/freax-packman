@@ -3,6 +3,7 @@ package it.freax.fpm.core.solver.specs;
 import it.freax.fpm.core.archives.ArchiveReader;
 import it.freax.fpm.core.solver.core.SourceDiscoverer;
 import it.freax.fpm.util.ErrorHandler;
+import it.freax.fpm.util.Strings;
 import it.freax.fpm.util.exceptions.ArchiveNotSupportedException;
 import it.freax.fpm.util.exceptions.ConfigurationReadException;
 
@@ -54,7 +55,7 @@ public class TarballSpec extends Spec
 
 	public String getArchType()
 	{
-		if ((ArchType == null) || ArchType.isEmpty())
+		if (Strings.getOne().isNullOrEmpty(ArchType))
 		{
 			ArchType = "Unsupported";
 		}
@@ -88,5 +89,11 @@ public class TarballSpec extends Spec
 				ErrorHandler.getOne(getClass()).handle(e);
 			}
 		}
+	}
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName().concat(":\n").concat("- Archive Type --> ").concat(ArchType).concat("\n").concat(super.toString());
 	}
 }
