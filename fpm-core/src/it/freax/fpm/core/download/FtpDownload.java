@@ -1,5 +1,7 @@
 package it.freax.fpm.core.download;
 
+import it.freax.fpm.util.ErrorHandler;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -121,19 +123,13 @@ public class FtpDownload extends AbstractDownload
 		}
 		catch (MalformedURLException e)
 		{
-			if (debug)
-			{
-				e.printStackTrace();
-			}
+			ErrorHandler.getOne(this.getClass(), debug).handle(e);
 			setDebugMessage(e.toString(), true);
 			error();
 		}
 		catch (IOException e)
 		{
-			if (debug)
-			{
-				e.printStackTrace();
-			}
+			ErrorHandler.getOne(this.getClass(), debug).handle(e);
 			setDebugMessage(e.toString(), true);
 			error();
 		}
@@ -147,7 +143,7 @@ public class FtpDownload extends AbstractDownload
 				}
 				catch (IOException ioe)
 				{
-					ioe.printStackTrace();
+					ErrorHandler.getOne(this.getClass(), debug).handle(ioe);
 				}
 			}
 			if (bos != null)
@@ -158,7 +154,7 @@ public class FtpDownload extends AbstractDownload
 				}
 				catch (IOException ioe)
 				{
-					ioe.printStackTrace();
+					ErrorHandler.getOne(this.getClass(), debug).handle(ioe);
 				}
 			}
 		}

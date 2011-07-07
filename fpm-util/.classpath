@@ -7,5 +7,6 @@
 			<attribute name="javadoc_location" value="file:/usr/share/javadoc/log4j-1.2.15/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/commons-compress-1.1.jar" sourcepath="lib/commons-compress-1.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

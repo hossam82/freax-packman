@@ -4,8 +4,10 @@ import it.freax.fpm.core.types.ExitCodeControl;
 import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.RootExecution;
 import it.freax.fpm.core.types.WhereToParseType;
+import it.freax.fpm.util.ErrorHandler;
 import it.freax.fpm.util.Streams;
 import it.freax.fpm.util.Strings;
+import it.freax.fpm.util.exceptions.ConfigurationReadException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,38 +30,44 @@ public class Configuration
 		return types.iterator();
 	}
 
-	public static Configuration load(String conf_path) throws FileNotFoundException
+	public static Configuration load(String conf_path) throws ConfigurationReadException
 	{
 		Configuration conf = new Configuration();
 		conf.types = new ArrayList<ConfType>();
 		conf.generalInfo = new General();
 
-		InputStream is = Streams.getOne(conf_path).getResource();
-		if (is != null)
+		InputStream is;
+
+		try
 		{
-			SAXBuilder builder = new SAXBuilder();
-			Document document = null;
-			try
+			is = Streams.getOne(conf_path).getResource();
+			if (is != null)
 			{
+				SAXBuilder builder = new SAXBuilder();
+				Document document = null;
 				document = builder.build(is);
-			}
-			catch (JDOMException e)
-			{
-				e.printStackTrace();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
 
-			Element root = document.getRootElement();
-			conf.generalInfo = makeGeneralInfo(root);
+				Element root = document.getRootElement();
+				conf.generalInfo = makeGeneralInfo(root);
 
-			Iterator<Element> iterator = getChildrenIteratorIgnoreCase(root, "type");
-			while (iterator.hasNext())
-			{
-				conf.types.add(makeType(iterator.next()));
+				Iterator<Element> iterator = getChildrenIteratorIgnoreCase(root, "type");
+				while (iterator.hasNext())
+				{
+					conf.types.add(makeType(iterator.next()));
+				}
 			}
+		}
+		catch (FileNotFoundException e)
+		{
+			throw ErrorHandler.getOne(conf.getClass()).<ConfigurationReadException> rethrow(e.getMessage(), e);
+		}
+		catch (JDOMException e)
+		{
+			throw ErrorHandler.getOne(conf.getClass()).<ConfigurationReadException> rethrow(e.getMessage(), e);
+		}
+		catch (IOException e)
+		{
+			throw ErrorHandler.getOne(conf.getClass()).<ConfigurationReadException> rethrow(e.getMessage(), e);
 		}
 		return conf;
 	}

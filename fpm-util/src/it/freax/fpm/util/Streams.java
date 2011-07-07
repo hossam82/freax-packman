@@ -12,7 +12,15 @@ public class Streams extends Constants
 
 	public Streams(String filename)
 	{
-		this(new File(filename));
+		if (isSystemResource())
+		{
+			this.filename = filename;
+		}
+		else
+		{
+			file = new File(filename);
+			this.filename = file.getAbsolutePath();
+		}
 	}
 
 	public Streams(File file)

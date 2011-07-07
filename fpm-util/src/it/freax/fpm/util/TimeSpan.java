@@ -126,9 +126,5 @@ public class TimeSpan
 	public static String format(long span, int type)
 	{
 		return new TimeSpan(span, type).format();
-		/*TimeSpan ts = new TimeSpan(span, type);
-		String ret = ts.format();
-		ts = null;
-		return ret;*/
 	}
 }

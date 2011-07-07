@@ -1,5 +1,6 @@
 package it.freax.fpm.core.solver.core;
 
+import it.freax.fpm.util.ErrorHandler;
 import it.freax.fpm.util.Streams;
 import it.freax.fpm.util.Strings;
 
@@ -51,7 +52,7 @@ public class EbnfParser
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			ErrorHandler.getOne(getClass(), true).handle("Error loading Ebnf.", e);
 		}
 	}
 

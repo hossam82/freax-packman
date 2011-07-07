@@ -1,5 +1,8 @@
 package it.freax.fpm.core.download;
 
+import it.freax.fpm.util.ErrorHandler;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.Authenticator;
@@ -26,7 +29,7 @@ public final class HttpDownload extends AbstractDownload
 	public HttpDownload(URL url, String path)
 	{
 		super(url, path);
-		this.download();
+		download();
 	}
 
 	/**
@@ -40,7 +43,7 @@ public final class HttpDownload extends AbstractDownload
 	public HttpDownload(URL url, String path, String proxyUrl, int port)
 	{
 		super(url, path, proxyUrl, port);
-		this.download();
+		download();
 	}
 
 	/**
@@ -56,7 +59,7 @@ public final class HttpDownload extends AbstractDownload
 	public HttpDownload(URL url, String path, String proxyUrl, int port, String userName, String password)
 	{
 		super(url, path, proxyUrl, port, userName, password);
-		this.download();
+		download();
 	}
 
 	/**
@@ -72,36 +75,36 @@ public final class HttpDownload extends AbstractDownload
 
 		try
 		{
-			if (this.useProxy)
+			if (useProxy)
 			{
 				Properties systemProperties = System.getProperties();
-				systemProperties.setProperty("http.proxyHost", this.proxyUrl);
-				systemProperties.setProperty("http.proxyPort", String.valueOf(this.port));
+				systemProperties.setProperty("http.proxyHost", proxyUrl);
+				systemProperties.setProperty("http.proxyPort", String.valueOf(port));
 
-				if (this.useAuthentication)
+				if (useAuthentication)
 				{
-					Authenticator.setDefault(new SimpleAuthenticator(this.userName, this.password));
+					Authenticator.setDefault(new SimpleAuthenticator(userName, password));
 				}
 			}
 
-			connection = (HttpURLConnection) this.url.openConnection();
+			connection = (HttpURLConnection) url.openConnection();
 
 			connection.setRequestMethod("GET");
 			connection.setInstanceFollowRedirects(true);
 
 			StringBuilder sb = new StringBuilder();
-			sb.append(this.path);
-			if (!this.path.endsWith(System.getProperty("file.separator")))
+			sb.append(path);
+			if (!path.endsWith(System.getProperty("file.separator")))
 			{
 				sb.append(System.getProperty("file.separator"));
 			}
-			sb.append(this.getFileName(this.url));
+			sb.append(getFileName(url));
 
 			// Specify what portion of file to download if we are resuming a
 			// download.
-			if (this.downloaded > 0)
+			if (downloaded > 0)
 			{
-				connection.setRequestProperty("Range", "bytes=" + this.downloaded + "-");
+				connection.setRequestProperty("Range", "bytes=" + downloaded + "-");
 			}
 
 			// Connect to server.
@@ -111,12 +114,12 @@ public final class HttpDownload extends AbstractDownload
 			// Make sure response code is in the 200 range.
 			if (responseCode != HttpURLConnection.HTTP_OK)
 			{
-				this.setDebugMessage("Response code is not 200: ", true);
-				this.setDebugMessage(String.valueOf(connection.getResponseCode()), true);
-				this.setDebugMessage(String.valueOf(connection.getResponseMessage()), true);
+				setDebugMessage("Response code is not 200: ", true);
+				setDebugMessage(String.valueOf(connection.getResponseCode()), true);
+				setDebugMessage(String.valueOf(connection.getResponseMessage()), true);
 				if (responseCode >= 300)
 				{
-					this.error();
+					error();
 					return;
 				}
 			}
@@ -125,27 +128,27 @@ public final class HttpDownload extends AbstractDownload
 			long contentLength = Long.parseLong(connection.getHeaderField("content-length"));
 			if (contentLength < 1)
 			{
-				this.setDebugMessage("Content length is not valid.", false);
-				this.error();
+				setDebugMessage("Content length is not valid.", false);
+				error();
 				return;
 			}
 
 			/*
 			 * Set the size for this download if it hasn't been already set.
 			 */
-			if (this.size == -1)
+			if (size == -1)
 			{
-				this.size = contentLength;
-				this.stateChanged();
+				size = contentLength;
+				stateChanged();
 			}
 
 			// Open file and seek to the end of it.
 			rafile = new RandomAccessFile(sb.toString(), "rw");
-			rafile.seek(this.downloaded);
+			rafile.seek(downloaded);
 
 			stream = connection.getInputStream();
 
-			while (this.status == DOWNLOADING)
+			while (status == DOWNLOADING)
 			{
 				/*
 				 * Size buffer according to how much of the file is left to
@@ -153,13 +156,13 @@ public final class HttpDownload extends AbstractDownload
 				 */
 				byte buffer[];
 
-				if (this.size - this.downloaded > MAX_BUFFER_SIZE)
+				if (size - downloaded > MAX_BUFFER_SIZE)
 				{
 					buffer = new byte[MAX_BUFFER_SIZE];
 				}
-				else if ((this.size - this.downloaded < MAX_BUFFER_SIZE) && (this.size - this.downloaded > 0))
+				else if ((size - downloaded < MAX_BUFFER_SIZE) && (size - downloaded > 0))
 				{
-					buffer = new byte[(int) (this.size - this.downloaded)];
+					buffer = new byte[(int) (size - downloaded)];
 				}
 				else
 				{
@@ -175,28 +178,25 @@ public final class HttpDownload extends AbstractDownload
 
 				// Write buffer to file.
 				rafile.write(buffer, 0, read);
-				this.downloaded += read;
-				this.stateChanged();
+				downloaded += read;
+				stateChanged();
 			}
 
 			/*
 			 * Change status to complete if this point was reached because
 			 * downloading has finished.
 			 */
-			if (this.status == DOWNLOADING)
+			if (status == DOWNLOADING)
 			{
-				this.status = COMPLETE;
-				this.stateChanged();
+				status = COMPLETE;
+				stateChanged();
 			}
 		}
 		catch (Exception e)
 		{
-			if (this.debug)
-			{
-				e.printStackTrace();
-			}
-			this.setDebugMessage(e.toString(), true);
-			this.error();
+			ErrorHandler.getOne(this.getClass(), debug).handle(e);
+			setDebugMessage(e.toString(), true);
+			error();
 		}
 		finally
 		{
@@ -209,6 +209,7 @@ public final class HttpDownload extends AbstractDownload
 				}
 				catch (Exception e)
 				{
+					ErrorHandler.getOne(this.getClass(), debug).handle(e);
 				}
 			}
 
@@ -219,8 +220,9 @@ public final class HttpDownload extends AbstractDownload
 				{
 					stream.close();
 				}
-				catch (Exception e)
+				catch (IOException e)
 				{
+					ErrorHandler.getOne(this.getClass(), debug).handle(e);
 				}
 			}
 		}

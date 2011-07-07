@@ -1,11 +1,7 @@
 package it.freax.fpm.util;
 
-public abstract class Constants
+public class Constants
 {
-	public static final int rangeExtMin = 1;
-	public static final int rangeExtMax = 4;
-	public static final String extSeparator = ".";
-
 	private boolean systemResource = true;
 	private String confdir = "conf";
 	private String archives_conf = "Archives.conf";
@@ -15,9 +11,7 @@ public abstract class Constants
 
 	public static Constants getOne()
 	{
-		return new Constants()
-		{
-		};
+		return new Constants();
 	}
 
 	public String getDirPrefix()
@@ -32,7 +26,12 @@ public abstract class Constants
 
 	public String getFullConfPath()
 	{
-		return Strings.getOne().concatPaths(getDirPrefix(), getConfdir());
+		String ret = Strings.getOne().concatPaths(getDirPrefix(), getConfdir());
+		if (isSystemResource() && ret.startsWith(System.getProperty("file.separator")))
+		{
+			ret = ret.substring(1);
+		}
+		return ret;
 	}
 
 	public boolean isSystemResource()

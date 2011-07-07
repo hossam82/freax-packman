@@ -66,18 +66,11 @@ public abstract class ArchiveReader extends Constants
 		this.hasRead = hasRead;
 	}
 
-	protected FileInputStream openStream()
+	protected FileInputStream openStream() throws FileNotFoundException
 	{
 		if (fis == null)
 		{
-			try
-			{
-				fis = new FileInputStream(file);
-			}
-			catch (FileNotFoundException e)
-			{
-				e.printStackTrace();
-			}
+			fis = new FileInputStream(file);
 		}
 		else
 		{
@@ -111,9 +104,26 @@ public abstract class ArchiveReader extends Constants
 	public static ArchiveReader getRightInstance(File file) throws ArchiveNotSupportedException, IOException
 	{
 		String type = ArchiveReader.getArchiveType(file);
-		String msg = "Formato dell'archivio non supportato!";
-		if (type == "Unsupported") { throw new ArchiveNotSupportedException(msg); }
-		return Generics.getOne(ArchiveReader.class).getChildInstance(type, file);
+		if (type == "Unsupported") { throw new ArchiveNotSupportedException(); }
+		ArchiveReader instance;
+		try
+		{
+			Class<?> cl = Class.forName(ArchiveReader.class.getPackage() + "." + type + ArchiveReader.class.getSimpleName());
+			instance = (ArchiveReader) cl.getConstructor(File.class).newInstance(file);
+		}
+		catch (Throwable e)
+		{
+			try
+			{
+				instance = Generics.getOne(ArchiveReader.class).getChildInstance(type, file);
+			}
+			catch (Throwable e1)
+			{
+				throw new ArchiveNotSupportedException();
+			}
+		}
+		if (instance == null) { throw new ArchiveNotSupportedException(); }
+		return instance;
 	}
 
 	private static String getArchiveType(File file) throws IOException

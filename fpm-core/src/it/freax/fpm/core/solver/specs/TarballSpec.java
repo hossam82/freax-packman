@@ -2,7 +2,9 @@ package it.freax.fpm.core.solver.specs;
 
 import it.freax.fpm.core.archives.ArchiveReader;
 import it.freax.fpm.core.solver.core.SourceDiscoverer;
+import it.freax.fpm.util.ErrorHandler;
 import it.freax.fpm.util.exceptions.ArchiveNotSupportedException;
+import it.freax.fpm.util.exceptions.ConfigurationReadException;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +81,11 @@ public class TarballSpec extends Spec
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				ErrorHandler.getOne(getClass()).handle(e);
+			}
+			catch (ConfigurationReadException e)
+			{
+				ErrorHandler.getOne(getClass()).handle(e);
 			}
 		}
 	}

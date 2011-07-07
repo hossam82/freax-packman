@@ -3,8 +3,8 @@ package it.freax.fpm.core.solver.specs;
 import it.freax.fpm.core.solver.dto.BasicInfos;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This is the Spec class, that allows child classes to have same

@@ -69,10 +69,9 @@ public class Collections<E>
 		return fill(new ConcurrentLinkedQueue<E>());
 	}
 
-	@SuppressWarnings("unchecked")
-	public E[] toArray()
+	public E[] toArray(E[] arr)
 	{
-		return (E[]) ((ArrayList<E>) toList()).toArray();
+		return toList().toArray(arr);
 	}
 
 	public <T> Collection<T> castAll()
@@ -150,5 +149,11 @@ public class Collections<E>
 			ret = false;
 		}
 		return ret;
+	}
+
+	@Override
+	public String toString()
+	{
+		return coll.toString();
 	}
 }

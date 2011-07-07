@@ -3,6 +3,7 @@
  */
 package it.freax.fpm.util;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
@@ -40,11 +41,11 @@ public class Generics<T>
 			}
 			catch (InstantiationException e)
 			{
-				e.printStackTrace();
+				ErrorHandler.getOne(getClass()).handle(e);
 			}
 			catch (IllegalAccessException e)
 			{
-				e.printStackTrace();
+				ErrorHandler.getOne(getClass()).handle(e);
 			}
 		}
 		else
@@ -58,7 +59,7 @@ public class Generics<T>
 	{
 		StringBuffer className = new StringBuffer(clazz.getPackage().getName());
 		className.append('.');
-		className.append(childSideName).append(clazz.getName());
+		className.append(childSideName).append(clazz.getSimpleName());
 		return getInstance(className.toString(), args);
 	}
 
@@ -74,35 +75,37 @@ public class Generics<T>
 			{
 				colls.add(o.getClass());
 			}
-			ret = (T) dad.getConstructor(colls.toArray()).newInstance(args);
+			Class<?>[] app = new Class<?>[] {};
+			Constructor<?> c = dad.getConstructor(colls.toArray(app));
+			ret = (T) c.newInstance(args);
 		}
 		catch (ClassNotFoundException e)
 		{
-			e.printStackTrace();
+			ErrorHandler.getOne(getClass()).handle(e);
 		}
 		catch (SecurityException e)
 		{
-			e.printStackTrace();
+			ErrorHandler.getOne(getClass()).handle(e);
 		}
 		catch (NoSuchMethodException e)
 		{
-			e.printStackTrace();
+			ErrorHandler.getOne(getClass()).handle(e);
 		}
 		catch (IllegalArgumentException e)
 		{
-			e.printStackTrace();
+			ErrorHandler.getOne(getClass()).handle(e);
 		}
 		catch (InstantiationException e)
 		{
-			e.printStackTrace();
+			ErrorHandler.getOne(getClass()).handle(e);
 		}
 		catch (IllegalAccessException e)
 		{
-			e.printStackTrace();
+			ErrorHandler.getOne(getClass()).handle(e);
 		}
 		catch (InvocationTargetException e)
 		{
-			e.printStackTrace();
+			ErrorHandler.getOne(getClass()).handle(e);
 		}
 		return ret;
 	}

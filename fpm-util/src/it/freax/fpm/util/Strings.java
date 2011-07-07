@@ -7,6 +7,10 @@ import java.util.regex.Pattern;
 
 public class Strings extends Constants
 {
+	public static final int rangeExtMin = 1;
+	public static final int rangeExtMax = 4;
+	public static final String extSeparator = ".";
+
 	public Strings()
 	{
 	}
@@ -197,7 +201,7 @@ public class Strings extends Constants
 			}
 			catch (ExtensionDecodingException e)
 			{
-				e.printStackTrace();
+				ErrorHandler.getOne(getClass()).handle(e);
 			}
 		}
 		ret = input.split(delim)[elemidx];

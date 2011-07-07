@@ -11,9 +11,9 @@ import it.freax.fpm.core.types.ExitCodeControl;
 import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.RootExecution;
 import it.freax.fpm.util.*;
+import it.freax.fpm.util.exceptions.ConfigurationReadException;
 import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -28,19 +28,12 @@ public class SourceDiscoverer extends Constants
 	private Configuration conf;
 	private Logger log = LogConfigurator.getOne(this.getClass()).configure(false);
 
-	public SourceDiscoverer(ArchiveReader reader, TarballSpec spec)
+	public SourceDiscoverer(ArchiveReader reader, TarballSpec spec) throws ConfigurationReadException
 	{
 		this.reader = reader;
 		this.spec = spec;
 		entries = reader.getEntries();
-		try
-		{
-			conf = Configuration.load(getSourceDiscoverConf());
-		}
-		catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
-		}
+		conf = Configuration.load(getSourceDiscoverConf());
 	}
 
 	public void setPackageName(String packageName)
@@ -313,7 +306,7 @@ public class SourceDiscoverer extends Constants
 				}
 				catch (ExtensionDecodingException e)
 				{
-					e.printStackTrace();
+					ErrorHandler.getOne(getClass()).handle(e);
 				}
 			}
 		}
