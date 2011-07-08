@@ -108,23 +108,12 @@ public abstract class ArchiveReader extends Constants
 		ArchiveReader instance;
 		try
 		{
-			String classPath = ArchiveReader.class.getPackage().getName() + "." + type + ArchiveReader.class.getSimpleName();
-			Class<?> cl = Class.forName(classPath);
-			instance = (ArchiveReader) cl.getConstructor(new Class<?>[]
-			{ File.class }).newInstance(file);
+			instance = Generics.getOne(ArchiveReader.class).getChildInstance(type, file);
 		}
-		catch (Throwable e)
+		catch (Throwable e1)
 		{
-			try
-			{
-				instance = Generics.getOne(ArchiveReader.class).getChildInstance(type, file);
-			}
-			catch (Throwable e1)
-			{
-				throw new ArchiveNotSupportedException();
-			}
+			throw new ArchiveNotSupportedException();
 		}
-		if (instance == null) { throw new ArchiveNotSupportedException(); }
 		return instance;
 	}
 
