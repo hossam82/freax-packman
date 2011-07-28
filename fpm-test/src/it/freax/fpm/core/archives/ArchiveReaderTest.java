@@ -12,11 +12,6 @@ public class ArchiveReaderTest {
 	}
 
 	@Test
-	public void testArchiveReader() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
 	public void testGetFile() {
 		fail("Not yet implemented"); // TODO
 	}
