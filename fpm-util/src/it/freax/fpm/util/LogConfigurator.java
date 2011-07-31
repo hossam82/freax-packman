@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.apache.log4j.*;
 
-public class LogConfigurator extends Constants
+public class LogConfigurator
 {
 	Class<?> clazz;
 
@@ -20,14 +20,15 @@ public class LogConfigurator extends Constants
 
 	public Logger configure()
 	{
-		return configure(false);
+		return configure(true);
 	}
 
 	public Logger configure(boolean logToConsole)
 	{
+		Constants c = Constants.getOne();
 		Logger log = Logger.getLogger(clazz);
-		String logPath = getDirPrefix() + getLogFile();
-		PatternLayout layout = new PatternLayout(getPattern());
+		String logPath = Strings.getOne().concatPaths(c.getDirPrefix(), c.getLogDir()) + c.getLogFile();
+		PatternLayout layout = new PatternLayout(c.getPattern());
 		log.setLevel(Level.ALL);
 
 		if (logToConsole)

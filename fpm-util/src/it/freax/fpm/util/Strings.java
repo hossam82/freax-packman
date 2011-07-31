@@ -5,7 +5,7 @@ import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class Strings extends Constants
+public class Strings
 {
 	public static final int rangeExtMin = 1;
 	public static final int rangeExtMax = 4;
@@ -335,6 +335,7 @@ public class Strings extends Constants
 			{
 				ret += FS;
 			}
+
 			if (args[i].endsWith(FS))
 			{
 				ret += args[i];

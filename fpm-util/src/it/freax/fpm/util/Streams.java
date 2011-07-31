@@ -4,15 +4,16 @@ import java.io.*;
 import java.util.Properties;
 import java.util.Scanner;
 
-public class Streams extends Constants
+public class Streams
 {
 	private String filename;
 	private File file;
 	private InputStream is;
+	private Constants consts = Constants.getOne();
 
 	public Streams(String filename)
 	{
-		if (isSystemResource())
+		if (consts.isSystemResource())
 		{
 			this.filename = filename;
 		}
@@ -98,7 +99,7 @@ public class Streams extends Constants
 	public InputStream getResource() throws FileNotFoundException
 	{
 		InputStream is = null;
-		if (isSystemResource())
+		if (consts.isSystemResource())
 		{
 			is = ClassLoader.getSystemResourceAsStream(filename);
 		}
