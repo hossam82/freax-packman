@@ -9,70 +9,80 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
-public abstract class ArchiveReader implements Comparable<ArchiveReader> {
+public abstract class ArchiveReader implements Comparable<ArchiveReader>
+{
 	private FileInputStream fis;
 	private File file;
 	private List<String> entries;
 	private Map<String, String> filecontents;
 	private boolean hasRead;
 
-	public ArchiveReader(File file) throws IOException {
+	public ArchiveReader(File file) throws IOException
+	{
 		this.file = file;
-		this.fis = new FileInputStream(this.file);
-		this.entries = new ArrayList<String>();
-		this.filecontents = new HashMap<String, String>();
-		this.hasRead = false;
-		this.setEntryArrayList();
+		fis = new FileInputStream(this.file);
+		entries = new ArrayList<String>();
+		filecontents = new HashMap<String, String>();
+		hasRead = false;
+		setEntryArrayList();
 	}
 
-	public File getFile() {
-		return this.file;
+	public File getFile()
+	{
+		return file;
 	}
 
 	public abstract String getType();
 
-	public List<String> getEntries() {
-		return this.entries;
+	public List<String> getEntries()
+	{
+		return entries;
 	}
 
-	public Map<String, String> getFilesContents() {
-		return this.filecontents;
+	public Map<String, String> getFilesContents()
+	{
+		return filecontents;
 	}
 
-	public String getEntryContent(String entryName) {
-		return this.filecontents.get(entryName);
+	public String getEntryContent(String entryName)
+	{
+		return filecontents.get(entryName);
 	}
 
-	public boolean hasRead() {
-		return this.hasRead;
+	public boolean hasRead()
+	{
+		return hasRead;
 	}
 
-	public void setHasRead(boolean hasRead) {
+	public void setHasRead(boolean hasRead)
+	{
 		this.hasRead = hasRead;
 	}
 
-	protected FileInputStream openStream() throws FileNotFoundException {
-		if (this.fis == null)
-			this.fis = new FileInputStream(this.file);
-		else {
-			this.closeStream();
-			this.fis = this.openStream();
+	protected FileInputStream openStream() throws FileNotFoundException
+	{
+		if (fis == null)
+		{
+			fis = new FileInputStream(file);
+		} else
+		{
+			closeStream();
+			fis = openStream();
 		}
-		return this.fis;
+		return fis;
 	}
 
-	protected void closeStream() {
-		try {
-			this.fis.close();
-		} catch (IOException e) {
+	protected void closeStream()
+	{
+		try
+		{
+			fis.close();
+		} catch (IOException e)
+		{
 		}
-		this.fis = null;
+		fis = null;
 	}
 
 	/**
@@ -85,21 +95,27 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader> {
 	 * @throws ArchiveNotSupportedException
 	 */
 	public static ArchiveReader getRightInstance(File file)
-			throws ArchiveNotSupportedException, IOException {
+			throws ArchiveNotSupportedException, IOException
+	{
 		String type = ArchiveReader.getArchiveType(file);
 		if (type == "Unsupported")
+		{
 			throw new ArchiveNotSupportedException();
+		}
 		ArchiveReader instance;
-		try {
+		try
+		{
 			instance = Generics.getOne(ArchiveReader.class).getChildInstance(
 					type, file);
-		} catch (Throwable e1) {
+		} catch (Throwable e1)
+		{
 			throw new ArchiveNotSupportedException();
 		}
 		return instance;
 	}
 
-	private static String getArchiveType(File file) throws IOException {
+	private static String getArchiveType(File file) throws IOException
+	{
 		Constants consts = Constants.getOne();
 		String ret = "Unsupported";
 		FileInputStream input = new FileInputStream(file);
@@ -141,12 +157,14 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader> {
 	 * @return Un HashMap contenente coppie che hanno come chiave il nome del
 	 *         file completo di percorso, e come valore il suo contenuto.
 	 */
-	public Map<String, String> readEntries() throws IOException {
-		if (!this.hasRead) {
-			this.readEntriesContent();
-			this.hasRead = true;
+	public Map<String, String> readEntries() throws IOException
+	{
+		if (!hasRead)
+		{
+			readEntriesContent();
+			hasRead = true;
 		}
-		return this.filecontents;
+		return filecontents;
 	}
 
 	/**
@@ -179,28 +197,40 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader> {
 	protected abstract void setEntryArrayList() throws IOException;
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ (this.file == null ? 0 : this.file.hashCode());
+		result = prime * result + (file == null ? 0 : file.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
+		{
 			return true;
+		}
 		if (obj == null)
+		{
 			return false;
+		}
 		if (!(obj instanceof ArchiveReader))
+		{
 			return false;
+		}
 		ArchiveReader other = (ArchiveReader) obj;
-		if (this.file == null) {
+		if (file == null)
+		{
 			if (other.file != null)
+			{
 				return false;
-		} else if (!this.file.equals(other.file))
+			}
+		} else if (!file.equals(other.file))
+		{
 			return false;
+		}
 		return true;
 	}
 }
