@@ -2,7 +2,7 @@ package it.freax.fpm.core.archives;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 public class MockArchiveReader extends ArchiveReader {
 
@@ -11,12 +11,17 @@ public class MockArchiveReader extends ArchiveReader {
 	}
 
 	@Override
+	public String getType() {
+		return null;
+	}
+
+	@Override
 	public String readEntry(String entryName) throws IOException {
 		return null;
 	}
 
 	@Override
-	public ArrayList<String> readEntries(String entryName, boolean excludeRoot,
+	public List<String> readEntries(String entryName, boolean excludeRoot,
 			String root) throws IOException {
 		return null;
 	}
@@ -34,6 +39,11 @@ public class MockArchiveReader extends ArchiveReader {
 	@Override
 	protected void setEntryArrayList() throws IOException {
 		return;
+	}
+
+	@Override
+	public int compareTo(ArchiveReader o) {
+		return 0;
 	}
 
 }
