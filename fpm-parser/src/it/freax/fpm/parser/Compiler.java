@@ -24,14 +24,24 @@ public class Compiler
 	public static void main(String[] args) throws IOException
 	{
 		CompilationAction compilationAction = new CompilationAction();
-		TargetCode targetCode = compilationAction.run(Streams.getOne(args[0]).read());
+		TargetCode targetCode = compilationAction.run(Streams.getOne(args[0])
+				.read());
 		Collections<ErrorReport> reports = null;
 		reports = Collections.getOne(targetCode.getErrorReports());
-		System.out.println(Strings.getOne().getLines(reports.<String> castAll()));
+		System.out.println(Strings.getOne()
+				.getLines(reports.<String> castAll()));
 		if (reports.isNullOrEmpty())
 		{
-			String path = Constants.getOne().getDirPrefix() + args[1];
-			Streams.getOne(path).write(targetCode.getOutputPayload(), true).setExecutable(true);
+			String path = "";
+			if (Strings.getOne().isRelativePath(args[1]))
+			{
+				path = Constants.USER_DIR + args[1];
+			} else
+			{
+				path = args[1];
+			}
+			Streams.getOne(path).write(targetCode.getOutputPayload(), true)
+					.setExecutable(true);
 		}
 	}
 }

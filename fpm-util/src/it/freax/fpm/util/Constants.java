@@ -3,157 +3,222 @@ package it.freax.fpm.util;
 import it.freax.fpm.util.exceptions.ConfigurationReadException;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.Scanner;
 
 public final class Constants
 {
-	public static final String USER_HOME = System.getProperty("user.home");
-	public static final String FS = System.getProperty("file.separator");
-	public static final String CONST_FILE = "constants.properties";
-	public static final String REL_P = "${REL}";
 	/**
-	 * Token that acts as a place holder for the previous path in the path
+	 * Home directory dell'utente.<br/>
+	 * In *nix è /home/USER/ In Windows è C:\Users\USER\ (Vista, 2k8, 7) o
+	 * C:\Documents and Settings\USER\ (2k, XP, 2k3)
+	 */
+	public static final String USER_HOME = System.getProperty("user.home");
+	/**
+	 * Directory di esecuzione del programma java, la jvm risolve il percorso
+	 * dei class file o del jar file che sta eseguendo e torna la directory root
+	 * che li contiene.<br/>
+	 * Es.: java -jar /home/joe/fpm/fpmMain.jar -> /home/joe/fpm
+	 */
+	public static final String USER_DIR = System.getProperty("user.dir");
+
+	/**
+	 * Nome del sistema operativo in uso.<br/>
+	 * Windows 7, Windows XP, Linux, Solaris, Mac OS X ...
+	 */
+	public static final String OS_NAME = System.getProperty("os.name");
+
+	/**
+	 * Separatore di file (e directory), In Windows '\', in *nix '/'.
+	 */
+	public static final String FS = System.getProperty("file.separator");
+
+	/**
+	 * Nazionalità (e linguaggio) dell'utente corrente
+	 */
+	public static final String COUNTRY = System.getProperty("user.country");
+
+	/**
+	 * Nome del file di configurazione principale di fpm.
+	 */
+	public static final String MAIN_CONF_FILE = "fpm.conf";
+
+	/**
+	 * Nome della directory contenente i file di configurazione.
+	 */
+	public static final String CONF_DIR = "conf";
+
+	/**
+	 * Nome della directory dei file fisici di fpm (configurazione, log, ...).
+	 */
+	public static final String FPM_DIR = "fpm";
+
+	/**
+	 * Tag di sostituzione che sta a indicare un percorso relativo (interno al
+	 * jar che contiene il software eseguito).
+	 */
+	public static final String REL_P = "${REL}";
+
+	/**
+	 * Tag di sostituzione che sta a indicare il percorso precedente nella lista
+	 * di percorsi.
 	 */
 	public static final String PREV_P = "${PREV}";
+
+	/**
+	 * Separatore per la lista di percorsi da utilizzare per la ricerca del
+	 * MAIN_CONF_FILE.
+	 */
 	public static final String SEP_P = ":";
-	public static final String CONF_PATHS = REL_P + "/conf/" + SEP_P + USER_HOME + "/.fpm/" + SEP_P + PREV_P + "/conf/" + SEP_P + "/etc/fpm/";
+
+	/**
+	 * Segnaposto per la directory home dell'utente corrente.
+	 */
+	public static final String HOME_P = "~";
+
+	/**
+	 * Lista di percorsi da utilizzare per la ricerca del MAIN_CONF_FILE.<br/>
+	 * 
+	 * In maniera gerarchica si trova il percorso di sistema o il percorso
+	 * relativo (una risorsa all'interno del jar di fpm, reset to default).<br/>
+	 * 
+	 * Se in presenza di un reset to default, il file di configurazione va
+	 * scritto sul disco nella directory di sistema.
+	 */
+	public static final String CONF_PATHS = getSystemConfDir() + SEP_P + REL_P
+			+ FS + CONF_DIR + FS;
 
 	private static Constants singleton = null;
 	private static boolean hasLoaded = false;
 
-	private String workPath = USER_HOME;
-	private String confdir = "conf";
-	private String logdir = "logs";
-	private String archives_conf = "Archives.conf";
-	private String sourcediscoverconf = "source-detect.xml";
-	private String logfile = "fpm-install.log";
-	private String pattern = "%-8r [%t] %-5p %c - %m%n";
+	private String confPath;
+	private Properties fpmConf;
+	private Properties localizedStrings;
+
+	private static String getSystemConfDir()
+	{
+		String sysConf = "";
+		if (OS_NAME.toLowerCase().contains("windows"))
+		{
+			sysConf = (!USER_DIR.endsWith(FS) ? USER_DIR + FS : USER_DIR);
+		} else
+		{
+			sysConf = FS + "etc" + FS + FPM_DIR + FS;
+		}
+		return sysConf;
+	}
+
+	private static MapEntry<String, Properties> loadFpmConf()
+	{
+		MapEntry<String, Properties> ret = null;
+
+		Scanner sc = new Scanner(CONF_PATHS).useDelimiter(SEP_P);
+		String prev = "";
+		while (sc.hasNext() && !hasLoaded)
+		{
+			Properties fpmConf = null;
+			boolean relative = false;
+			String path = sc.next();
+			if (path.startsWith(PREV_P))
+			{
+				path = path.replace(PREV_P,
+						prev.substring(0, prev.length() - 1));
+			} else if (path.startsWith(REL_P))
+			{
+				path = path.replace(REL_P + FS, "");
+				relative = true;
+			} else if (path.contains(HOME_P))
+			{
+				path = path.replace(HOME_P, USER_HOME);
+			}
+			prev = path;
+
+			path = path.concat(MAIN_CONF_FILE);
+
+			try
+			{
+				InputStream is = null;
+				if (relative)
+				{
+					is = ClassLoader.getSystemResourceAsStream(path);
+				} else
+				{
+					is = new FileInputStream(path);
+				}
+
+				fpmConf = new Properties();
+
+				fpmConf.load(is);
+				if (fpmConf.isEmpty())
+				{
+					throw new ConfigurationReadException();
+				}
+
+				ret = new MapEntry<String, Properties>(path, fpmConf);
+				hasLoaded = true;
+			} catch (Throwable e)
+			{
+				fpmConf = null;
+				singleton = null;
+				hasLoaded = false;
+			}
+		}
+		return ret;
+	}
+
+	private static Properties loadLocalizedStrings(String path, String pattern)
+	{
+		Properties ret = null;
+		Strings s = Strings.getOne();
+		InputStream is = null;
+		String locRes = pattern.replace("{COUNTRY}", COUNTRY);
+		String fullpath = s.concatPaths(path, locRes);
+		try
+		{
+			if (s.isRelativePath(path))
+			{
+				is = ClassLoader.getSystemResourceAsStream(fullpath);
+			} else
+
+			{
+				is = new FileInputStream(fullpath);
+			}
+
+			ret = new Properties();
+			ret.load(is);
+		} catch (IOException e)
+		{
+			is = ClassLoader.getSystemResourceAsStream(CONF_DIR + FS
+					+ pattern.replace("{COUNTRY}", "default"));
+			ret = new Properties();
+			try
+			{
+				ret.load(is);
+			} catch (Throwable t)
+			{
+			}
+		}
+		return ret;
+	}
 
 	public static Constants getOne()
 	{
 		if (!hasLoaded && (singleton == null))
 		{
-			Scanner sc = new Scanner(CONF_PATHS).useDelimiter(SEP_P);
-			String prev = "";
-			while (sc.hasNext() && !hasLoaded)
-			{
-				singleton = new Constants();
-				boolean relative = false;
-				String path = sc.next();
-				if (path.startsWith(PREV_P))
-				{
-					path = path.replace(PREV_P, prev.substring(0, prev.length() - 1));
-				}
-				else if (path.startsWith(REL_P))
-				{
-					path = path.replace(REL_P + "/", "");
-					relative = true;
-				}
-				else if (path.contains("~"))
-				{
-					path = path.replace("~", USER_HOME);
-				}
-				prev = path;
+			MapEntry<String, Properties> entry = loadFpmConf();
+			String locFilesPath = entry.getValue().getProperty(
+					"localized.files.path");
+			String locFilesPattern = entry.getValue().getProperty(
+					"localized.files.pattern");
+			Properties localizedStrings = loadLocalizedStrings(locFilesPath,
+					locFilesPattern);
 
-				path = path.concat(CONST_FILE);
-
-				try
-				{
-					InputStream is = null;
-					if (relative)
-					{
-						is = ClassLoader.getSystemResourceAsStream(path);
-					}
-					else
-					{
-						is = new FileInputStream(path);
-					}
-
-					Properties props = new Properties();
-					props.load(is);
-					String prop;
-
-					prop = props.getProperty("workPath");
-					if ((prop != null) && !prop.isEmpty())
-					{
-						singleton.setWorkPath(prop);
-					}
-					else
-					{
-						throw new ConfigurationReadException();
-					}
-
-					prop = props.getProperty("confdir");
-					if ((prop != null) && !prop.isEmpty())
-					{
-						singleton.setConfdir(prop);
-					}
-					else
-					{
-						throw new ConfigurationReadException();
-					}
-
-					prop = props.getProperty("logdir");
-					if ((prop != null) && !prop.isEmpty())
-					{
-						singleton.setLogDir(prop);
-					}
-					else
-					{
-						throw new ConfigurationReadException();
-					}
-
-					prop = props.getProperty("archives_conf");
-					if ((prop != null) && !prop.isEmpty())
-					{
-						singleton.setArchivesConf(prop);
-					}
-					else
-					{
-						throw new ConfigurationReadException();
-					}
-
-					prop = props.getProperty("sourcediscoverconf");
-					if ((prop != null) && !prop.isEmpty())
-					{
-						singleton.setSourceDiscoverConf(prop);
-					}
-					else
-					{
-						throw new ConfigurationReadException();
-					}
-
-					prop = props.getProperty("logfile");
-					if ((prop != null) && !prop.isEmpty())
-					{
-						singleton.setLogFile(prop);
-					}
-					else
-					{
-						throw new ConfigurationReadException();
-					}
-
-					prop = props.getProperty("pattern");
-					if ((prop != null) && !prop.isEmpty())
-					{
-						singleton.setPattern(prop);
-					}
-					else
-					{
-						throw new ConfigurationReadException();
-					}
-
-					hasLoaded = true;
-				}
-				catch (Throwable e)
-				{
-					singleton = null;
-					hasLoaded = false;
-				}
-			}
+			singleton = new Constants();
+			singleton.setDefaultConfPath(entry.getKey());
+			singleton.setFpmConf(entry.getValue());
+			singleton.setLocalizedStrings(localizedStrings);
 		}
 		return singleton;
 	}
@@ -165,131 +230,43 @@ public final class Constants
 		return getOne();
 	}
 
-	public String getFullConfPath()
+	private void setDefaultConfPath(String confPath)
 	{
-		String ret = "";
-		String paths = "";
-		String prev = "";
-		String fpm_conf_paths = System.getenv("FPM_CONF_PATHS");
-		if (Strings.getOne().isNullOrEmpty(fpm_conf_paths))
-		{
-			paths = CONF_PATHS;
-		}
-		else
-		{
-			paths = fpm_conf_paths;
-		}
-
-		boolean found = false;
-		Scanner sc = new Scanner(paths).useDelimiter(SEP_P);
-		while (sc.hasNext() && !found)
-		{
-			boolean relative = false;
-			String path = sc.next();
-			if (path.startsWith(PREV_P))
-			{
-				path = path.replace(PREV_P, prev.substring(0, prev.length() - 1));
-			}
-			else if (path.startsWith(REL_P))
-			{
-				path = path.replace(REL_P + FS, "");
-				relative = true;
-			}
-			else if (path.contains("~"))
-			{
-				path = path.replace("~", USER_HOME);
-			}
-			prev = path;
-
-			path = path.concat(CONST_FILE);
-
-			try
-			{
-				if (relative)
-				{
-					ClassLoader.getSystemResourceAsStream(path);
-				}
-				else
-				{
-					new FileInputStream(path);
-				}
-				ret = prev;
-				found = true;
-			}
-			catch (FileNotFoundException fnfe)
-			{
-			}
-		}
-		return ret;
+		this.confPath = confPath;
 	}
 
-	public String getConfdir()
+	public String getDefaultConfPath()
 	{
-		return confdir;
+		return confPath;
 	}
 
-	public void setConfdir(String confdir)
+	private void setFpmConf(Properties fpmConf)
 	{
-		this.confdir = confdir;
+		this.fpmConf = fpmConf;
 	}
 
-	public String getArchivesConf()
+	public Properties getFpmConf()
 	{
-		return archives_conf;
+		return fpmConf;
 	}
 
-	public void setArchivesConf(String archives_conf)
+	public String getConstant(String name)
 	{
-		this.archives_conf = archives_conf;
+		return getFpmConf().getProperty(name);
 	}
 
-	public String getSourceDiscoverConf()
+	private void setLocalizedStrings(Properties localizedStrings)
 	{
-		return sourcediscoverconf;
+		this.localizedStrings = localizedStrings;
 	}
 
-	public void setSourceDiscoverConf(String sourcediscoverconf)
+	public Properties getLocalizedStrings()
 	{
-		this.sourcediscoverconf = sourcediscoverconf;
+		return localizedStrings;
 	}
 
-	public String getLogFile()
+	public String getLocalizedString(String name)
 	{
-		return logfile;
-	}
-
-	public void setLogFile(String logfile)
-	{
-		this.logfile = logfile;
-	}
-
-	public String getPattern()
-	{
-		return pattern;
-	}
-
-	public void setPattern(String pattern)
-	{
-		this.pattern = pattern;
-	}
-
-	public void setLogDir(String logdir)
-	{
-		this.logdir = logdir;
-	}
-
-	public String getLogDir()
-	{
-		return logdir;
-	}
-
-	public void setWorkPath(String workPath)
-	{
-		this.workPath = workPath;
-	}
-
-	public String getWorkPath()
-	{
-		return (workPath.contains("~") ? workPath.replace("~", USER_HOME) : workPath);
+		return getLocalizedStrings().getProperty(name);
 	}
 }

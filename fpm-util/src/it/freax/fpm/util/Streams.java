@@ -9,15 +9,14 @@ public class Streams
 	private String filename;
 	private File file;
 	private InputStream is;
-	private Constants consts = Constants.getOne();
+	private boolean relative;
 
 	public Streams(String filename)
 	{
-		if (consts.isSystemResource())
+		if (relative = Strings.getOne().isRelativePath(filename))
 		{
 			this.filename = filename;
-		}
-		else
+		} else
 		{
 			file = new File(filename);
 			this.filename = file.getAbsolutePath();
@@ -57,8 +56,7 @@ public class Streams
 		if (file != null)
 		{
 			scanner = new Scanner(file);
-		}
-		else if (is != null)
+		} else if (is != null)
 		{
 			scanner = new Scanner(is);
 		}
@@ -71,7 +69,8 @@ public class Streams
 		return ret.toString();
 	}
 
-	private Properties getPropertiesFromInputStream(InputStream is) throws IOException
+	private Properties getPropertiesFromInputStream(InputStream is)
+			throws IOException
 	{
 		Properties props = null;
 		if (is != null)
@@ -88,8 +87,7 @@ public class Streams
 		if (is != null)
 		{
 			props = getPropertiesFromInputStream(is);
-		}
-		else
+		} else
 		{
 			props = getPropertiesFromInputStream(getResource());
 		}
@@ -99,11 +97,10 @@ public class Streams
 	public InputStream getResource() throws FileNotFoundException
 	{
 		InputStream is = null;
-		if (consts.isSystemResource())
+		if (relative)
 		{
 			is = ClassLoader.getSystemResourceAsStream(filename);
-		}
-		else
+		} else
 		{
 			is = new FileInputStream(filename);
 		}
@@ -125,10 +122,10 @@ public class Streams
 			FileOutputStream fileOutputStream = new FileOutputStream(file);
 			fileOutputStream.write(toWrite);
 			fileOutputStream.close();
-		}
-		else
+		} else
 		{
-			throw new IOException("File not exists and cannot be created, aborting");
+			throw new IOException(
+					"File not exists and cannot be created, aborting");
 		}
 		return file;
 	}

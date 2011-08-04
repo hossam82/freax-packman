@@ -3,6 +3,7 @@ package it.freax.fpm.core.archives;
 import it.freax.fpm.util.Constants;
 import it.freax.fpm.util.Generics;
 import it.freax.fpm.util.Streams;
+import it.freax.fpm.util.Strings;
 import it.freax.fpm.util.exceptions.ArchiveNotSupportedException;
 
 import java.io.File;
@@ -120,8 +121,9 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader>
 		String ret = "Unsupported";
 		FileInputStream input = new FileInputStream(file);
 		String type = String.format("%h%h", input.read(), input.read());
-		String archives_conf = consts.getFullConfPath()
-				+ consts.getArchivesConf();
+		String archives_conf = Strings.getOne().concatPaths(
+				consts.getConstant("conf.path"),
+				consts.getConstant("conf.archives"));
 		Properties properties = Streams.getOne(archives_conf).getProperties();
 		ret = properties.getProperty(type);
 		input.close();

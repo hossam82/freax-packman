@@ -26,14 +26,19 @@ public class SourceDiscoverer
 	private ArchiveReader reader;
 	private TarballSpec spec;
 	private Configuration conf;
-	private Logger log = LogConfigurator.getOne(this.getClass()).configure(true);
+	private Logger log = LogConfigurator.getOne(this.getClass())
+			.configure(true);
 
-	public SourceDiscoverer(ArchiveReader reader, TarballSpec spec) throws ConfigurationReadException
+	public SourceDiscoverer(ArchiveReader reader, TarballSpec spec)
+			throws ConfigurationReadException
 	{
 		this.reader = reader;
 		this.spec = spec;
 		entries = reader.getEntries();
-		conf = Configuration.load(Constants.getOne().getSourceDiscoverConf());
+		Constants c = Constants.getOne();
+		conf = Configuration.load(Strings.getOne().concatPaths(
+				c.getConstant("conf.path"),
+				c.getConstant("conf.sourcediscover")));
 	}
 
 	public void setPackageName(String packageName)
@@ -55,7 +60,8 @@ public class SourceDiscoverer
 		{
 			start = time();
 			reader.readEntries();
-			log.debug("Read all entries: " + TimeSpan.format(time() - start, TimeSpan.MILLISECOND));
+			log.debug("Read all entries: "
+					+ TimeSpan.format(time() - start, TimeSpan.MILLISECOND));
 		}
 		log.debug("Inizializzo il treeset");
 		ret = initTreeSet();
@@ -68,20 +74,24 @@ public class SourceDiscoverer
 		{
 			Treenode tn = it.next();
 			log.debug("Tento di riempire il nodo " + tn.getName());
-			ArrayList<SrcFile> srcfiles = makeSrcFileList(tn, getFiles(tn.getName()));
+			ArrayList<SrcFile> srcfiles = makeSrcFileList(tn,
+					getFiles(tn.getName()));
 			makeInstructionSet(tn, cleanSrcFiles(srcfiles));
 			CompilationUnit cu = tn.getAssociatedCU();
 			setCompilationUnit(cu, srcfiles);
 			log.debug("Dopo aver fatto tutto questo aggiorno la Compilation Unit che ho appena settato sul treenode padre");
 			tn.updateCU(cu);
 			log.debug("Emerge che il nome della Compilation Unit e la sua versione sono:");
-			log.debug(tn.getAssociatedCU().getDummySpec().getPackage().getPackageName());
-			log.debug(tn.getAssociatedCU().getDummySpec().getPackage().getVersion());
+			log.debug(tn.getAssociatedCU().getDummySpec().getPackage()
+					.getPackageName());
+			log.debug(tn.getAssociatedCU().getDummySpec().getPackage()
+					.getVersion());
 		}
 		log.debug("Una volta processati tutti i nodi setto il DummySpec");
 		spec.map(getGlobalDummySpec(ret));
 		log.debug(spec);
-		log.debug("Tempo impiegato: " + TimeSpan.format(time() - start, TimeSpan.MILLISECOND));
+		log.debug("Tempo impiegato: "
+				+ TimeSpan.format(time() - start, TimeSpan.MILLISECOND));
 		return ret;
 	}
 
@@ -99,7 +109,10 @@ public class SourceDiscoverer
 		while (it.hasNext())
 		{
 			String entry = it.next();
-			if (entry.startsWith(directory) && !entry.equalsIgnoreCase(directory) && (dirsplitlen + 1 == entry.split("/").length) && !isDirectory(entry))
+			if (entry.startsWith(directory)
+					&& !entry.equalsIgnoreCase(directory)
+					&& (dirsplitlen + 1 == entry.split("/").length)
+					&& !isDirectory(entry))
 			{
 				ret.add(entry);
 			}
@@ -171,12 +184,10 @@ public class SourceDiscoverer
 		if (ebnf == null)
 		{
 			parser = null;
-		}
-		else if (parser == null)
+		} else if (parser == null)
 		{
 			parser = new EbnfParser(ebnf);
-		}
-		else
+		} else
 		{
 			parser.setEbnf(ebnf);
 		}
@@ -190,15 +201,18 @@ public class SourceDiscoverer
 		{
 			for (String lang : file.getLangs())
 			{
-				log.debug("Cicli annidati: Per ogni file su tutti i linguaggi associati for (files) { for (files.linguaggi) { \"" + lang + "\" } }");
+				log.debug("Cicli annidati: Per ogni file su tutti i linguaggi associati for (files) { for (files.linguaggi) { \""
+						+ lang + "\" } }");
 				ConfType type = conf.getType(lang);
 				if (file.isNotable())
 				{
-					NotableFile notable = type.getNotableFile(Strings.getOne().trimDir(file.getName()));
-					instructions.addAll(type.getInstructionsById(notable.getId()));
-					log.debug("Dato che è notevole prendo l'instruction set " + notable.getId() + " dalla configurazione");
-				}
-				else
+					NotableFile notable = type.getNotableFile(Strings.getOne()
+							.trimDir(file.getName()));
+					instructions.addAll(type.getInstructionsById(notable
+							.getId()));
+					log.debug("Dato che è notevole prendo l'instruction set "
+							+ notable.getId() + " dalla configurazione");
+				} else
 				{
 					log.debug("Dato che non è notevole prendo l'instruction set 0 dalla configurazione");
 					instructions.addAll(type.getInstructionsById(0));
@@ -209,7 +223,8 @@ public class SourceDiscoverer
 		}
 		General genInfo = conf.getGeneralInfo();
 		ArrayList<String> command = new ArrayList<String>();
-		String delimiter = ExitCodeControl.getDelimiter(genInfo.getExitCodeControl());
+		String delimiter = ExitCodeControl.getDelimiter(genInfo
+				.getExitCodeControl());
 		Iterator<Instruction> it = instructions.descendingIterator();
 		log.debug("Aggiungo i comandi di Privilege Excalation quando necessari nell'instruction set");
 		while (it.hasNext())
@@ -229,10 +244,12 @@ public class SourceDiscoverer
 			}
 		}
 		log.debug("Aggiungo l'istruzione alla Compilation Unit facendo un merge dinamico di tutto l'instruction set");
-		tn.getAssociatedCU().addInstruction(Strings.getOne().merge(command, " "), null);
+		tn.getAssociatedCU().addInstruction(
+				Strings.getOne().merge(command, " "), null);
 	}
 
-	private ArrayList<SrcFile> makeSrcFileList(Treenode tn, ArrayList<String> files)
+	private ArrayList<SrcFile> makeSrcFileList(Treenode tn,
+			ArrayList<String> files)
 	{
 		log.debug("Costruisco la lista di SrcFile");
 		ArrayList<SrcFile> srcfiles = new ArrayList<SrcFile>();
@@ -271,7 +288,8 @@ public class SourceDiscoverer
 		SrcFile srcfile = new SrcFile();
 		srcfile.setName(file);
 		srcfile.setNotable(isFileParticolare(file));
-		log.debug("Il file" + (srcfile.isNotable() ? " " : " non ") + "è notevole");
+		log.debug("Il file" + (srcfile.isNotable() ? " " : " non ")
+				+ "è notevole");
 		String content = reader.getEntryContent(file);
 		log.debug("Setto il contenuto del file");
 		srcfile.setContent(content);
@@ -280,8 +298,7 @@ public class SourceDiscoverer
 			log.debug("Dato che è notevole trovo tutti i linguaggi per i quali è notevole");
 			srcfile.addAllLangs(getNotableFileLangs(file));
 			log.debug("che sono:\n" + srcfile.getLangs());
-		}
-		else
+		} else
 		{
 			log.debug("Dato che non è notevole devo usare altri metodi per verificare che file è");
 			Iterator<ConfType> typeit = conf.typesIterator();
@@ -294,17 +311,20 @@ public class SourceDiscoverer
 				{
 					if (Strings.getOne().checkExtensions(file, type.getExts()))
 					{
-						log.debug("Il file ricade nelle estensioni del tipo, quindi posso provare il parsing con l'ebnf " + type.getEbnf());
+						log.debug("Il file ricade nelle estensioni del tipo, quindi posso provare il parsing con l'ebnf "
+								+ type.getEbnf());
 						parser = getEbnfParser(parser, type.getEbnf());
 						if (parser.parse(content))
 						{
-							log.debug("Sono riuscito a parsare il contenuto! Il file è di tipo \"" + type.getSource() + "\" e i suoi imports sono:\n" + parser.getImports());
+							log.debug("Sono riuscito a parsare il contenuto! Il file è di tipo \""
+									+ type.getSource()
+									+ "\" e i suoi imports sono:\n"
+									+ parser.getImports());
 							srcfile.addLang(type.getSource());
 							srcfile.addAllIncludes(parser.getImports());
 						}
 					}
-				}
-				catch (ExtensionDecodingException e)
+				} catch (ExtensionDecodingException e)
 				{
 					ErrorHandler.getOne(getClass()).handle(e);
 				}
@@ -315,17 +335,20 @@ public class SourceDiscoverer
 
 	private void setCompilationUnit(CompilationUnit cu, ArrayList<SrcFile> files)
 	{
-		log.debug("Setto la Compilation Unit con " + files.size() + " SrcFile(s), di questi scelgo solo quelli notevoli");
+		log.debug("Setto la Compilation Unit con " + files.size()
+				+ " SrcFile(s), di questi scelgo solo quelli notevoli");
 		for (SrcFile file : files)
 		{
 			if (file.isNotable())
 			{
 				for (String lang : file.getLangs())
 				{
-					log.debug("Controllo se il file notevole contiene informazioni additive nel linguaggio " + lang);
+					log.debug("Controllo se il file notevole contiene informazioni additive nel linguaggio "
+							+ lang);
 					ConfType type = conf.getType(lang);
 					ArrayList<Additive> additives = new ArrayList<Additive>();
-					NotableFile notable = type.getNotableFile(Strings.getOne().trimDir(file.getName()));
+					NotableFile notable = type.getNotableFile(Strings.getOne()
+							.trimDir(file.getName()));
 					additives = type.getAdditivesById(notable.getId());
 
 					log.debug("A questo punto devo fare una cosa particolare: dato che gli additives sono categorizzati, devo intanto dividerli per categoria");
@@ -334,36 +357,41 @@ public class SourceDiscoverer
 					while (it.hasNext())
 					{
 						Entry<InfoType, ArrayList<Additive>> elem = it.next();
-						log.debug("Poi per ogni tipo di additive prendo tutti quelli della categoria " + elem.getKey() + " e trovo quale risulta essere il migliore");
+						log.debug("Poi per ogni tipo di additive prendo tutti quelli della categoria "
+								+ elem.getKey()
+								+ " e trovo quale risulta essere il migliore");
 						String best = getBestScore(elem.getValue(), file);
 						log.debug("La parte importante arriva qui: setto il payload nell'attributo specifico a seconda del tipo di additive che ho processato");
 						switch (elem.getKey())
 						{
-							case PackageName:
-							{
-								log.debug("Setto " + elem.getKey() + " come " + best);
-								cu.getDummySpec().setPackageName(best);
-								break;
-							}
-							case Version:
-							{
-								log.debug("Setto " + elem.getKey() + " come " + best);
-								cu.getDummySpec().setVersion(best);
-								break;
-							}
-							case Changelog:
-							{
-								log.debug("Setto " + elem.getKey());
-								cu.getDummySpec().setChangeLog(best);
-							}
-							case InfoPage:
-							case ManPage:
-							case Readme:
-							{
-								log.debug("Setto " + elem.getKey() + " come " + file.getName());
-								cu.getDummySpec().addDocFile(file.getName(), best);
-								break;
-							}
+						case PackageName:
+						{
+							log.debug("Setto " + elem.getKey() + " come "
+									+ best);
+							cu.getDummySpec().setPackageName(best);
+							break;
+						}
+						case Version:
+						{
+							log.debug("Setto " + elem.getKey() + " come "
+									+ best);
+							cu.getDummySpec().setVersion(best);
+							break;
+						}
+						case Changelog:
+						{
+							log.debug("Setto " + elem.getKey());
+							cu.getDummySpec().setChangeLog(best);
+						}
+						case InfoPage:
+						case ManPage:
+						case Readme:
+						{
+							log.debug("Setto " + elem.getKey() + " come "
+									+ file.getName());
+							cu.getDummySpec().addDocFile(file.getName(), best);
+							break;
+						}
 						}
 					}
 				}
@@ -390,7 +418,8 @@ public class SourceDiscoverer
 		return ret;
 	}
 
-	private HashMap<InfoType, ArrayList<Additive>> getTypedAdditives(ArrayList<Additive> additives)
+	private HashMap<InfoType, ArrayList<Additive>> getTypedAdditives(
+			ArrayList<Additive> additives)
 	{
 		HashMap<InfoType, ArrayList<Additive>> typedAdditives;
 		typedAdditives = new HashMap<InfoType, ArrayList<Additive>>();
@@ -399,7 +428,8 @@ public class SourceDiscoverer
 		{
 			if (!typedAdditives.containsKey(additive.getInfoType()))
 			{
-				typedAdditives.put(additive.getInfoType(), new ArrayList<Additive>());
+				typedAdditives.put(additive.getInfoType(),
+						new ArrayList<Additive>());
 			}
 			typedAdditives.get(additive.getInfoType()).add(additive);
 		}
@@ -424,7 +454,9 @@ public class SourceDiscoverer
 				DummySpec ds = tn.getAssociatedCU().getDummySpec();
 				namesEs.add(ds.getPackage().getPackageName());
 				versEs.add(ds.getPackage().getVersion());
-				ret.setChangeLog(((ds.getChangeLog() == null ? "" : ds.getChangeLog()).isEmpty() ? ret.getChangeLog() : ds.getChangeLog()));
+				ret.setChangeLog(((ds.getChangeLog() == null ? "" : ds
+						.getChangeLog()).isEmpty() ? ret.getChangeLog() : ds
+						.getChangeLog()));
 			}
 		}
 		log.debug("E in fine setto il best dei due EntriesScorer");
