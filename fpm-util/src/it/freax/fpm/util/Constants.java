@@ -2,11 +2,11 @@ package it.freax.fpm.util;
 
 import it.freax.fpm.util.exceptions.ConfigurationReadException;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 import java.util.Scanner;
+
+import org.apache.commons.io.IOUtils;
 
 public final class Constants
 {
@@ -62,6 +62,12 @@ public final class Constants
 	public static final String REL_P = "${REL}";
 
 	/**
+	 * Tag di sostituzione che sta a indicare un paese (o una lingua) per il
+	 * sistema di internazionalizzazione.
+	 */
+	public static final String COUNTRY_P = "${COUNTRY}";
+
+	/**
 	 * Tag di sostituzione che sta a indicare il percorso precedente nella lista
 	 * di percorsi.
 	 */
@@ -102,7 +108,8 @@ public final class Constants
 		String sysConf = "";
 		if (OS_NAME.toLowerCase().contains("windows"))
 		{
-			sysConf = (!USER_DIR.endsWith(FS) ? USER_DIR + FS : USER_DIR);
+			sysConf = (!USER_DIR.endsWith(FS) ? USER_DIR + FS : USER_DIR)
+					+ CONF_DIR;
 		} else
 		{
 			sysConf = FS + "etc" + FS + FPM_DIR + FS;
@@ -143,11 +150,19 @@ public final class Constants
 				if (relative)
 				{
 					is = ClassLoader.getSystemResourceAsStream(path);
-				} else
-				{
-					is = new FileInputStream(path);
+					path = Strings.getOne().concatPaths(getSystemConfDir(),
+							MAIN_CONF_FILE);
+					FileOutputStream os = new FileOutputStream(new File(path));
+					IOUtils.copy(is, os);
+					os.flush();
+					os.close();
+					os = null;
+
+					is.close();
+					is = null;
 				}
 
+				is = new FileInputStream(path);
 				fpmConf = new Properties();
 
 				fpmConf.load(is);
@@ -173,7 +188,7 @@ public final class Constants
 		Properties ret = null;
 		Strings s = Strings.getOne();
 		InputStream is = null;
-		String locRes = pattern.replace("{COUNTRY}", COUNTRY);
+		String locRes = pattern.replace(COUNTRY_P, COUNTRY);
 		String fullpath = s.concatPaths(path, locRes);
 		try
 		{
@@ -181,7 +196,6 @@ public final class Constants
 			{
 				is = ClassLoader.getSystemResourceAsStream(fullpath);
 			} else
-
 			{
 				is = new FileInputStream(fullpath);
 			}
@@ -191,7 +205,7 @@ public final class Constants
 		} catch (IOException e)
 		{
 			is = ClassLoader.getSystemResourceAsStream(CONF_DIR + FS
-					+ pattern.replace("{COUNTRY}", "default"));
+					+ pattern.replace(COUNTRY_P, "default"));
 			ret = new Properties();
 			try
 			{
