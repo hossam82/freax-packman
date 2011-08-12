@@ -1,4 +1,4 @@
-package it.freax.fpm.core.archives;
+package it.freax.fpm.test.unit;
 
 import static org.junit.Assert.*;
 

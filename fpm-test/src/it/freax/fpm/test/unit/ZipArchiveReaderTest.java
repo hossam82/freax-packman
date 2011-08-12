@@ -1,11 +1,11 @@
-package it.freax.fpm.core.archives;
+package it.freax.fpm.test.unit;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class BZip2ArchiveReaderTest {
+public class ZipArchiveReaderTest {
 
 	@Before
 	public void setUp() throws Exception {
@@ -37,7 +37,7 @@ public class BZip2ArchiveReaderTest {
 	}
 
 	@Test
-	public void testBZip2ArchiveReader() {
+	public void testZipArchiveReader() {
 		fail("Not yet implemented"); // TODO
 	}
 

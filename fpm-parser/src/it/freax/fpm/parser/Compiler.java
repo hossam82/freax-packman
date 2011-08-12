@@ -1,6 +1,3 @@
-/**
- * 
- */
 package it.freax.fpm.parser;
 
 import it.freax.fpm.parser.actions.CompilationAction;
