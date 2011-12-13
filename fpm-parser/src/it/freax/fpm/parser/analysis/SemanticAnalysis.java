@@ -10,15 +10,20 @@ import it.freax.fpm.parser.interfaces.IAnalysis;
 /**
  * @author kLeZ-hAcK
  */
-public class SemanticAnalysis<K, V> implements IAnalysis<ConnectionSequence, StructureTree<K, V>>
+public class SemanticAnalysis<K, V> implements
+		IAnalysis<ConnectionSequence, StructureTree<K, V>>
 {
-	/* (non-Javadoc)
-	 * @see it.freax.fpm.parser.interfaces.IAnalysis#performAnalysis(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.freax.fpm.parser.interfaces.IAnalysis#performAnalysis(java.lang.Object
+	 * )
 	 */
 	@Override
 	public StructureTree<K, V> analyse(ConnectionSequence sourceText)
 	{
-		// TODO Auto-generated method stub
+		// TODO Semantic analysis implementation
 		return null;
 	}
 }

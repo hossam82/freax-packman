@@ -17,6 +17,8 @@ public class TestTree
 	 */
 	public static void main(String[] args)
 	{
-		Tree<String> root = new Tree<String>("");
+		Tree<String> root = new Tree<String>("root");
+		root.addLeaf("leaf");
+		System.out.println(root);
 	}
 }

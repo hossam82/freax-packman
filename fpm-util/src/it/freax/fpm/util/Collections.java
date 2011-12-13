@@ -151,6 +151,11 @@ public class Collections<E>
 		return ret;
 	}
 
+	public int size()
+	{
+		return coll.size();
+	}
+
 	@Override
 	public String toString()
 	{

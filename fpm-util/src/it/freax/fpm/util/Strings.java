@@ -21,8 +21,7 @@ public class Strings
 		return new Strings();
 	}
 
-	public boolean checkExtensions(String path, List<String> list)
-			throws ExtensionDecodingException
+	public boolean checkExtensions(String path, List<String> list) throws ExtensionDecodingException
 	{
 		boolean ret = false;
 		if (!getExtension(path).isEmpty())
@@ -38,8 +37,7 @@ public class Strings
 		return ret;
 	}
 
-	public boolean checkExtension(String path, String ext)
-			throws ExtensionDecodingException
+	public boolean checkExtension(String path, String ext) throws ExtensionDecodingException
 	{
 		return ext.equalsIgnoreCase(getExtension(path));
 	}
@@ -50,7 +48,8 @@ public class Strings
 		try
 		{
 			ext = getExtension(path);
-		} catch (ExtensionDecodingException e)
+		}
+		catch (ExtensionDecodingException e)
 		{
 			ErrorHandler.getOne(getClass()).handle(e);
 		}
@@ -74,10 +73,7 @@ public class Strings
 		{
 			ext = extSeparator + Collections.getOne(candidates).lastOrDefault();
 		}
-		if (!path.endsWith(ext) || ext.isEmpty())
-		{
-			throw new ExtensionDecodingException("Extension decoding failed!");
-		}
+		if (!path.endsWith(ext) || ext.isEmpty()) { throw new ExtensionDecodingException("Extension decoding failed!"); }
 		return ext;
 	}
 
@@ -86,14 +82,12 @@ public class Strings
 		return (ext.length() >= rangeExtMin) && (ext.length() <= rangeExtMax);
 	}
 
-	public String removeExtension(String fileName)
-			throws ExtensionDecodingException
+	public String removeExtension(String fileName) throws ExtensionDecodingException
 	{
 		return fileName.replace(getExtension(fileName), "");
 	}
 
-	public String replaceExtension(String fileName, String extToReplace)
-			throws ExtensionDecodingException
+	public String replaceExtension(String fileName, String extToReplace) throws ExtensionDecodingException
 	{
 		return fileName.replace(getExtension(fileName), extToReplace);
 	}
@@ -120,8 +114,7 @@ public class Strings
 		return str;
 	}
 
-	public String getStringInsideDelimiters(String input,
-			String startDelimiter, String endDelimiter)
+	public String getStringInsideDelimiters(String input, String startDelimiter, String endDelimiter)
 	{
 		String ret = "";
 		if ((input != null) && !input.isEmpty())
@@ -135,15 +128,15 @@ public class Strings
 		return ret;
 	}
 
-	public String getStringFromKeyValue(String input, String keyValueDelimiter,
-			boolean getKey)
+	public String getStringFromKeyValue(String input, String keyValueDelimiter, boolean getKey)
 	{
 		String ret = "";
 		StringTokenizer st = new StringTokenizer(input, keyValueDelimiter);
 		if (getKey)
 		{
 			ret = st.nextToken();
-		} else
+		}
+		else
 		{
 			st.nextToken();
 			if (st.hasMoreTokens())
@@ -159,8 +152,7 @@ public class Strings
 		return input.replace("[", "").replace("]", "");
 	}
 
-	public String getRowSubstring(String input, String subset,
-			boolean removeSubSet)
+	public String getRowSubstring(String input, String subset, boolean removeSubSet)
 	{
 		int beginIndex = input.indexOf(subset);
 		if (removeSubSet)
@@ -187,14 +179,12 @@ public class Strings
 		String[] inputArr = input.toArray(new String[input.size()]);
 		for (int i = 0; i < inputArr.length; i++)
 		{
-			ret.append(inputArr[i])
-					.append(System.getProperty("line.separator"));
+			ret.append(inputArr[i]).append(System.getProperty("line.separator"));
 		}
 		return ret.toString();
 	}
 
-	public List<String> grep(String input, String pattern,
-			boolean caseInsensitive)
+	public List<String> grep(String input, String pattern, boolean caseInsensitive)
 	{
 		ArrayList<String> ret = new ArrayList<String>();
 		Scanner scn = new Scanner(input);
@@ -223,7 +213,8 @@ public class Strings
 			try
 			{
 				ret = removeExtension(input);
-			} catch (ExtensionDecodingException e)
+			}
+			catch (ExtensionDecodingException e)
 			{
 				ErrorHandler.getOne(getClass()).handle(e);
 			}
@@ -238,36 +229,36 @@ public class Strings
 		char first = input.charAt(0);
 		switch (first)
 		{
-		case '"':
-		{
-			opid = 1;
-			break;
-		}
-		case '\'':
-		{
-			opid = 2;
-			break;
-		}
-		case '<':
-		{
-			opid = 3;
-			break;
-		}
-		case '{':
-		{
-			opid = 4;
-			break;
-		}
-		case '[':
-		{
-			opid = 5;
-			break;
-		}
-		case '(':
-		{
-			opid = 6;
-			break;
-		}
+			case '"':
+			{
+				opid = 1;
+				break;
+			}
+			case '\'':
+			{
+				opid = 2;
+				break;
+			}
+			case '<':
+			{
+				opid = 3;
+				break;
+			}
+			case '{':
+			{
+				opid = 4;
+				break;
+			}
+			case '[':
+			{
+				opid = 5;
+				break;
+			}
+			case '(':
+			{
+				opid = 6;
+				break;
+			}
 		}
 		return opid;
 	}
@@ -280,40 +271,40 @@ public class Strings
 		switch (opid)
 		// gli esempi sono tutti con uguale anche se il delimiter è dinamico
 		{
-		case 0: // Semplice, Chiave=Valore
-		{
-			break;
-		}
-		case 1:// Con virgolette, Chiave="Valore"
-		{
-			ret = getStringInsideDelimiters(ret, "\"", "\"");
-			break;
-		}
-		case 2: // Con apici, Chiave='Valore'
-		{
-			ret = getStringInsideDelimiters(ret, "'", "'");
-			break;
-		}
-		case 3: // Con parentesi angolari, Chiave=<Valore>
-		{
-			ret = getStringInsideDelimiters(ret, "<", ">");
-			break;
-		}
-		case 4: // Con parentesi graffe, Chiave={Valore}
-		{
-			ret = getStringInsideDelimiters(ret, "{", "}");
-			break;
-		}
-		case 5: // Con parentesi quadre, Chiave=[Valore]
-		{
-			ret = getStringInsideDelimiters(ret, "[", "]");
-			break;
-		}
-		case 6: // Con parentesi tonde, Chiave=(Valore)
-		{
-			ret = getStringInsideDelimiters(ret, "(", ")");
-			break;
-		}
+			case 0: // Semplice, Chiave=Valore
+			{
+				break;
+			}
+			case 1:// Con virgolette, Chiave="Valore"
+			{
+				ret = getStringInsideDelimiters(ret, "\"", "\"");
+				break;
+			}
+			case 2: // Con apici, Chiave='Valore'
+			{
+				ret = getStringInsideDelimiters(ret, "'", "'");
+				break;
+			}
+			case 3: // Con parentesi angolari, Chiave=<Valore>
+			{
+				ret = getStringInsideDelimiters(ret, "<", ">");
+				break;
+			}
+			case 4: // Con parentesi graffe, Chiave={Valore}
+			{
+				ret = getStringInsideDelimiters(ret, "{", "}");
+				break;
+			}
+			case 5: // Con parentesi quadre, Chiave=[Valore]
+			{
+				ret = getStringInsideDelimiters(ret, "[", "]");
+				break;
+			}
+			case 6: // Con parentesi tonde, Chiave=(Valore)
+			{
+				ret = getStringInsideDelimiters(ret, "(", ")");
+				break;
+			}
 		}
 		return ret;
 	}
@@ -359,11 +350,11 @@ public class Strings
 				ret += Constants.FS;
 			}
 
-			if (args[i].endsWith(Constants.FS)
-					|| ((i == args.length - 1) && !isNullOrEmpty(getExtensionSafe(args[i]))))
+			if (args[i].endsWith(Constants.FS) || ((i == args.length - 1) && !isNullOrEmpty(getExtensionSafe(args[i]))))
 			{
 				ret += args[i];
-			} else
+			}
+			else
 			{
 				ret += args[i] + Constants.FS;
 			}

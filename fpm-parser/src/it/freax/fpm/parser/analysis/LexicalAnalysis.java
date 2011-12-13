@@ -11,13 +11,18 @@ import it.freax.fpm.parser.interfaces.IAnalysis;
  */
 public class LexicalAnalysis implements IAnalysis<String, TokenSequence>
 {
-	/* (non-Javadoc)
-	 * @see it.freax.fpm.parser.interfaces.IAnalysis#performAnalysis(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.freax.fpm.parser.interfaces.IAnalysis#performAnalysis(java.lang.Object
+	 * )
 	 */
 	@Override
 	public TokenSequence analyse(String sourceText)
 	{
-		// TODO Auto-generated method stub
+		// TODO Lexical analysis implemetation
+
 		return null;
 	}
 }

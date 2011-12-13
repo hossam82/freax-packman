@@ -26,7 +26,8 @@ public class Tree<T>
 		if (locate.containsKey(root))
 		{
 			locate.get(root).addLeaf(leaf);
-		} else
+		}
+		else
 		{
 			addLeaf(root).addLeaf(leaf);
 		}
@@ -91,10 +92,7 @@ public class Tree<T>
 	{
 		for (Tree<T> tree : in)
 		{
-			if (tree.locate.containsKey(of))
-			{
-				return tree.getSuccessors(of);
-			}
+			if (tree.locate.containsKey(of)) { return tree.getSuccessors(of); }
 		}
 		return new ArrayList<T>();
 	}
