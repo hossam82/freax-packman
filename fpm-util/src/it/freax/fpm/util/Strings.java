@@ -42,20 +42,6 @@ public class Strings
 		return ext.equalsIgnoreCase(getExtension(path));
 	}
 
-	public String getExtensionSafe(String path)
-	{
-		String ext = "";
-		try
-		{
-			ext = getExtension(path);
-		}
-		catch (ExtensionDecodingException e)
-		{
-			ErrorHandler.getOne(getClass()).handle(e);
-		}
-		return ext;
-	}
-
 	public String getExtension(String path) throws ExtensionDecodingException
 	{
 		String ext = "";
@@ -166,9 +152,13 @@ public class Strings
 	{
 		List<String> ret = new ArrayList<String>();
 		Scanner scn = new Scanner(input);
-		while (scn.hasNext())
+		while (scn.hasNextLine())
 		{
-			ret.add(scn.next());
+			String line = scn.nextLine();
+			if (!line.isEmpty())
+			{
+				ret.add(line);
+			}
 		}
 		return ret;
 	}
@@ -179,7 +169,7 @@ public class Strings
 		String[] inputArr = input.toArray(new String[input.size()]);
 		for (int i = 0; i < inputArr.length; i++)
 		{
-			ret.append(inputArr[i]).append(System.getProperty("line.separator"));
+			ret.append(inputArr[i]).append(Constants.LS);
 		}
 		return ret.toString();
 	}
@@ -205,19 +195,12 @@ public class Strings
 		return ret;
 	}
 
-	public String Split(String input, String delim, int elemidx, boolean remext)
+	public String Split(String input, String delim, int elemidx, boolean remext) throws ExtensionDecodingException
 	{
 		String ret = "";
 		if (remext)
 		{
-			try
-			{
-				ret = removeExtension(input);
-			}
-			catch (ExtensionDecodingException e)
-			{
-				ErrorHandler.getOne(getClass()).handle(e);
-			}
+			ret = removeExtension(input);
 		}
 		ret = input.split(delim)[elemidx];
 		return ret;
@@ -311,7 +294,7 @@ public class Strings
 
 	public String trimDir(String file)
 	{
-		int idx = file.lastIndexOf(System.getProperty("file.separator")) + 1;
+		int idx = file.lastIndexOf(Constants.FS) + 1;
 		file = file.substring(idx);
 		return file;
 	}
@@ -340,7 +323,35 @@ public class Strings
 		return merged.toString();
 	}
 
-	public String concatPaths(String... args)
+	public String safeConcatPaths(String... args)
+	{
+		String ret = "";
+		try
+		{
+			ret = concatPaths(args);
+		}
+		catch (ExtensionDecodingException e)
+		{
+			if (args.length > 1)
+			{
+				String[] newargs = new String[] {};
+				Collections<String> coll = Collections.getOne(args);
+				newargs = coll.subarray(0, Collections.LastIndex - 1, newargs);
+				ret = safeConcatPaths(newargs);
+			}
+			else if (args.length > 0)
+			{
+				ret = args[0];
+			}
+			else
+			{
+				ret = null;
+			}
+		}
+		return ret;
+	}
+
+	public String concatPaths(String... args) throws ExtensionDecodingException
 	{
 		String ret = args[0];
 		for (int i = 1; i < args.length; i++)
@@ -350,7 +361,7 @@ public class Strings
 				ret += Constants.FS;
 			}
 
-			if (args[i].endsWith(Constants.FS) || ((i == args.length - 1) && !isNullOrEmpty(getExtensionSafe(args[i]))))
+			if (args[i].endsWith(Constants.FS) || ((i == args.length - 1) && !isNullOrEmpty(getExtension(args[i]))))
 			{
 				ret += args[i];
 			}
@@ -371,9 +382,45 @@ public class Strings
 	{
 		boolean ret = false;
 		File[] roots = File.listRoots();
-		for (int i = 0; (i < roots.length) && !ret; i++)
+		for (int i = 0; (i < roots.length); i++)
 		{
-			ret = path.startsWith(roots[i].getAbsolutePath());
+			ret |= !path.startsWith(roots[i].getAbsolutePath());
+		}
+		return ret;
+	}
+
+	public boolean checkPathExistence(String path)
+	{
+		return new File(path).exists();
+	}
+
+	public boolean createPath(String path)
+	{
+		boolean ret = false;
+		File f = new File(path);
+		if (!f.exists())
+		{
+
+			if (f.getParent() == null)
+			{
+				ret = f.mkdir();
+			}
+			else if (f.getParentFile().exists())
+			{
+				ret = f.mkdir();
+			}
+			else
+			{
+				ret = createPath(f.getParent());
+				if (ret)
+				{
+					ret = f.mkdir();
+				}
+			}
+		}
+		else
+		{
+			ret = true;
 		}
 		return ret;
 	}

@@ -11,6 +11,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Collections<E>
 {
+	public static final int LastIndex = -2;
+
 	private Collection<E> coll;
 
 	public Collections(Collection<E> coll)
@@ -127,18 +129,7 @@ public class Collections<E>
 
 	public E get(int index)
 	{
-		int counter = 0;
-		E ret = null;
-		Iterator<E> it = coll.iterator();
-		if (it.hasNext())
-		{
-			do
-			{
-				ret = it.next();
-			}
-			while ((counter != index) || it.hasNext());
-		}
-		return ret;
+		return toList().get(index);
 	}
 
 	public boolean isNullOrEmpty()
@@ -154,6 +145,26 @@ public class Collections<E>
 	public int size()
 	{
 		return coll.size();
+	}
+
+	public int lastIndex()
+	{
+		return coll.size() - 1;
+	}
+
+	public List<E> sublist(int fromIndex, int toIndex)
+	{
+		if (toIndex <= -2)
+		{
+			toIndex = (toIndex - LastIndex) * -1;
+			toIndex = size() - toIndex;
+		}
+		return toList().subList(fromIndex, toIndex);
+	}
+
+	public E[] subarray(int fromIndex, int toIndex, E[] instance)
+	{
+		return sublist(fromIndex, toIndex).toArray(instance);
 	}
 
 	@Override

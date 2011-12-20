@@ -16,7 +16,8 @@ public class Streams
 		if (relative = Strings.getOne().isRelativePath(filename))
 		{
 			this.filename = filename;
-		} else
+		}
+		else
 		{
 			file = new File(filename);
 			this.filename = file.getAbsolutePath();
@@ -56,21 +57,24 @@ public class Streams
 		if (file != null)
 		{
 			scanner = new Scanner(file);
-		} else if (is != null)
+		}
+		else if (is != null)
 		{
 			scanner = new Scanner(is);
 		}
-		while (scanner.hasNext())
+		if (scanner != null)
 		{
-			ret.append(scanner.nextLine());
-			ret.append(System.getProperty("line.separator"));
+			while (scanner.hasNext())
+			{
+				ret.append(scanner.nextLine());
+				ret.append(System.getProperty("line.separator"));
+			}
+			scanner.close();
 		}
-		scanner.close();
 		return ret.toString();
 	}
 
-	private Properties getPropertiesFromInputStream(InputStream is)
-			throws IOException
+	private Properties getPropertiesFromInputStream(InputStream is) throws IOException
 	{
 		Properties props = null;
 		if (is != null)
@@ -87,7 +91,8 @@ public class Streams
 		if (is != null)
 		{
 			props = getPropertiesFromInputStream(is);
-		} else
+		}
+		else
 		{
 			props = getPropertiesFromInputStream(getResource());
 		}
@@ -100,10 +105,12 @@ public class Streams
 		if (relative)
 		{
 			is = ClassLoader.getSystemResourceAsStream(filename);
-		} else
+		}
+		else
 		{
 			is = new FileInputStream(filename);
 		}
+		this.is = is;
 		return is;
 	}
 
@@ -122,10 +129,10 @@ public class Streams
 			FileOutputStream fileOutputStream = new FileOutputStream(file);
 			fileOutputStream.write(toWrite);
 			fileOutputStream.close();
-		} else
+		}
+		else
 		{
-			throw new IOException(
-					"File not exists and cannot be created, aborting");
+			throw new IOException("File not exists and cannot be created, aborting");
 		}
 		return file;
 	}

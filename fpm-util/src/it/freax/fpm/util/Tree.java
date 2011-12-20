@@ -54,6 +54,11 @@ public class Tree<T>
 		return t;
 	}
 
+	public boolean contains(T t)
+	{
+		return locate.get(t) != null;
+	}
+
 	public T getHead()
 	{
 		return head;

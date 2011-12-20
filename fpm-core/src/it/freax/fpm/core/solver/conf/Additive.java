@@ -5,7 +5,9 @@ import it.freax.fpm.core.types.InfoType;
 import it.freax.fpm.core.types.MethodType;
 import it.freax.fpm.core.types.WhereToParseType;
 import it.freax.fpm.util.EntriesScorer;
+import it.freax.fpm.util.ErrorHandler;
 import it.freax.fpm.util.Strings;
+import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 
 import java.util.List;
 import java.util.Map.Entry;
@@ -92,24 +94,31 @@ public class Additive
 			MethodParams mp = type.getParams(howToParse);
 			String input = "";
 
-			switch (whereToParse)
+			try
 			{
-				case Content:
+				switch (whereToParse)
 				{
-					input = file.getContent();
-					ret = getValue(type, mp, input);
-					break;
+					case Content:
+					{
+						input = file.getContent();
+						ret = getValue(type, mp, input);
+						break;
+					}
+					case FileName:
+					{
+						input = file.getName();
+						ret = getValue(type, mp, input);
+						break;
+					}
+					case Nothing:
+					{
+						break;
+					}
 				}
-				case FileName:
-				{
-					input = file.getName();
-					ret = getValue(type, mp, input);
-					break;
-				}
-				case Nothing:
-				{
-					break;
-				}
+			}
+			catch (ExtensionDecodingException e)
+			{
+				ErrorHandler.getOne(getClass()).handle(e);
 			}
 		}
 		else
@@ -119,7 +128,7 @@ public class Additive
 		return ret;
 	}
 
-	private String getValue(MethodType type, MethodParams mp, String input)
+	private String getValue(MethodType type, MethodParams mp, String input) throws ExtensionDecodingException
 	{
 		String ret = "";
 		String pattern = whatToParse + mp.getDivider();

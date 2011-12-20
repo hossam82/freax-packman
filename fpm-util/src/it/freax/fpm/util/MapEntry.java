@@ -38,4 +38,36 @@ public class MapEntry<K, V> implements Entry<K, V>
 		return this.value;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object obj)
+	{
+		boolean ret = false;
+		if (obj instanceof MapEntry<?, ?>)
+		{
+			MapEntry<?, ?> en = (MapEntry<?, ?>) obj;
+			ret = en.getKey().equals(key) && en.getValue().equals(value);
+		}
+		else if (obj instanceof Entry<?, ?>)
+		{
+			MapEntry<?, ?> en = new MapEntry<K, V>((Entry<K, V>) obj);
+			ret = en.getKey().equals(key) && en.getValue().equals(value);
+		}
+		else
+		{
+			ret = super.equals(obj);
+		}
+		return ret;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return key.toString().concat("=").concat(value.toString());
+	}
 }

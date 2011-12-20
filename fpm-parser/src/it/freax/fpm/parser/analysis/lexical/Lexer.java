@@ -3,7 +3,6 @@
  */
 package it.freax.fpm.parser.analysis.lexical;
 
-import java.io.InputStream;
 
 /**
  * @author kLeZ-hAcK
@@ -11,7 +10,4 @@ import java.io.InputStream;
  */
 public class Lexer
 {
-	private long line;
-	private long col;
-	private InputStream stream;
 }

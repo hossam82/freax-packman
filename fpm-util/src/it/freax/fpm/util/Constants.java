@@ -1,6 +1,7 @@
 package it.freax.fpm.util;
 
 import it.freax.fpm.util.exceptions.ConfigurationReadException;
+import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 
 import java.io.*;
 import java.util.Properties;
@@ -36,6 +37,11 @@ public final class Constants
 	public static final String FS = System.getProperty("file.separator");
 
 	/**
+	 * Separatore di linea, In Windows '\r\n', in *nix '\n' in MacOS '\r'.
+	 */
+	public static final String LS = System.getProperty("line.separator");
+
+	/**
 	 * Nazionalità (e linguaggio) dell'utente corrente
 	 */
 	public static final String COUNTRY = System.getProperty("user.country");
@@ -44,6 +50,16 @@ public final class Constants
 	 * Nome del file di configurazione principale di fpm.
 	 */
 	public static final String MAIN_CONF_FILE = "fpm.conf";
+
+	/**
+	 * Nome del file di log principale di fpm.
+	 */
+	public static final String MAIN_LOG_FILE = "fpm.log";
+
+	/**
+	 * Pattern di default per il logger di fpm.
+	 */
+	public static final String DEFAULT_LOG_PATTERN = "%-8r [%t] %-5p %c - %m%n";
 
 	/**
 	 * Nome della directory contenente i file di configurazione.
@@ -93,8 +109,7 @@ public final class Constants
 	 * Se in presenza di un reset to default, il file di configurazione va
 	 * scritto sul disco nella directory di sistema.
 	 */
-	public static final String CONF_PATHS = getSystemConfDir() + SEP_P + REL_P
-			+ FS + CONF_DIR + FS;
+	public static final String CONF_PATHS = getSystemConfDir() + SEP_P + REL_P + FS + CONF_DIR + FS;
 
 	private static Constants singleton = null;
 	private static boolean hasLoaded = false;
@@ -108,16 +123,20 @@ public final class Constants
 		String sysConf = "";
 		if (OS_NAME.toLowerCase().contains("windows"))
 		{
-			sysConf = (!USER_DIR.endsWith(FS) ? USER_DIR + FS : USER_DIR)
-					+ CONF_DIR;
-		} else
+			sysConf = (!USER_DIR.endsWith(FS) ? USER_DIR + FS : USER_DIR) + CONF_DIR + FS;
+		}
+		else
 		{
 			sysConf = FS + "etc" + FS + FPM_DIR + FS;
+			if (!new File(sysConf).canWrite())
+			{
+				sysConf = USER_HOME + FS + FPM_DIR + FS + CONF_DIR + FS;
+			}
 		}
 		return sysConf;
 	}
 
-	private static MapEntry<String, Properties> loadFpmConf()
+	private static MapEntry<String, Properties> loadFpmConf() throws ConfigurationReadException
 	{
 		MapEntry<String, Properties> ret = null;
 
@@ -130,13 +149,14 @@ public final class Constants
 			String path = sc.next();
 			if (path.startsWith(PREV_P))
 			{
-				path = path.replace(PREV_P,
-						prev.substring(0, prev.length() - 1));
-			} else if (path.startsWith(REL_P))
+				path = path.replace(PREV_P, prev.substring(0, prev.length() - 1));
+			}
+			else if (path.startsWith(REL_P))
 			{
 				path = path.replace(REL_P + FS, "");
 				relative = true;
-			} else if (path.contains(HOME_P))
+			}
+			else if (path.contains(HOME_P))
 			{
 				path = path.replace(HOME_P, USER_HOME);
 			}
@@ -150,40 +170,44 @@ public final class Constants
 				if (relative)
 				{
 					is = ClassLoader.getSystemResourceAsStream(path);
-					path = Strings.getOne().concatPaths(getSystemConfDir(),
-							MAIN_CONF_FILE);
-					FileOutputStream os = new FileOutputStream(new File(path));
+
+					path = getSystemConfDir();
+					Strings.getOne().createPath(path);
+					path += MAIN_CONF_FILE;
+
+					FileOutputStream os = new FileOutputStream(path);
 					IOUtils.copy(is, os);
 					os.flush();
 					os.close();
 					os = null;
-
-					is.close();
-					is = null;
 				}
-
-				is = new FileInputStream(path);
+				else
+				{
+					is = new FileInputStream(path);
+				}
 				fpmConf = new Properties();
 
 				fpmConf.load(is);
-				if (fpmConf.isEmpty())
-				{
-					throw new ConfigurationReadException();
-				}
+				if (fpmConf.isEmpty()) { throw new ConfigurationReadException(); }
 
 				ret = new MapEntry<String, Properties>(path, fpmConf);
 				hasLoaded = true;
-			} catch (Throwable e)
+			}
+			catch (FileNotFoundException e)
 			{
 				fpmConf = null;
 				singleton = null;
 				hasLoaded = false;
 			}
+			catch (IOException e)
+			{
+				throw new ConfigurationReadException();
+			}
 		}
 		return ret;
 	}
 
-	private static Properties loadLocalizedStrings(String path, String pattern)
+	private static Properties loadLocalizedStrings(String path, String pattern) throws ExtensionDecodingException
 	{
 		Properties ret = null;
 		Strings s = Strings.getOne();
@@ -195,39 +219,46 @@ public final class Constants
 			if (s.isRelativePath(path))
 			{
 				is = ClassLoader.getSystemResourceAsStream(fullpath);
-			} else
+			}
+			else
 			{
 				is = new FileInputStream(fullpath);
 			}
 
 			ret = new Properties();
 			ret.load(is);
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
-			is = ClassLoader.getSystemResourceAsStream(CONF_DIR + FS
-					+ pattern.replace(COUNTRY_P, "default"));
+			is = ClassLoader.getSystemResourceAsStream(CONF_DIR + FS + pattern.replace(COUNTRY_P, "default"));
 			ret = new Properties();
 			try
 			{
 				ret.load(is);
-			} catch (Throwable t)
+			}
+			catch (Throwable t)
 			{
 			}
 		}
 		return ret;
 	}
 
-	public static Constants getOne()
+	public static Constants getOne() throws ConfigurationReadException
 	{
 		if (!hasLoaded && (singleton == null))
 		{
 			MapEntry<String, Properties> entry = loadFpmConf();
-			String locFilesPath = entry.getValue().getProperty(
-					"localized.files.path");
-			String locFilesPattern = entry.getValue().getProperty(
-					"localized.files.pattern");
-			Properties localizedStrings = loadLocalizedStrings(locFilesPath,
-					locFilesPattern);
+			String locFilesPath = entry.getValue().getProperty("localized.files.path");
+			String locFilesPattern = entry.getValue().getProperty("localized.files.pattern");
+			Properties localizedStrings;
+			try
+			{
+				localizedStrings = loadLocalizedStrings(locFilesPath, locFilesPattern);
+			}
+			catch (ExtensionDecodingException e)
+			{
+				throw new ConfigurationReadException((Exception) e.fillInStackTrace());
+			}
 
 			singleton = new Constants();
 			singleton.setDefaultConfPath(entry.getKey());
@@ -237,7 +268,7 @@ public final class Constants
 		return singleton;
 	}
 
-	public static Constants getOneReset()
+	public static Constants getOneReset() throws ConfigurationReadException
 	{
 		hasLoaded = false;
 		singleton = null;

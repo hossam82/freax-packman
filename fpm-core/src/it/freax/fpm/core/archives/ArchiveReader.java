@@ -5,6 +5,7 @@ import it.freax.fpm.util.Generics;
 import it.freax.fpm.util.Streams;
 import it.freax.fpm.util.Strings;
 import it.freax.fpm.util.exceptions.ArchiveNotSupportedException;
+import it.freax.fpm.util.exceptions.ConfigurationReadException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -67,7 +68,8 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader>
 		if (fis == null)
 		{
 			fis = new FileInputStream(file);
-		} else
+		}
+		else
 		{
 			closeStream();
 			fis = openStream();
@@ -80,7 +82,8 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader>
 		try
 		{
 			fis.close();
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 		}
 		fis = null;
@@ -95,35 +98,30 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader>
 	 * @return un'istanza di un oggetto che eredita da ArchiveReader
 	 * @throws ArchiveNotSupportedException
 	 */
-	public static ArchiveReader getRightInstance(File file)
-			throws ArchiveNotSupportedException, IOException
+	public static ArchiveReader getRightInstance(File file) throws ArchiveNotSupportedException, IOException, ConfigurationReadException
 	{
 		String type = ArchiveReader.getArchiveType(file);
-		if (type == "Unsupported")
-		{
-			throw new ArchiveNotSupportedException();
-		}
+		if (type == "Unsupported") { throw new ArchiveNotSupportedException(); }
 		ArchiveReader instance;
 		try
 		{
-			instance = Generics.getOne(ArchiveReader.class).getChildInstance(
-					type, file);
-		} catch (Throwable e1)
+			instance = Generics.getOne(ArchiveReader.class).getChildInstance(type, file);
+		}
+		catch (Throwable e1)
 		{
 			throw new ArchiveNotSupportedException();
 		}
 		return instance;
 	}
 
-	private static String getArchiveType(File file) throws IOException
+	private static String getArchiveType(File file) throws IOException, ConfigurationReadException
 	{
 		Constants consts = Constants.getOne();
 		String ret = "Unsupported";
 		FileInputStream input = new FileInputStream(file);
 		String type = String.format("%h%h", input.read(), input.read());
-		String archives_conf = Strings.getOne().concatPaths(
-				consts.getConstant("conf.path"),
-				consts.getConstant("conf.archives"));
+		String archives_conf = "";
+		archives_conf = Strings.getOne().safeConcatPaths(consts.getConstant("conf.path"), consts.getConstant("conf.archives"));
 		Properties properties = Streams.getOne(archives_conf).getProperties();
 		ret = properties.getProperty(type);
 		input.close();
@@ -149,8 +147,7 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader>
 	 * @return
 	 * @throws IOException
 	 */
-	public abstract List<String> readEntries(String entryName,
-			boolean excludeRoot, String root) throws IOException;
+	public abstract List<String> readEntries(String entryName, boolean excludeRoot, String root) throws IOException;
 
 	/**
 	 * Questo metodo permette di leggere tutti i file di testo all'interno di un
@@ -210,29 +207,15 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader>
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (this == obj)
-		{
-			return true;
-		}
-		if (obj == null)
-		{
-			return false;
-		}
-		if (!(obj instanceof ArchiveReader))
-		{
-			return false;
-		}
+		if (this == obj) { return true; }
+		if (obj == null) { return false; }
+		if (!(obj instanceof ArchiveReader)) { return false; }
 		ArchiveReader other = (ArchiveReader) obj;
 		if (file == null)
 		{
-			if (other.file != null)
-			{
-				return false;
-			}
-		} else if (!file.equals(other.file))
-		{
-			return false;
+			if (other.file != null) { return false; }
 		}
+		else if (!file.equals(other.file)) { return false; }
 		return true;
 	}
 }

@@ -42,10 +42,26 @@ public class LogConfigurator
 	 */
 	public Logger configure(boolean logToConsole)
 	{
-		Constants c = Constants.getOne();
 		Logger log = Logger.getLogger(clazz);
-		String logPath = c.getConstant("log.dir") + c.getConstant("log.file");
-		PatternLayout layout = new PatternLayout(c.getConstant("log.pattern"));
+		String logPath = null;
+		PatternLayout layout = null;
+		Strings str = Strings.getOne();
+		try
+		{
+			Constants c = Constants.getOne();
+			logPath = str.safeConcatPaths(c.getConstant("log.dir"), c.getConstant("log.file"));
+			layout = new PatternLayout(c.getConstant("log.pattern"));
+		}
+		catch (Throwable e)
+		{
+			logPath = str.safeConcatPaths(Constants.USER_HOME, Constants.FPM_DIR);
+			if (!str.checkPathExistence(logPath))
+			{
+				str.createPath(logPath);
+			}
+			layout = new PatternLayout(Constants.DEFAULT_LOG_PATTERN);
+		}
+
 		log.setLevel(Level.ALL);
 
 		if (logToConsole)
@@ -60,9 +76,10 @@ public class LogConfigurator
 		{
 			fileapp = new FileAppender(layout, logPath);
 			log.addAppender(fileapp);
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
-			log.warn("FileAppender not initialized!!", e);
+			log.warn("FileAppender not initialized! ".concat(e.getMessage()));
 		}
 
 		return log;

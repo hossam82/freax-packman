@@ -58,7 +58,7 @@ public class EbnfParser
 
 	public boolean parse(String fileToMatch)
 	{
-		//TODO: Implementare metodo di parsing!!!
+		// TODO: Implementare metodo di parsing!!!
 		imports = new ArrayList<String>();
 		ebnfContent = "Dummy text!";
 		Strings strings = Strings.getOne();
