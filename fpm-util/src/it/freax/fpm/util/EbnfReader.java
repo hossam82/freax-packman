@@ -3,7 +3,6 @@
  */
 package it.freax.fpm.util;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -17,13 +16,12 @@ public class EbnfReader
 {
 	private final Logger log = LogConfigurator.getOne(getClass()).configure();
 	private String content;
-	private HashMap<String, String> map;
+	private ArrayMap<String, String> map;
 	private Tree<MapEntry<String, String>> tree;
 
 	public EbnfReader(String content)
 	{
 		this.content = content;
-		buildTree();
 	}
 
 	public String getContent()
@@ -31,7 +29,7 @@ public class EbnfReader
 		return content;
 	}
 
-	public HashMap<String, String> getMap()
+	public ArrayMap<String, String> getMap()
 	{
 		return map;
 	}
@@ -43,7 +41,7 @@ public class EbnfReader
 
 	public void buildMap()
 	{
-		map = new HashMap<String, String>();
+		map = new ArrayMap<String, String>();
 		Strings sh = Strings.getOne();
 		String fs = "::=";
 		List<String> lines = sh.getLines(content);
@@ -98,7 +96,7 @@ public class EbnfReader
 	private Tree<MapEntry<String, String>> addnode(Tree<MapEntry<String, String>> root, MapEntry<String, String> entry)
 	{
 		Tree<MapEntry<String, String>> newroot = null;
-		PairList<String, String> childs = null;
+		ArrayMap<String, String> childs = null;
 		if (entry != null)
 		{
 			if (!root.contains(entry))
@@ -128,9 +126,9 @@ public class EbnfReader
 		return root;
 	}
 
-	private PairList<String, String> findchilds(MapEntry<String, String> entry)
+	private ArrayMap<String, String> findchilds(MapEntry<String, String> entry)
 	{
-		PairList<String, String> ret = new PairList<String, String>();
+		ArrayMap<String, String> ret = new ArrayMap<String, String>();
 		for (Entry<String, String> mapentry : map.entrySet())
 		{
 			if (entry.getValue().contains(mapentry.getKey()) && !entry.equals(mapentry))

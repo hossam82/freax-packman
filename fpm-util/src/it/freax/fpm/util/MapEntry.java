@@ -13,7 +13,7 @@ public class MapEntry<K, V> implements Entry<K, V>
 		this.value = value;
 	}
 
-	public MapEntry(Entry<K, V> entry)
+	public MapEntry(Entry<? extends K, ? extends V> entry)
 	{
 		this.key = entry.getKey();
 		this.value = entry.getValue();

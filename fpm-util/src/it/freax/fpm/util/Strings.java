@@ -3,7 +3,10 @@ package it.freax.fpm.util;
 import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Strings
@@ -117,7 +120,7 @@ public class Strings
 	public String getStringFromKeyValue(String input, String keyValueDelimiter, boolean getKey)
 	{
 		String ret = "";
-		StringTokenizer st = new StringTokenizer(input, keyValueDelimiter);
+		StringDelimiterTokenizer st = new StringDelimiterTokenizer(input, keyValueDelimiter);
 		if (getKey)
 		{
 			ret = st.nextToken();

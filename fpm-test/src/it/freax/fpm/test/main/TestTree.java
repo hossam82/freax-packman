@@ -29,7 +29,10 @@ public class TestTree
 			{
 				String content = str.read();
 				EbnfReader reader = new EbnfReader(content);
-				System.out.println(reader.getTree());
+				reader.buildMap();
+				System.out.println(reader.getMap());
+				// reader.buildTree();
+				// System.out.println(reader.getTree());
 			}
 		}
 		catch (FileNotFoundException e)
