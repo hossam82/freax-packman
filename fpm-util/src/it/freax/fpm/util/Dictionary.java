@@ -9,9 +9,9 @@ import java.util.*;
  * @author kLeZ-hAcK
  * 
  */
-public class ArrayMap<K, V> implements Map<K, V>, Iterable<MapEntry<K, V>>
+public class Dictionary<K, V> implements Map<K, V>, Iterable<MapEntry<K, V>>
 {
-	ArrayList<MapEntry<K, V>> _map = new ArrayList<MapEntry<K, V>>();
+	private ArrayList<MapEntry<K, V>> _map = new ArrayList<MapEntry<K, V>>();
 
 	/*
 	 * (non-Javadoc)
@@ -100,14 +100,20 @@ public class ArrayMap<K, V> implements Map<K, V>, Iterable<MapEntry<K, V>>
 	@Override
 	public V put(K key, V value)
 	{
-		_map.add(new MapEntry<K, V>(key, value));
-		return value;
+		if (!containsKey(key))
+		{
+			_map.add(new MapEntry<K, V>(key, value));
+			return value;
+		}
+		else
+		{
+			return get(key);
+		}
 	}
 
 	public V add(MapEntry<K, V> entry)
 	{
-		_map.add(entry);
-		return entry.getValue();
+		return put(entry.getKey(), entry.getValue());
 	}
 
 	/*

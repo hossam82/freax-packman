@@ -31,8 +31,8 @@ public class TestTree
 				EbnfReader reader = new EbnfReader(content);
 				reader.buildMap();
 				System.out.println(reader.getMap());
-				// reader.buildTree();
-				// System.out.println(reader.getTree());
+				reader.buildTree();
+				System.out.println(reader.getTree());
 			}
 		}
 		catch (FileNotFoundException e)

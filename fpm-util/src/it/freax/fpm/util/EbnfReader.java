@@ -4,7 +4,6 @@
 package it.freax.fpm.util;
 
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -16,8 +15,8 @@ public class EbnfReader
 {
 	private final Logger log = LogConfigurator.getOne(getClass()).configure();
 	private String content;
-	private ArrayMap<String, String> map;
-	private Tree<MapEntry<String, String>> tree;
+	private Dictionary<String, String> dict;
+	private Node<MapEntry<String, String>> tree;
 
 	public EbnfReader(String content)
 	{
@@ -29,19 +28,19 @@ public class EbnfReader
 		return content;
 	}
 
-	public ArrayMap<String, String> getMap()
+	public Dictionary<String, String> getMap()
 	{
-		return map;
+		return dict;
 	}
 
-	public Tree<MapEntry<String, String>> getTree()
+	public Node<MapEntry<String, String>> getTree()
 	{
 		return tree;
 	}
 
 	public void buildMap()
 	{
-		map = new ArrayMap<String, String>();
+		dict = new Dictionary<String, String>();
 		Strings sh = Strings.getOne();
 		String fs = "::=";
 		List<String> lines = sh.getLines(content);
@@ -63,9 +62,9 @@ public class EbnfReader
 					String value = sh.getStringFromKeyValue(line, fs, false);
 					MapEntry<String, String> me;
 					me = new MapEntry<String, String>(key, value);
-					if (!map.entrySet().contains(me))
+					if (!dict.entrySet().contains(me))
 					{
-						map.put(key.trim(), value.trim());
+						dict.put(key.trim(), value.trim());
 					}
 				}
 				count++;
@@ -85,55 +84,72 @@ public class EbnfReader
 
 	public void buildTree()
 	{
-		if ((map == null) || map.isEmpty())
+		if ((dict == null) || dict.isEmpty())
 		{
 			buildMap();
 		}
-		tree = new Tree<MapEntry<String, String>>(findroot());
-		tree = addnode(tree, null);
+
+		tree = filltree(new Node<MapEntry<String, String>>(findroot()), dict);
+
 	}
 
-	private Tree<MapEntry<String, String>> addnode(Tree<MapEntry<String, String>> root, MapEntry<String, String> entry)
+	public Node<MapEntry<String, String>> filltree(Node<MapEntry<String, String>> node, Dictionary<String, String> dict)
 	{
-		Tree<MapEntry<String, String>> newroot = null;
-		ArrayMap<String, String> childs = null;
-		if (entry != null)
+		for (MapEntry<String, String> entry : dict)
 		{
-			if (!root.contains(entry))
+			if (node == null)
 			{
-				newroot = root.addLeaf(entry);
+				node = new Node<MapEntry<String, String>>(entry);
+			}
+			else if (!node.has(entry))
+			{
+				node = filltree(node, findchilds(entry));
 			}
 		}
-		else
-		{
-			newroot = root;
-		}
-
-		if (newroot != null)
-		{
-			childs = findchilds(newroot.getHead());
-
-			if (!childs.isEmpty())
-			{
-				for (MapEntry<String, String> child : childs)
-				{
-					root = addnode(newroot, child);
-				}
-			}
-		}
-		log.debug("Printing the temporal status of the tree.");
-		log.debug("\n" + root.toString());
-		return root;
+		return node;
 	}
 
-	private ArrayMap<String, String> findchilds(MapEntry<String, String> entry)
+	//	private Tree<MapEntry<String, String>> addnode(Tree<MapEntry<String, String>> root, MapEntry<String, String> entry)
+	//	{
+	//		Tree<MapEntry<String, String>> newroot = null;
+	//		Dictionary<String, String> childs = null;
+	//		if (entry != null)
+	//		{
+	//			if (!root.contains(entry))
+	//			{
+	//				newroot = root.addLeaf(entry);
+	//			}
+	//		}
+	//		else
+	//		{
+	//			newroot = root;
+	//		}
+	//
+	//		if (newroot != null)
+	//		{
+	//			childs = findchilds(newroot.getHead());
+	//
+	//			if (!childs.isEmpty())
+	//			{
+	//				for (MapEntry<String, String> child : childs)
+	//				{
+	//					root = addnode(newroot, child);
+	//				}
+	//			}
+	//		}
+	//		log.debug("Printing the temporal status of the tree.");
+	//		log.debug("\n" + root.toString());
+	//		return root;
+	//	}
+
+	private Dictionary<String, String> findchilds(MapEntry<String, String> entry)
 	{
-		ArrayMap<String, String> ret = new ArrayMap<String, String>();
-		for (Entry<String, String> mapentry : map.entrySet())
+		Dictionary<String, String> ret = new Dictionary<String, String>();
+		for (MapEntry<String, String> mapentry : dict)
 		{
 			if (entry.getValue().contains(mapentry.getKey()) && !entry.equals(mapentry))
 			{
-				ret.add(new MapEntry<String, String>(mapentry));
+				ret.add(mapentry);
 			}
 		}
 		return ret;
@@ -143,8 +159,8 @@ public class EbnfReader
 	{
 		MapEntry<String, String> root = null;
 		// è root l'unico elemento chiave che non è anche un valore
-		Collections<String> values = Collections.getOne(map.values());
-		for (Entry<String, String> entry : map.entrySet())
+		Collections<String> values = Collections.getOne(dict.values());
+		for (MapEntry<String, String> entry : dict)
 		{
 			boolean breakfor = true;
 			String value = "";
@@ -159,7 +175,7 @@ public class EbnfReader
 			}
 			if (breakfor)
 			{
-				root = new MapEntry<String, String>(entry);
+				root = entry;
 				break;
 			}
 		}
