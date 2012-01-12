@@ -119,7 +119,7 @@ public class Collections<E>
 
 	public E last()
 	{
-		return get(coll.size() - 1);
+		return (isNullOrEmpty() ? null : get(lastIndex()));
 	}
 
 	public E getOrDefault(int index, E defaultArg)
@@ -165,6 +165,11 @@ public class Collections<E>
 	public E[] subarray(int fromIndex, int toIndex, E[] instance)
 	{
 		return sublist(fromIndex, toIndex).toArray(instance);
+	}
+
+	public void clear()
+	{
+		coll.clear();
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package it.freax.fpm.util;
 
 import it.freax.fpm.util.exceptions.ExtensionDecodingException;
+import it.freax.fpm.util.exceptions.ParseException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -426,5 +427,47 @@ public class Strings
 			ret = true;
 		}
 		return ret;
+	}
+
+	public Dictionary<String, String> getMap(String content, String kvs, String inCommTk, String outCommTk) throws ParseException
+	{
+		Dictionary<String, String> dict = new Dictionary<String, String>();
+		List<String> lines = getLines(content);
+		int count = 0;
+		boolean keyok = false;
+		String currentline = "";
+
+		try
+		{
+			for (String line : lines)
+			{
+				currentline = line;
+				keyok = false;
+				if (!(line.startsWith(inCommTk) && (line.endsWith(outCommTk) || isNullOrEmpty(outCommTk))))
+				{
+					String key = getStringFromKeyValue(line, kvs, true);
+					keyok = true;
+					String value = getStringFromKeyValue(line, kvs, false);
+					MapEntry<String, String> me;
+					me = new MapEntry<String, String>(key, value);
+					if (!dict.entrySet().contains(me))
+					{
+						dict.put(key.trim(), value.trim());
+					}
+				}
+				count++;
+			}
+		}
+		catch (Exception e)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.append("Read " + count + " lines of " + lines.size()).append(Constants.LS);
+			sb.append("Broken in the value getter: " + keyok);
+			sb.append(" at the line (non-blank) " + ++count).append(Constants.LS);
+			sb.append("Current line is:").append(Constants.LS);
+			sb.append(currentline).append(Constants.LS);
+			throw new ParseException(sb.toString());
+		}
+		return dict;
 	}
 }

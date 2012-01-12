@@ -40,13 +40,14 @@ public class Node<T> implements Iterable<Node<T>>
 
 	public Node<T> add(Node<T> child)
 	{
+		child.Parent = this;
 		Childs.add(child);
 		return child;
 	}
 
 	public Node<T> add(T data)
 	{
-		return add(new Node<T>(data));
+		return add(new Node<T>(data, this));
 	}
 
 	public void remove(int index)
@@ -56,7 +57,7 @@ public class Node<T> implements Iterable<Node<T>>
 
 	public void remove(T data)
 	{
-		Childs.remove(new Node<T>(data));
+		Childs.remove(new Node<T>(data, this));
 	}
 
 	/*
@@ -77,7 +78,7 @@ public class Node<T> implements Iterable<Node<T>>
 		{
 			for (Node<T> child : Childs)
 			{
-				ret |= child.has(otherData);
+				ret |= child.data.equals(otherData);
 			}
 		}
 		else if (data != null)
@@ -95,7 +96,32 @@ public class Node<T> implements Iterable<Node<T>>
 	@Override
 	public String toString()
 	{
-		// TODO Auto-generated method stub
-		return super.toString();
+		String LF = System.getProperty("line.separator");
+		StringBuilder sb = new StringBuilder();
+		sb.append("{ ");
+		sb.append(data);
+
+		if (Parent != null)
+		{
+			sb.append(LF);
+			sb.append("Parent: < ").append(Parent.data).append(" >");
+		}
+		if (!Childs.isEmpty())
+		{
+			sb.append(LF);
+			sb.append('[');
+			for (int i = 0; i < Childs.size(); i++)
+			{
+				Node<T> child = Childs.get(i);
+				sb.append(child);
+				if (i + 1 < Childs.size())
+				{
+					sb.append(',');
+				}
+			}
+			sb.append(']');
+		}
+		sb.append(" }");
+		return sb.toString();
 	}
 }
