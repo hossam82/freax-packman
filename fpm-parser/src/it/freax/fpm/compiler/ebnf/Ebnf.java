@@ -133,6 +133,12 @@ public class Ebnf
 				}
 				else if (token instanceof OperatorToken)
 				{
+					// TODO: è sbagliato che si interrompa il ciclo in questo caso
+					// Se io avessi, come ho, un semicolon in un RoundsToken
+					// avrei difficoltà a capire che non devo completare la
+					// lettura dei token in quanto in questo caso sarebbe "quotato"
+					// La soluzione è interpretare il rouds token come un container
+					// Per tutti i token che sono contenuti tra l'opener e il closer.
 					breakfor = token.getOperator() == EOL;
 				}
 				else if (token instanceof DataToken)
