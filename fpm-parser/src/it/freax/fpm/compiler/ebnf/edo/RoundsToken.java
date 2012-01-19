@@ -25,7 +25,7 @@ public class RoundsToken extends EbnfToken
 		{
 			if (Operators[i] == operator)
 			{
-				opener = i % 2 != 0;
+				opener = i % 2 == 0;
 				break;
 			}
 		}

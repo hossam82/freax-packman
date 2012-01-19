@@ -16,11 +16,14 @@ import java.util.Map.Entry;
 public class EbnfToken extends Token
 {
 	public static final char NULL = '\0';
+	public static final char ROUNDS_NOTABLE = '"';
+	public static final char EOL = ';';
 	public static final Map<Class<? extends EbnfToken>, char[]> OPERATORS_ASSOCIATION;
 	static
 	{
 		HashMap<Class<? extends EbnfToken>, char[]> associations = new HashMap<Class<? extends EbnfToken>, char[]>();
-		associations.put(RoundsToken.class, new char[] { '(', ')', '[', ']', '{', '}', '"', '"' });
+		associations.put(RoundsToken.class, new char[] { '(', ')', '[', ']', '{', '}' });
+		associations.put(QuoteToken.class, new char[] { '"', '\'' });
 		associations.put(RepetitionToken.class, new char[] { '?', '*', '+' });
 		associations.put(OperatorToken.class, new char[] { '|', ';' });
 		associations.put(DataToken.class, new char[] { NULL });

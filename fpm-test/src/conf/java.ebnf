@@ -47,7 +47,7 @@ AndExpression                   ::=   EqualityExpression ( "&" EqualityExpressio
 EqualityExpression              ::=   InstanceOfExpression ( ( "==" | "!=" ) InstanceOfExpression )*;
 InstanceOfExpression            ::=   RelationalExpression ( "instanceof" Type )?;
 RelationalExpression            ::=   ShiftExpression ( ( "<" | ">" | "<=" | ">=" ) ShiftExpression )*;
-ShiftExpression                 ::=   AdditiveExpression ( ( "<<" | RSIGNEDSHIFT | RUNSIGNEDSHIFT ) AdditiveExpression )*;
+ShiftExpression                 ::=   AdditiveExpression ( ( "<<" | ">>" | ">>>" ) AdditiveExpression )*;
 AdditiveExpression              ::=   MultiplicativeExpression ( ( "+" | "-" ) MultiplicativeExpression )*;
 MultiplicativeExpression        ::=   UnaryExpression ( ( "*" | "/" | "%" ) UnaryExpression )*;
 UnaryExpression                 ::=   ( ( "+" | "-" ) UnaryExpression | PreIncrementExpression | PreDecrementExpression |   UnaryExpressionNotPlusMinus );
@@ -91,8 +91,6 @@ ReturnStatement                 ::=   "return" ( Expression )? ";";
 ThrowStatement                  ::=   "throw" Expression ";";
 SynchronizedStatement           ::=   "synchronized" "(" Expression ")" Block;
 TryStatement                    ::=   "try" Block ( "catch" "(" FormalParameter ")" Block )* ( "finally" Block )?;
-RUNSIGNEDSHIFT                  ::=   ( ">" ">" ">" );
-RSIGNEDSHIFT                    ::=   ( ">" ">" );
 Annotation                      ::=   ( NormalAnnotation | SingleMemberAnnotation | MarkerAnnotation );
 NormalAnnotation                ::=   "@" Name "(" ( MemberValuePairs )? ")";
 MarkerAnnotation                ::=   "@" Name;
@@ -105,3 +103,12 @@ AnnotationTypeDeclaration       ::=   "@" "interface" <IDENTIFIER> AnnotationTyp
 AnnotationTypeBody              ::=   "{" ( AnnotationTypeMemberDeclaration )* "}";
 AnnotationTypeMemberDeclaration ::=   ( Modifiers ( Type <IDENTIFIER> "(" ")" ( DefaultValue )? ";" |  ClassOrInterfaceDeclaration | EnumDeclaration | AnnotationTypeDeclaration | FieldDeclaration ) | ( ";" ) );
 DefaultValue                    ::=   "default" MemberValue;
+
+{[								IDENTIFIER							]}
+<IDENTIFIER>                    ::=   \w+
+
+{[								LITERALS							]}
+<STRING_LITERAL>                ::=   ".*"
+<INTEGER_LITERAL>               ::=   ( \d+ | 0x[a-fA-F0-9]+ | 0b[0-1]+ )
+<FLOATING_POINT_LITERAL>        ::=   ( \d+ | \d+\.\d+( f | F | d | D )? )
+<CHARACTER_LITERAL>             ::=   ( '.' | '\.' | '\u[a-fA-F0-9]{4}' )

@@ -82,11 +82,32 @@ public class Dictionary<K, V> implements Map<K, V>, Iterable<MapEntry<K, V>>
 	public V get(Object key)
 	{
 		V ret = null;
-		for (int i = 0; i < size(); i++)
+		if (containsKey(key))
 		{
-			if (_map.get(i).equals(key))
+			for (int i = 0; i < size(); i++)
 			{
-				ret = _map.get(i).getValue();
+				if (_map.get(i).getKey().equals(key))
+				{
+					ret = _map.get(i).getValue();
+					break;
+				}
+			}
+		}
+		return ret;
+	}
+
+	public MapEntry<K, V> getPair(Object key)
+	{
+		MapEntry<K, V> ret = null;
+		if (containsKey(key))
+		{
+			for (int i = 0; i < size(); i++)
+			{
+				if (_map.get(i).getKey().equals(key))
+				{
+					ret = _map.get(i);
+					break;
+				}
 			}
 		}
 		return ret;
