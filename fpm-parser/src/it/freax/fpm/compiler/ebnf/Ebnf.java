@@ -4,15 +4,13 @@
 package it.freax.fpm.compiler.ebnf;
 
 import it.freax.fpm.compiler.ebnf.edo.*;
+import it.freax.fpm.compiler.exceptions.AmbiguousCrossReferenceException;
 import it.freax.fpm.util.*;
 import it.freax.fpm.util.exceptions.ParseException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author kLeZ-hAcK
@@ -21,13 +19,14 @@ import java.util.List;
 public class Ebnf
 {
 	public static final String EOF = "<EOF>";
+	public static final String COLLECTED = "<COLLECTED>";
 	public static final String IDENTIFIER = "<IDENTIFIER>";
 	public static final String LITERAL_SUFFIX = "_LITERAL";
 	public static final String ROOT_ENTRY = "CompilationUnit";
-	public static final Dictionary<String, String> regexSpecials;
+	public static final LinearDictionary<String, String> regexSpecials;
 	static
 	{
-		Dictionary<String, String> map = new Dictionary<String, String>();
+		LinearDictionary<String, String> map = new LinearDictionary<String, String>();
 		map.put("[", "\\[");
 		map.put("\\", "\\\\");
 		map.put("^", "\\^");
@@ -42,16 +41,22 @@ public class Ebnf
 		regexSpecials = map;
 	}
 
+	private boolean collectErrors = true;
 	private String regex;
 	private String content;
-	private Dictionary<String, String> dict;
+	private List<Exception> collectedErrors;
+	private HashSet<String> builtSymbolsCache;
 	private HashMap<String, String> builtTokensCache;
-	private Dictionary<MapEntry<String, String>, List<EbnfToken>> tokdict;
+	private LinearDictionary<String, String> dict;
+	private LinearDictionary<MapEntry<String, String>, List<EbnfToken>> tokdict;
 
-	public Ebnf(String content)
+	public Ebnf(String content, boolean collectErrors)
 	{
 		this.content = content;
+		this.collectErrors = collectErrors;
 		builtTokensCache = new HashMap<String, String>();
+		builtSymbolsCache = new HashSet<String>();
+		collectedErrors = new ArrayList<Exception>();
 	}
 
 	public String getRegex()
@@ -64,12 +69,12 @@ public class Ebnf
 		return content;
 	}
 
-	public Dictionary<String, String> getEbnf()
+	public LinearDictionary<String, String> getEbnf()
 	{
 		return dict;
 	}
 
-	public Dictionary<MapEntry<String, String>, List<EbnfToken>> getTokdict()
+	public LinearDictionary<MapEntry<String, String>, List<EbnfToken>> getTokdict()
 	{
 		return tokdict;
 	}
@@ -79,6 +84,11 @@ public class Ebnf
 		return (dict != null) && !dict.isEmpty();
 	}
 
+	public List<Exception> getCollectedErrors()
+	{
+		return collectedErrors;
+	}
+
 	public void read() throws ParseException
 	{
 		dict = Strings.getOne().getMap(content, "::=", "{[\t", "\t]}");
@@ -86,7 +96,7 @@ public class Ebnf
 
 	public void buildTokens()
 	{
-		tokdict = new Dictionary<MapEntry<String, String>, List<EbnfToken>>();
+		tokdict = new LinearDictionary<MapEntry<String, String>, List<EbnfToken>>();
 
 		Iterator<MapEntry<String, String>> it = dict.iterator();
 		int i = 0;
@@ -95,15 +105,6 @@ public class Ebnf
 			MapEntry<String, String> entry = it.next();
 			tokdict.put(entry, tokenizeValue(entry.getValue(), ++i));
 		}
-	}
-
-	public void buildRegex()
-	{
-		StringBuilder ret = new StringBuilder();
-		ret.append('^');
-		ret.append(buildRegex(ROOT_ENTRY));
-		ret.append('$');
-		regex = ret.toString();
 	}
 
 	public boolean matches(String unit)
@@ -127,15 +128,24 @@ public class Ebnf
 		 * deterministico.
 		 */
 
-		return ret && regex.equals(null);
+		return ret;
 	}
 
-	private String buildRegex(String regexclass)
+	public void buildRegex() throws AmbiguousCrossReferenceException
 	{
-		// TODO: Per evitare i riferimenti incrociati l'idea è di inserire subito
-		// l'elemento all'iterno della tabella di hash, e successivamente di
-		// aggiornarlo con il suo valore calcolato. In questo modo si può tenere
-		// conto di eventuali riferimenti incrociati. :D
+		StringBuilder ret = new StringBuilder();
+		ret.append('^');
+		ret.append(buildRegex(ROOT_ENTRY, true));
+		ret.append('$');
+		regex = ret.toString();
+	}
+
+	private String buildRegex(String regexclass, boolean recursive) throws AmbiguousCrossReferenceException
+	{
+		// FIXME: Tutto sbagliato, da rifare, è impensabile una regex di queste dimensioni.
+		// Bisognerà riprogettare da capo il sistema di riconoscimento.
+		// Rimane l'ebnf e quindi il lavoro fatto per il parser,
+		// ma poi con questo coso ci devo fare qualcosa.
 		String ret = "";
 		if (builtTokensCache.containsKey(regexclass))
 		{
@@ -143,12 +153,26 @@ public class Ebnf
 		}
 		else
 		{
-			StringBuilder sb = new StringBuilder();
+			if (!builtSymbolsCache.contains(regexclass))
+			{
+				builtSymbolsCache.add(regexclass);
+			}
+			else if (collectErrors)
+			{
+				collectedErrors.add(new AmbiguousCrossReferenceException(regexclass));
+				ret = COLLECTED;
+				regexclass = null;
+			}
+			else
+			{
+				throw new AmbiguousCrossReferenceException(regexclass);
+			}
 			MapEntry<String, String> regclass = dict.getPair(regexclass);
 			if (regclass != null)
 			{
+				StringBuilder sb = new StringBuilder();
 				List<EbnfToken> tokens = tokdict.get(regclass);
-				boolean quoted = false;
+				boolean quoted = false, collected = false;
 
 				for (EbnfToken token : tokens)
 				{
@@ -162,7 +186,7 @@ public class Ebnf
 					}
 					else if (token instanceof OperatorToken)
 					{
-						if (token.getOperator() != ';')
+						if ((token.getOperator() != ';') && !collected)
 						{
 							sb.append(token.getOperator());
 						}
@@ -207,28 +231,37 @@ public class Ebnf
 							{
 								data = dict.get(data);
 							}
-							else if (dict.containsKey(data))
+							else if (dict.containsKey(data) && recursive)
 							{
-								data = buildRegex(data);
+								data = buildRegex(data, recursive);
 							}
 						}
-						sb.append(data);
-						if (!sb.toString().endsWith("\\s+"))
+
+						if (!data.equalsIgnoreCase(COLLECTED))
 						{
-							sb.append("\\s+");
+							collected = false;
+							sb.append(data);
+							if (!sb.toString().endsWith("\\s+"))
+							{
+								sb.append("\\s+");
+							}
+						}
+						else
+						{
+							collected = true;
 						}
 					}
 				}
+				builtTokensCache.put(regexclass, sb.toString());
+				ret = sb.toString();
 			}
-			builtTokensCache.put(regexclass, sb.toString());
-			ret = sb.toString();
 		}
 		return ret;
 	}
 
 	private List<EbnfToken> tokenizeValue(String value, long linenr)
 	{
-		Collections<EbnfToken> ret = Collections.getOne(new ArrayList<EbnfToken>());
+		FpmCollections<EbnfToken> ret = FpmCollections.getOne(new ArrayList<EbnfToken>());
 
 		char[] tokens;
 		char operator;

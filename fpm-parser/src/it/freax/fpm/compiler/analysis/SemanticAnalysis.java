@@ -10,8 +10,7 @@ import it.freax.fpm.compiler.interfaces.IAnalysis;
 /**
  * @author kLeZ-hAcK
  */
-public class SemanticAnalysis<K, V> implements
-		IAnalysis<ConnectionSequence, StructureTree<K, V>>
+public class SemanticAnalysis<K, V> implements IAnalysis<ConnectionSequence, StructureTree<K, V>>
 {
 	/*
 	 * (non-Javadoc)

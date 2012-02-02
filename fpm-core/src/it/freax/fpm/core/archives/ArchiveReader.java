@@ -84,8 +84,7 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader>
 			fis.close();
 		}
 		catch (IOException e)
-		{
-		}
+		{}
 		fis = null;
 	}
 

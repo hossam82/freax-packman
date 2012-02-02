@@ -12,7 +12,9 @@ import it.freax.fpm.compiler.interfaces.IAction;
  */
 public class TargetMappingAction<K, V> implements IAction<StructureTree<K, V>, ComputationGraph<K, V>>
 {
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.freax.fpm.compiler.interfaces.IAction#run(java.lang.Object)
 	 */
 	@Override

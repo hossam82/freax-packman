@@ -5,39 +5,47 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class BZip2ArchiveReaderTest {
+public class BZip2ArchiveReaderTest
+{
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws Exception
+	{
 	}
 
 	@Test
-	public void testReadEntry() {
+	public void testReadEntry()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testReadEntriesStringBooleanString() {
+	public void testReadEntriesStringBooleanString()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testReadEntriesContent() {
+	public void testReadEntriesContent()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testCountEntries() {
+	public void testCountEntries()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testSetEntryArrayList() {
+	public void testSetEntryArrayList()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testBZip2ArchiveReader() {
+	public void testBZip2ArchiveReader()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 

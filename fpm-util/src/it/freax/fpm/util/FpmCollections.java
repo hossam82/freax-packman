@@ -4,35 +4,35 @@
 package it.freax.fpm.util;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.*;
 
 /**
  * @author kLeZ-hAcK
  */
-public class Collections<E>
+public class FpmCollections<E>
 {
 	public static final int LastIndex = -2;
 
 	private Collection<E> coll;
 
-	public Collections(Collection<E> coll)
+	public FpmCollections(Collection<E> coll)
 	{
 		this.coll = coll;
 	}
 
-	public Collections(E[] arr)
+	public FpmCollections(E[] arr)
 	{
 		coll = Arrays.asList(arr);
 	}
 
-	public static <E> Collections<E> getOne(Collection<E> coll)
+	public static <E> FpmCollections<E> getOne(Collection<E> coll)
 	{
-		return new Collections<E>(coll);
+		return new FpmCollections<E>(coll);
 	}
 
-	public static <E> Collections<E> getOne(E[] arr)
+	public static <E> FpmCollections<E> getOne(E[] arr)
 	{
-		return new Collections<E>(arr);
+		return new FpmCollections<E>(arr);
 	}
 
 	public Collection<E> getCollection()
@@ -78,7 +78,7 @@ public class Collections<E>
 
 	public <T> Collection<T> castAll()
 	{
-		Collections<T> ret = Collections.getOne(new ArrayList<T>());
+		FpmCollections<T> ret = FpmCollections.getOne(new ArrayList<T>());
 		Generics<E> g = Generics.getOne();
 		for (E element : coll)
 		{

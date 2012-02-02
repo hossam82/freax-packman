@@ -237,8 +237,7 @@ public final class Constants
 				ret.load(is);
 			}
 			catch (Throwable t)
-			{
-			}
+			{}
 		}
 		return ret;
 	}

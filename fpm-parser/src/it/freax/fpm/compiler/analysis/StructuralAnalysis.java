@@ -12,8 +12,12 @@ import it.freax.fpm.compiler.interfaces.IAnalysis;
  */
 public class StructuralAnalysis implements IAnalysis<String, ConnectionSequence>
 {
-	/* (non-Javadoc)
-	 * @see it.freax.fpm.compiler.interfaces.IAnalysis#performAnalysis(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.freax.fpm.compiler.interfaces.IAnalysis#performAnalysis(java.lang.
+	 * String)
 	 */
 	@Override
 	public ConnectionSequence analyse(String sourceText)

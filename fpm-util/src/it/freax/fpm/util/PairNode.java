@@ -127,7 +127,8 @@ public class PairNode<K, V> implements Iterable<PairNode<K, V>>
 	{
 		boolean ret = false;
 		ret = (parent == null) && ((childs == null) || childs.isEmpty());
-		for (PairNode<K, V> child : childs) ret &= child.isEmpty();
+		for (PairNode<K, V> child : childs)
+			ret &= child.isEmpty();
 		return ret;
 	}
 

@@ -54,8 +54,7 @@ public class ErrorHandler
 		E ret = null;
 		try
 		{
-			ret = (E) e.getClass().getConstructor(new Class<?>[]
-			{ Exception.class }).newInstance(t);
+			ret = (E) e.getClass().getConstructor(new Class<?>[] { Exception.class }).newInstance(t);
 		}
 		catch (IllegalArgumentException e1)
 		{

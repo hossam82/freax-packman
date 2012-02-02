@@ -5,64 +5,77 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ArchiveReaderTest {
+public class ArchiveReaderTest
+{
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws Exception
+	{
 	}
 
 	@Test
-	public void testGetFile() {
+	public void testGetFile()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testGetType() {
+	public void testGetType()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testGetEntries() {
+	public void testGetEntries()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testGetFilesContents() {
+	public void testGetFilesContents()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testGetEntryContent() {
+	public void testGetEntryContent()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testHasRead() {
+	public void testHasRead()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testSetHasRead() {
+	public void testSetHasRead()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testOpenStream() {
+	public void testOpenStream()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testCloseStream() {
+	public void testCloseStream()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testGetRightInstance() {
+	public void testGetRightInstance()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testReadEntries() {
+	public void testReadEntries()
+	{
 		fail("Not yet implemented"); // TODO
 	}
 

@@ -4,12 +4,16 @@
 package it.freax.fpm.test.main;
 
 import it.freax.fpm.compiler.ebnf.Ebnf;
+import it.freax.fpm.compiler.ebnf.edo.EbnfToken;
 import it.freax.fpm.util.ErrorHandler;
+import it.freax.fpm.util.LinearDictionary;
+import it.freax.fpm.util.MapEntry;
 import it.freax.fpm.util.Streams;
 import it.freax.fpm.util.exceptions.ParseException;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author kLeZ-hAcK
@@ -29,18 +33,18 @@ public class TestTree
 			if (is != null)
 			{
 				String content = str.read();
-				Ebnf reader = new Ebnf(content);
+				Ebnf reader = new Ebnf(content, true);
 				reader.read();
 				reader.buildTokens();
-				reader.buildRegex();
+				//reader.buildRegex();
 
-				// System.out.println(reader.getEbnf());
-				// Dictionary<MapEntry<String, String>, List<EbnfToken>> tokens = reader.getTokdict();
-				// for (MapEntry<MapEntry<String, String>, List<EbnfToken>> entry : tokens)
-				// {
-				// 	System.out.println(entry.getValue());
-				// }
-				System.out.println(reader.getRegex());
+				System.out.println(reader.getEbnf());
+				LinearDictionary<MapEntry<String, String>, List<EbnfToken>> tokens = reader.getTokdict();
+				for (MapEntry<MapEntry<String, String>, List<EbnfToken>> entry : tokens)
+				{
+					System.out.println(entry.getValue());
+				}
+				// System.out.println(reader.getRegex());
 			}
 		}
 		catch (FileNotFoundException e)

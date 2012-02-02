@@ -20,8 +20,7 @@ public abstract class AbstractDownload extends Observable implements Runnable
 	protected static final int MAX_BUFFER_SIZE = 10 * 1024;
 	public static final int PAUSED = 1;
 	// These are the status names.
-	public static final String[] STATUSES =
-	{ "Downloading", "Paused", "Complete", "Cancelled", "Error" };
+	public static final String[] STATUSES = { "Downloading", "Paused", "Complete", "Cancelled", "Error" };
 
 	public boolean debug = false;
 	protected StringBuilder debugMessage; // message for debugging purposes

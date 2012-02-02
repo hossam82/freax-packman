@@ -19,9 +19,11 @@ public class ExtensionDecodingException extends Throwable
 		this.path = path;
 	}
 
-	/* (non-Javadoc)
-		 * @see java.lang.Throwable#getLocalizedMessage()
-		 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Throwable#getLocalizedMessage()
+	 */
 	@Override
 	public String getLocalizedMessage()
 	{

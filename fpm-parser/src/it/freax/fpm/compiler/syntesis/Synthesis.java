@@ -14,8 +14,12 @@ import it.freax.fpm.compiler.interfaces.ISyntesis;
  */
 public class Synthesis<K, V> implements ISyntesis<K, V>
 {
-	/* (non-Javadoc)
-	 * @see it.freax.fpm.compiler.interfaces.IAccessor#performAccessorAction(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.freax.fpm.compiler.interfaces.IAccessor#performAccessorAction(java
+	 * .lang.Object)
 	 */
 	@Override
 	public TargetCode synthesise(StructureTree<K, V> input)

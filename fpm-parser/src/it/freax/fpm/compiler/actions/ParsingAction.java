@@ -12,7 +12,9 @@ import it.freax.fpm.compiler.interfaces.IAction;
  */
 public class ParsingAction implements IAction<TokenSequence, ConnectionSequence>
 {
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.freax.fpm.compiler.interfaces.IAction#run(java.lang.Object)
 	 */
 	@Override

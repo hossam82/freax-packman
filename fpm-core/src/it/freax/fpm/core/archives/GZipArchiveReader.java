@@ -13,23 +13,26 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
-public class GZipArchiveReader extends ArchiveReader {
+public class GZipArchiveReader extends ArchiveReader
+{
 	private String type;
 
-	public GZipArchiveReader(File file) throws IOException {
+	public GZipArchiveReader(File file) throws IOException
+	{
 		super(file);
 		this.type = "GZip";
 	}
 
 	@Override
-	public String getType() {
+	public String getType()
+	{
 		return this.type;
 	}
 
 	@Override
-	protected void setEntryArrayList() throws IOException {
-		TarArchiveInputStream tarin = new TarArchiveInputStream(
-				new GzipCompressorInputStream(this.openStream()));
+	protected void setEntryArrayList() throws IOException
+	{
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(this.openStream()));
 		List<String> entries = this.getEntries();
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
@@ -40,13 +43,14 @@ public class GZipArchiveReader extends ArchiveReader {
 	}
 
 	@Override
-	public String readEntry(String entryName) throws IOException {
+	public String readEntry(String entryName) throws IOException
+	{
 		String lines = "";
-		TarArchiveInputStream tarin = new TarArchiveInputStream(
-				new GzipCompressorInputStream(this.openStream()));
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(this.openStream()));
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
-			if (entry.getName().contains(entryName)) {
+			if (entry.getName().contains(entryName))
+			{
 				byte[] buf = new byte[(int) entry.getSize()];
 				tarin.read(buf, 0, (int) entry.getSize());
 				ByteArrayInputStream bais = new ByteArrayInputStream(buf);
@@ -59,34 +63,30 @@ public class GZipArchiveReader extends ArchiveReader {
 	}
 
 	@Override
-	public int countEntries(String entryName) throws IOException {
+	public int countEntries(String entryName) throws IOException
+	{
 		int counter = 0;
-		TarArchiveInputStream tarin = new TarArchiveInputStream(
-				new GzipCompressorInputStream(this.openStream()));
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(this.openStream()));
 		TarArchiveEntry entry = null;
 		while ((entry = tarin.getNextTarEntry()) != null)
-			if (entry.getName().contains(entryName))
-				counter++;
+			if (entry.getName().contains(entryName)) counter++;
 		tarin.close();
 		this.closeStream();
 		return counter;
 	}
 
 	@Override
-	public List<String> readEntries(String entryName, boolean excludeRoot,
-			String root) throws IOException {
+	public List<String> readEntries(String entryName, boolean excludeRoot, String root) throws IOException
+	{
 		List<String> ret = new ArrayList<String>();
-		TarArchiveInputStream tarin = new TarArchiveInputStream(
-				new GzipCompressorInputStream(this.openStream()));
+		TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(this.openStream()));
 		TarArchiveEntry entry = null;
 		boolean isRoot = excludeRoot;
-		while ((entry = tarin.getNextTarEntry()) != null) {
-			if (excludeRoot)
-				isRoot = entry.getName().equalsIgnoreCase(
-						root.concat(entryName));
+		while ((entry = tarin.getNextTarEntry()) != null)
+		{
+			if (excludeRoot) isRoot = entry.getName().equalsIgnoreCase(root.concat(entryName));
 
-			if (entry.getName().contains(entryName) && !isRoot)
-				ret.add(entry.getName());
+			if (entry.getName().contains(entryName) && !isRoot) ret.add(entry.getName());
 		}
 		tarin.close();
 		this.closeStream();
@@ -94,14 +94,16 @@ public class GZipArchiveReader extends ArchiveReader {
 	}
 
 	@Override
-	protected void readEntriesContent() throws IOException {
-		if (!this.hasRead()) {
-			TarArchiveInputStream tarin = new TarArchiveInputStream(
-					new GzipCompressorInputStream(this.openStream()));
+	protected void readEntriesContent() throws IOException
+	{
+		if (!this.hasRead())
+		{
+			TarArchiveInputStream tarin = new TarArchiveInputStream(new GzipCompressorInputStream(this.openStream()));
 			TarArchiveEntry entry = null;
 			Map<String, String> filecontents = this.getFilesContents();
 
-			while ((entry = tarin.getNextTarEntry()) != null) {
+			while ((entry = tarin.getNextTarEntry()) != null)
+			{
 				byte[] buf = new byte[(int) entry.getSize()];
 				tarin.read(buf, 0, (int) entry.getSize());
 				ByteArrayInputStream bais = new ByteArrayInputStream(buf);
@@ -113,7 +115,8 @@ public class GZipArchiveReader extends ArchiveReader {
 	}
 
 	@Override
-	public int compareTo(ArchiveReader arg0) {
+	public int compareTo(ArchiveReader arg0)
+	{
 		return this.getFile().compareTo(arg0.getFile());
 	}
 }

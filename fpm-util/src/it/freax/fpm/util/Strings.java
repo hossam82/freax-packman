@@ -61,7 +61,7 @@ public class Strings
 		}
 		if (candidates.size() > 0)
 		{
-			ext = extSeparator + Collections.getOne(candidates).lastOrDefault();
+			ext = extSeparator + FpmCollections.getOne(candidates).lastOrDefault();
 		}
 		if (!path.endsWith(ext) || ext.isEmpty()) { throw new ExtensionDecodingException("Extension decoding failed!"); }
 		return ext;
@@ -308,7 +308,7 @@ public class Strings
 		List<String> ret = new ArrayList<String>();
 		if (str != null)
 		{
-			ret = Collections.<String> getOne(str.split(delim)).toList();
+			ret = FpmCollections.<String> getOne(str.split(delim)).toList();
 		}
 		return ret;
 	}
@@ -339,8 +339,8 @@ public class Strings
 			if (args.length > 1)
 			{
 				String[] newargs = new String[] {};
-				Collections<String> coll = Collections.getOne(args);
-				newargs = coll.subarray(0, Collections.LastIndex - 1, newargs);
+				FpmCollections<String> coll = FpmCollections.getOne(args);
+				newargs = coll.subarray(0, FpmCollections.LastIndex - 1, newargs);
 				ret = safeConcatPaths(newargs);
 			}
 			else if (args.length > 0)
@@ -429,9 +429,9 @@ public class Strings
 		return ret;
 	}
 
-	public Dictionary<String, String> getMap(String content, String kvs, String inCommTk, String outCommTk) throws ParseException
+	public LinearDictionary<String, String> getMap(String content, String kvs, String inCommTk, String outCommTk) throws ParseException
 	{
-		Dictionary<String, String> dict = new Dictionary<String, String>();
+		LinearDictionary<String, String> dict = new LinearDictionary<String, String>();
 		List<String> lines = getLines(content);
 		int count = 0;
 		boolean keyok = false;

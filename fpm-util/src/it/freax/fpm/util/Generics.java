@@ -67,7 +67,7 @@ public class Generics<T>
 	public T getInstance(String className, Object... args) throws InstantiationException
 	{
 		T ret = null;
-		Collections<Class<?>> colls = Collections.getOne(new ArrayList<Class<?>>());
+		FpmCollections<Class<?>> colls = FpmCollections.getOne(new ArrayList<Class<?>>());
 		try
 		{
 			Class<?> dad = Class.forName(className);

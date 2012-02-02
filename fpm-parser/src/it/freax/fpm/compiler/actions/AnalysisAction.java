@@ -13,8 +13,12 @@ import it.freax.fpm.compiler.interfaces.IAction;
  */
 public class AnalysisAction<K, V> implements IAction<String, StructureTree<K, V>>
 {
-	/* (non-Javadoc)
-	 * @see it.freax.fpm.compiler.interfaces.IAccessor#performAccessorAction(java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * it.freax.fpm.compiler.interfaces.IAccessor#performAccessorAction(java
+	 * .lang.Object)
 	 */
 	@Override
 	public StructureTree<K, V> run(String input)

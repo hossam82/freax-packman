@@ -14,8 +14,7 @@ public class Operator
 	private int precedence;
 	private GroupOperator group;
 
-	public Operator(String symbol, String description, int precedence,
-			GroupOperator group)
+	public Operator(String symbol, String description, int precedence, GroupOperator group)
 	{
 		setSymbol(symbol);
 		setDescription(description);

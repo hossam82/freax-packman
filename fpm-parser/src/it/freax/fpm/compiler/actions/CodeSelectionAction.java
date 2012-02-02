@@ -9,12 +9,14 @@ import it.freax.fpm.compiler.interfaces.IAction;
 
 /**
  * @author kLeZ-hAcK
- *
+ * 
  */
 public class CodeSelectionAction<K, V> implements IAction<ComputationGraph<K, V>, TargetTree<K, V>>
 {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see it.freax.fpm.compiler.interfaces.IAction#run(java.lang.Object)
 	 */
 	@Override

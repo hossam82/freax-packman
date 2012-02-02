@@ -15,8 +15,7 @@ import org.apache.log4j.Logger;
 
 public class Executor implements Runnable
 {
-	public static final String[] STATUSES =
-	{ "Idle", "Working", "Error", "Completed" };
+	public static final String[] STATUSES = { "Idle", "Working", "Error", "Completed" };
 	public static final int IDLE = 0;
 	public static final int WORKING = 1;
 	public static final int ERROR = 2;
@@ -106,8 +105,7 @@ public class Executor implements Runnable
 					path.append(command.substring(3));
 					pwd = new File(path.toString());
 
-					Object[] args = new Object[]
-					{ command, 0 };
+					Object[] args = new Object[] { command, 0 };
 					String msg = String.format("Command [%1s] exited with status %2d", args);
 					log.info(msg);
 
@@ -138,8 +136,7 @@ public class Executor implements Runnable
 				updater.waitFor();
 				exitStatus = updater.exitValue();
 
-				Object[] args = new Object[]
-				{ command, exitStatus };
+				Object[] args = new Object[] { command, exitStatus };
 				String msg = String.format("Command [%1s] exited with status %2d", args);
 				log.info(msg);
 

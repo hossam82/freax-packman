@@ -9,7 +9,7 @@ import java.util.*;
  * @author kLeZ-hAcK
  * 
  */
-public class Dictionary<K, V> implements Map<K, V>, Iterable<MapEntry<K, V>>
+public class LinearDictionary<K, V> implements Map<K, V>, Iterable<MapEntry<K, V>>
 {
 	private ArrayList<MapEntry<K, V>> _map = new ArrayList<MapEntry<K, V>>();
 
@@ -44,11 +44,14 @@ public class Dictionary<K, V> implements Map<K, V>, Iterable<MapEntry<K, V>>
 	public boolean containsKey(Object key)
 	{
 		boolean ret = false;
-		for (MapEntry<K, V> entry : _map)
+		if (key != null)
 		{
-			if (ret = entry.getKey().equals(key))
+			for (MapEntry<K, V> entry : _map)
 			{
-				break;
+				if (ret = entry.getKey().equals(key))
+				{
+					break;
+				}
 			}
 		}
 		return ret;
