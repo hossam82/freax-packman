@@ -81,27 +81,27 @@ public class Generics<T>
 		}
 		catch (ClassNotFoundException e)
 		{
-			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(e);
 		}
 		catch (SecurityException e)
 		{
-			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(e);
 		}
 		catch (NoSuchMethodException e)
 		{
-			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(e);
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(e);
 		}
 		catch (IllegalAccessException e)
 		{
-			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(e);
 		}
 		catch (InvocationTargetException e)
 		{
-			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(new InstantiationException(), e);
+			throw ErrorHandler.getOne(getClass()).<InstantiationException> rethrow(e);
 		}
 		return ret;
 	}

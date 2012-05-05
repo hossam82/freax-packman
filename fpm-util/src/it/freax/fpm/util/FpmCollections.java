@@ -92,6 +92,38 @@ public class FpmCollections<E>
 		coll.add(e);
 	}
 
+	public void addAll(Collection<E> c)
+	{
+		coll.addAll(c);
+	}
+
+	public void insert(E e, int position)
+	{
+		Collection<E> prefix;
+		Collection<E> postfix;
+		if (position > 0)
+		{
+			prefix = sublist(0, position - 1);
+			postfix = sublist(position, lastIndex());
+			clear();
+		}
+		else
+		{
+			prefix = new ArrayList<E>();
+			postfix = coll;
+		}
+		if (position <= size())
+		{
+			addAll(prefix);
+			add(e);
+			addAll(postfix);
+		}
+		else
+		{
+			add(e);
+		}
+	}
+
 	public E first()
 	{
 		return get(0);

@@ -67,6 +67,11 @@ public final class Constants
 	public static final String CONF_DIR = "conf";
 
 	/**
+	 * Nome della directory delle grammatiche di ANTLR
+	 */
+	public static final String GRAMMARS_DIR = "grammars";
+
+	/**
 	 * Nome della directory dei file fisici di fpm (configurazione, log, ...).
 	 */
 	public static final String FPM_DIR = "fpm";
@@ -90,6 +95,12 @@ public final class Constants
 	public static final String PREV_P = "${PREV}";
 
 	/**
+	 * Tag di sostituzione che sta a indicare il percorso della directory di
+	 * output per i file generati dalle grammatiche ANTLR
+	 */
+	public static final String ANTLR_OUT_P = "${ANTLR-Output}";
+
+	/**
 	 * Separatore per la lista di percorsi da utilizzare per la ricerca del
 	 * MAIN_CONF_FILE.
 	 */
@@ -101,11 +112,27 @@ public final class Constants
 	public static final String HOME_P = "~";
 
 	/**
-	 * Lista di percorsi da utilizzare per la ricerca del MAIN_CONF_FILE.<br/>
+	 * Package per le classi generate dal motore ANTLR
+	 */
+	public static final String ENGINE_PACKAGE = "it.freax.fpm.core.solver.parsers.";
+
+	/**
+	 * Delimitatore per la variabile Entry Point all'interno dei file di
+	 * grammatica.<br>
+	 * Sitassi aggiunta per fpm.<br>
+	 * Il delimitatore viene usato nel modo:
+	 * {@literal @@EP::ENTRY_POINT[reverse(@@EP::)]}<br>
+	 * Esempio:<br>
+	 * {@literal @@EP::compilationUnit::PE@@}
 	 * 
+	 * @author kLeZ-hAcK<br>
+	 */
+	public static final String ENTRY_POINT_DEL = "@@EP::";
+
+	/**
+	 * Lista di percorsi da utilizzare per la ricerca del MAIN_CONF_FILE.<br/>
 	 * In maniera gerarchica si trova il percorso di sistema o il percorso
 	 * relativo (una risorsa all'interno del jar di fpm, reset to default).<br/>
-	 * 
 	 * Se in presenza di un reset to default, il file di configurazione va
 	 * scritto sul disco nella directory di sistema.
 	 */
@@ -130,7 +157,7 @@ public final class Constants
 			sysConf = FS + "etc" + FS + FPM_DIR + FS;
 			if (!new File(sysConf).canWrite())
 			{
-				sysConf = USER_HOME + FS + FPM_DIR + FS + CONF_DIR + FS;
+				sysConf = USER_HOME + FS + "." + FPM_DIR + FS + CONF_DIR + FS;
 			}
 		}
 		return sysConf;
@@ -237,7 +264,8 @@ public final class Constants
 				ret.load(is);
 			}
 			catch (Throwable t)
-			{}
+			{
+			}
 		}
 		return ret;
 	}
@@ -294,9 +322,19 @@ public final class Constants
 		return fpmConf;
 	}
 
+	public String getDefaultFpmPath()
+	{
+		return getDefaultConfPath().replace(CONF_DIR, "").replace(FS + FS, FS);
+	}
+
 	public String getConstant(String name)
 	{
 		return getFpmConf().getProperty(name);
+	}
+
+	public String getConstant(String name, String defaultProp)
+	{
+		return getProperty(getFpmConf(), name, defaultProp);
 	}
 
 	private void setLocalizedStrings(Properties localizedStrings)
@@ -312,5 +350,20 @@ public final class Constants
 	public String getLocalizedString(String name)
 	{
 		return getLocalizedStrings().getProperty(name);
+	}
+
+	public String getLocalizedString(String name, String defaultProp)
+	{
+		return getProperty(getLocalizedStrings(), name, defaultProp);
+	}
+
+	public static String getProperty(Properties props, String defaultProp, String propName)
+	{
+		String ret = defaultProp;
+		if (props.containsKey(propName))
+		{
+			ret = props.getProperty(propName);
+		}
+		return ret;
 	}
 }

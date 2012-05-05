@@ -4,6 +4,7 @@ import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 import it.freax.fpm.util.exceptions.ParseException;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -171,9 +172,9 @@ public class Strings
 	{
 		StringBuffer ret = new StringBuffer();
 		String[] inputArr = input.toArray(new String[input.size()]);
-		for (int i = 0; i < inputArr.length; i++)
+		for (String element : inputArr)
 		{
-			ret.append(inputArr[i]).append(Constants.LS);
+			ret.append(element).append(Constants.LS);
 		}
 		return ret.toString();
 	}
@@ -319,7 +320,7 @@ public class Strings
 		for (int i = 0; i < toMerge.size(); i++)
 		{
 			merged.append(toMerge.get(i));
-			if (i < toMerge.size() - 1)
+			if (i < (toMerge.size() - 1))
 			{
 				merged.append(delimiter);
 			}
@@ -365,7 +366,7 @@ public class Strings
 				ret += Constants.FS;
 			}
 
-			if (args[i].endsWith(Constants.FS) || ((i == args.length - 1) && !isNullOrEmpty(getExtension(args[i]))))
+			if (args[i].endsWith(Constants.FS) || ((i == (args.length - 1)) && !isNullOrEmpty(getExtension(args[i]))))
 			{
 				ret += args[i];
 			}
@@ -469,5 +470,29 @@ public class Strings
 			throw new ParseException(sb.toString());
 		}
 		return dict;
+	}
+
+	public String reverse(String input)
+	{
+		StringBuilder ret = new StringBuilder();
+		char[] inArr = input.toCharArray();
+		for (int i = inArr.length - 1; i > 0; i--)
+		{
+			ret.append(inArr[i]);
+		}
+		return ret.toString();
+	}
+
+	public StringWriter toStringWriter(String source)
+	{
+		StringWriter writer = new StringWriter();
+		Scanner scanner;
+
+		scanner = new Scanner(source);
+		while (scanner.hasNextLine())
+		{
+			writer.append(scanner.nextLine()).append(Constants.FS);
+		}
+		return writer;
 	}
 }
