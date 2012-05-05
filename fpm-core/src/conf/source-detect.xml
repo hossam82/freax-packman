@@ -22,7 +22,7 @@
 	<!--
 		Template:
 		<general rootexec="" exitcodecontrol=""/>
-		<type src="" ebnf="" ext="" opts="">
+		<type src="" grammar="" ext="" opts="">
 			<notevoli>
 				<file id="" name=""/>
 			</notevoli>
@@ -36,7 +36,7 @@
 	-->
 
 	<general rootExec="sudo" exitCodeControl="strong"/>
-	<type src="C" ebnf="ebnf/C.ebnf" ext=".c:.cc:.h:.hh" opts="">
+	<type src="C" grammar="C.g" ext=".c:.cc:.h:.hh" opts="">
 		<notevoli>
 			<file id="1" name="configure"/>
 			<file id="2" name="MakeFile"/>
@@ -59,7 +59,7 @@
 			<additive id="3" infotype="Changelog" wheretoparse="Nothing" whattoparse="" howtoparse=""/>
 		</additives>
 	</type>
-	<type src="C++" ebnf="ebnf/C++.ebnf" ext=".cpp:.cxx:.hpp:.hxx" opts="-x c++">
+	<type src="C++" grammar="Cpp.g" ext=".cpp:.cxx:.hpp:.hxx" opts="-x c++">
 		<notevoli>
 			<file id="1" name="configure"/>
 			<file id="2" name="MakeFile"/>

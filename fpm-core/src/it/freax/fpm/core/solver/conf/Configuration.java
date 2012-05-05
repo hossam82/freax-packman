@@ -87,7 +87,7 @@ public class Configuration
 	{
 		ConfType ret = new ConfType();
 		ret.setSource(getAttributeValueIgnoreCase(type, "src"));
-		ret.setEbnf(getAttributeValueIgnoreCase(type, "ebnf"));
+		ret.setGrammar(getAttributeValueIgnoreCase(type, "grammar"));
 		ret.setExts(Strings.getOne().split(getAttributeValueIgnoreCase(type, "ext"), ":"));
 		ret.setCompiler_opts(getAttributeValueIgnoreCase(type, "opts"));
 

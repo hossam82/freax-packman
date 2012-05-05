@@ -8,7 +8,7 @@ import java.util.List;
 public class ConfType
 {
 	private String source;
-	private String ebnf;
+	private String grammar;
 	private String compiler_opts;
 	private List<String> exts;
 	private List<NotableFile> notevoli;
@@ -32,14 +32,14 @@ public class ConfType
 		this.source = source;
 	}
 
-	public String getEbnf()
+	public String getGrammar()
 	{
-		return ebnf;
+		return grammar;
 	}
 
-	public void setEbnf(String ebnf)
+	public void setGrammar(String grammar)
 	{
-		this.ebnf = ebnf;
+		this.grammar = grammar;
 	}
 
 	public String getCompiler_opts()

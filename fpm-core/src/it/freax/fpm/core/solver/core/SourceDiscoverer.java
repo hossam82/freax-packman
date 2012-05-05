@@ -1,6 +1,7 @@
 package it.freax.fpm.core.solver.core;
 
 import it.freax.fpm.core.archives.ArchiveReader;
+import it.freax.fpm.core.solver.antlr.AntlrEngine;
 import it.freax.fpm.core.solver.conf.*;
 import it.freax.fpm.core.solver.dto.CompilationUnit;
 import it.freax.fpm.core.solver.dto.SrcFile;
@@ -14,7 +15,9 @@ import it.freax.fpm.util.*;
 import it.freax.fpm.util.exceptions.ConfigurationReadException;
 import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -100,7 +103,7 @@ public class SourceDiscoverer
 		while (it.hasNext())
 		{
 			String entry = it.next();
-			if (entry.startsWith(directory) && !entry.equalsIgnoreCase(directory) && (dirsplitlen + 1 == entry.split("/").length) && !isDirectory(entry))
+			if (entry.startsWith(directory) && !entry.equalsIgnoreCase(directory) && ((dirsplitlen + 1) == entry.split("/").length) && !isDirectory(entry))
 			{
 				ret.add(entry);
 			}
@@ -165,23 +168,6 @@ public class SourceDiscoverer
 			}
 		}
 		return ret;
-	}
-
-	private static EbnfParser getEbnfParser(EbnfParser parser, String ebnf)
-	{
-		if (ebnf == null)
-		{
-			parser = null;
-		}
-		else if (parser == null)
-		{
-			parser = new EbnfParser(ebnf);
-		}
-		else
-		{
-			parser.setEbnf(ebnf);
-		}
-		return parser;
 	}
 
 	private void makeInstructionSet(Treenode tn, ArrayList<SrcFile> files)
@@ -284,9 +270,10 @@ public class SourceDiscoverer
 		}
 		else
 		{
+			//TODO: Change this code to implement the parse engine
 			log.debug("Dato che non è notevole devo usare altri metodi per verificare che file è");
 			Iterator<ConfType> typeit = conf.typesIterator();
-			EbnfParser parser = getEbnfParser(null, null);
+			AntlrEngine parser;
 			while (typeit.hasNext())
 			{
 				ConfType type = typeit.next();
@@ -295,9 +282,9 @@ public class SourceDiscoverer
 				{
 					if (Strings.getOne().checkExtensions(file, type.getExts()))
 					{
-						log.debug("Il file ricade nelle estensioni del tipo, quindi posso provare il parsing con l'ebnf " + type.getEbnf());
-						parser = getEbnfParser(parser, type.getEbnf());
-						if (parser.parse(content))
+						log.debug("Il file ricade nelle estensioni del tipo, quindi posso provare il parsing con l'ebnf " + type.getGrammar());
+						parser = new AntlrEngine(type.getGrammar(), type.getSource());
+						if (parser.process(content))
 						{
 							log.debug("Sono riuscito a parsare il contenuto! Il file è di tipo \"" + type.getSource() + "\" e i suoi imports sono:\n" + parser.getImports());
 							srcfile.addLang(type.getSource());
@@ -306,6 +293,22 @@ public class SourceDiscoverer
 					}
 				}
 				catch (ExtensionDecodingException e)
+				{
+					ErrorHandler.getOne(getClass()).handle(e);
+				}
+				catch (MalformedURLException e)
+				{
+					ErrorHandler.getOne(getClass()).handle(e);
+				}
+				catch (FileNotFoundException e)
+				{
+					ErrorHandler.getOne(getClass()).handle(e);
+				}
+				catch (ConfigurationReadException e)
+				{
+					ErrorHandler.getOne(getClass()).handle(e);
+				}
+				catch (IOException e)
 				{
 					ErrorHandler.getOne(getClass()).handle(e);
 				}
