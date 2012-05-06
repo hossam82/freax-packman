@@ -270,7 +270,6 @@ public class SourceDiscoverer
 		}
 		else
 		{
-			//TODO: Change this code to implement the parse engine
 			log.debug("Dato che non è notevole devo usare altri metodi per verificare che file è");
 			Iterator<ConfType> typeit = conf.typesIterator();
 			AntlrEngine parser;

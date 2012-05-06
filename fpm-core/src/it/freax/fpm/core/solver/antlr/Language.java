@@ -19,17 +19,23 @@ public class Language
 	private String languageName;
 	private String grammarFile;
 	private String entryPoint;
+	private int importStmt;
+	private int eos;
 
 	/**
 	 * @param languageName
 	 * @param grammarFile
 	 * @param entryPoint
+	 * @param importStmt
+	 * @param eos
 	 */
-	public Language(String languageName, String grammarFile, String entryPoint)
+	public Language(String languageName, String grammarFile, String entryPoint, int importStmt, int eos)
 	{
 		this.languageName = languageName;
 		this.grammarFile = grammarFile;
 		this.entryPoint = entryPoint;
+		this.importStmt = importStmt;
+		this.eos = eos;
 	}
 
 	/**
@@ -56,63 +62,20 @@ public class Language
 		return entryPoint;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
+	/**
+	 * @return the importStmt
 	 */
-	@Override
-	public int hashCode()
+	public int getImportStmt()
 	{
-		final int prime = 31;
-		int result = 1;
-		result = (prime * result) + ((entryPoint == null) ? 0 : entryPoint.hashCode());
-		result = (prime * result) + ((grammarFile == null) ? 0 : grammarFile.hashCode());
-		result = (prime * result) + ((languageName == null) ? 0 : languageName.hashCode());
-		return result;
+		return importStmt;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * @return the eos
 	 */
-	@Override
-	public boolean equals(Object obj)
+	public int getEos()
 	{
-		if (this == obj) { return true; }
-		if (obj == null) { return false; }
-		if (!(obj instanceof Language)) { return false; }
-		Language other = (Language) obj;
-		if (entryPoint == null)
-		{
-			if (other.entryPoint != null) { return false; }
-		}
-		else if (!entryPoint.equals(other.entryPoint)) { return false; }
-		if (grammarFile == null)
-		{
-			if (other.grammarFile != null) { return false; }
-		}
-		else if (!grammarFile.equals(other.grammarFile)) { return false; }
-		if (languageName == null)
-		{
-			if (other.languageName != null) { return false; }
-		}
-		else if (!languageName.equals(other.languageName)) { return false; }
-		return true;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder builder = new StringBuilder();
-		builder.append("Language [languageName=");
-		builder.append(languageName);
-		builder.append(", grammarFile=");
-		builder.append(grammarFile);
-		builder.append(", entryPoint=");
-		builder.append(entryPoint);
-		builder.append("]");
-		return builder.toString();
+		return eos;
 	}
 
 	public static Language create(File grammar, String lang) throws FileNotFoundException, ExtensionDecodingException
@@ -120,10 +83,12 @@ public class Language
 		Language ret;
 		Streams streams = Streams.getOne(grammar);
 		Strings s = Strings.getOne();
+		int importStmt = 0, eos = 0;
 		String entryPoint, grammarContents = streams.read();
 		String ep_pref = Constants.ENTRY_POINT_DEL, ep_suf = s.reverse(Constants.ENTRY_POINT_DEL);
 		entryPoint = s.getStringInsideDelimiters(grammarContents, ep_pref, ep_suf);
-		ret = new Language(lang, grammar.getAbsolutePath(), entryPoint);
+		// TODO: Read grammar file and fill Language object with the importStmt and eos
+		ret = new Language(lang, grammar.getAbsolutePath(), entryPoint, importStmt, eos);
 		return ret;
 	}
 }

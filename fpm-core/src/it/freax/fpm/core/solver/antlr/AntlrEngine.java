@@ -25,6 +25,7 @@ import javax.tools.JavaCompiler.CompilationTask;
 import org.antlr.Tool;
 import org.antlr.runtime.*;
 import org.antlr.runtime.tree.CommonTree;
+import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Logger;
 
 /**
@@ -91,10 +92,29 @@ public class AntlrEngine
 
 	public ArrayList<String> getImports()
 	{
-		// TODO: Read the generated AST and get the imports!
-		CommonTree tree = (CommonTree) parserRetVal.getTree();
-		tree.dupNode();//HACK: Dummy
-		return new ArrayList<String>();
+		CommonTree t = (CommonTree) parserRetVal.getTree();
+		ArrayList<String> ret = new ArrayList<String>();
+		if (t != null)
+		{
+			for (int i = 0; i < t.getChildCount(); i++)
+			{
+				if (t.getChild(i).getType() == lang.getImportStmt())
+				{
+					int j = i + 1;
+					StringBuilder sb = new StringBuilder();
+					String current;
+					Tree child = t.getChild(j);
+					while ((child != null) && (child.getType() != lang.getEos()))
+					{
+						current = child.toString();
+						sb.append(current);
+						child = t.getChild(++j);
+					}
+					ret.add(sb.toString());
+				}
+			}
+		}
+		return ret;
 	}
 
 	/**
