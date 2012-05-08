@@ -6,7 +6,6 @@ package it.freax.fpm.core.solver.antlr;
 import it.freax.fpm.util.*;
 import it.freax.fpm.util.exceptions.ConfigurationReadException;
 import it.freax.fpm.util.exceptions.ExtensionDecodingException;
-
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -87,20 +86,22 @@ public class AntlrEngine
 		classPrefix = Constants.ENGINE_PACKAGE + lang.getLanguageName();
 	}
 
-	public boolean process(String sourceContents) throws ExtensionDecodingException, IOException, ConfigurationReadException
+	public boolean process(String sourceFileName, String sourceContents) throws ExtensionDecodingException, IOException, ConfigurationReadException
 	{
 		boolean ret = false;
+		String fmt = "Trying to build a parser for the grammar %s, in order to parse '%s'";
+		log.debug(String.format(fmt, grammarName, sourceFileName));
 		if (grammarsFolder.exists())
 		{
 			if (isAlreadyBuilt())
 			{
-				ret = runParser(sourceContents);
+				ret = runParser(sourceFileName, sourceContents);
 			}
 			else if (isAlreadyGenerated())
 			{
 				if (build())
 				{
-					ret = runParser(sourceContents);
+					ret = runParser(sourceFileName, sourceContents);
 				}
 			}
 			else
@@ -108,7 +109,7 @@ public class AntlrEngine
 				generateParser(grammar);
 				if (build())
 				{
-					ret = runParser(sourceContents);
+					ret = runParser(sourceFileName, sourceContents);
 				}
 			}
 		}
@@ -223,7 +224,7 @@ public class AntlrEngine
 	 * @param lang
 	 * @return
 	 */
-	public boolean runParser(String sourceContents)
+	public boolean runParser(String sourceFileName, String sourceContents)
 	{
 		boolean ret = false;
 		try
@@ -240,10 +241,7 @@ public class AntlrEngine
 			Parser parser = (Parser) parserCTor.newInstance(tokens);
 			Method entryPointMethod = parserClass.getMethod(lang.getEntryPoint());
 			parserRetVal = (ParserRuleReturnScope) entryPointMethod.invoke(parser);
-			ret = true; // FIXME: ANTLR doesn't throws any exception when error
-			            // parsing so I have to think a method to go in error
-			            // when parsing is failed and to gain antlr logs in
-			            // order to write them on the log file
+			ret = true;
 		}
 		catch (SecurityException e)
 		{
@@ -271,7 +269,8 @@ public class AntlrEngine
 		}
 		catch (InvocationTargetException e)
 		{
-			ErrorHandler.getOne(getClass()).handle("Error in parsing!", e);
+			String fmt = "Error in parsing source file '%s' with the grammar %s!";
+			log.warn(String.format(fmt, sourceFileName, grammarName));
 		}
 		catch (NoSuchFieldException e)
 		{

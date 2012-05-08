@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.freax.fpm.test.main;
+package it.freax.fpm.compiler;
 
 import it.freax.fpm.compiler.ebnf.Ebnf;
 import it.freax.fpm.compiler.ebnf.edo.EbnfToken;

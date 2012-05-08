@@ -37,7 +37,7 @@ public class TestAntlr
 			for (String source : sources)
 			{
 				engine = new AntlrEngine("Java.g", "Java");
-				if (engine.process(Streams.getOne(source).read()))
+				if (engine.process(source, Streams.getOne(source).read()))
 				{
 					log.debug(Calendar.getInstance().getTimeInMillis() - start);
 					for (String imp : engine.getImports())

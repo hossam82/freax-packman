@@ -52,6 +52,11 @@ public final class Constants
 	public static final String MAIN_CONF_FILE = "fpm.conf";
 
 	/**
+	 * Nome del file di configurazione per log4j di fpm.
+	 */
+	public static final String LOG4J_CONF_FILE = "log4j.conf";
+
+	/**
 	 * Nome del file di log principale di fpm.
 	 */
 	public static final String MAIN_LOG_FILE = "fpm.log";
@@ -173,6 +178,9 @@ public final class Constants
 	private String confPath;
 	private Properties fpmConf;
 	private Properties localizedStrings;
+	private Properties log4j;
+
+	//FIXME: Do some refactorings in Properties load methods!!!
 
 	private static String getSystemConfDir()
 	{
@@ -306,6 +314,48 @@ public final class Constants
 		return ret;
 	}
 
+	@SuppressWarnings("static-access")
+	private static Properties loadLog4J(Class<?> clazz) throws ExtensionDecodingException
+	{
+		Properties ret = null;
+		Strings s = Strings.getOne();
+		InputStream is = null;
+		String fullpath = s.concatPaths(CONF_DIR, LOG4J_CONF_FILE);
+		try
+		{
+			if (s.isRelativePath(fullpath))
+			{
+				is = clazz.getClassLoader().getSystemResourceAsStream(fullpath);
+
+				fullpath = getSystemConfDir();
+				Strings.getOne().createPath(fullpath);
+				fullpath += LOG4J_CONF_FILE;
+
+				FileOutputStream os = new FileOutputStream(fullpath);
+				IOUtils.copy(is, os);
+				os.flush();
+				os.close();
+				os = null;
+			}
+			is = new FileInputStream(fullpath);
+			ret = new Properties();
+			ret.load(is);
+		}
+		catch (IOException e)
+		{
+			is = clazz.getClassLoader().getSystemResourceAsStream(CONF_DIR + FS + LOG4J_CONF_FILE);
+			ret = new Properties();
+			try
+			{
+				ret.load(is);
+			}
+			catch (Throwable t)
+			{
+			}
+		}
+		return ret;
+	}
+
 	public static Constants getOne(Class<?> clazz) throws ConfigurationReadException
 	{
 		if (!hasLoaded && (singleton == null))
@@ -314,9 +364,11 @@ public final class Constants
 			String locFilesPath = entry.getValue().getProperty("localized.files.path");
 			String locFilesPattern = entry.getValue().getProperty("localized.files.pattern");
 			Properties localizedStrings;
+			Properties log4j;
 			try
 			{
 				localizedStrings = loadLocalizedStrings(clazz, locFilesPath, locFilesPattern);
+				log4j = loadLog4J(clazz);
 			}
 			catch (ExtensionDecodingException e)
 			{
@@ -327,6 +379,7 @@ public final class Constants
 			singleton.setDefaultConfPath(entry.getKey());
 			singleton.setFpmConf(entry.getValue());
 			singleton.setLocalizedStrings(localizedStrings);
+			singleton.setLog4j(log4j);
 		}
 		return singleton;
 	}
@@ -401,5 +454,15 @@ public final class Constants
 			ret = props.getProperty(propName);
 		}
 		return ret;
+	}
+
+	public Properties getLog4j()
+	{
+		return log4j;
+	}
+
+	public void setLog4j(Properties log4j)
+	{
+		this.log4j = log4j;
 	}
 }

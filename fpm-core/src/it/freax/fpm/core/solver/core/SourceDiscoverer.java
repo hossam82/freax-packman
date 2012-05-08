@@ -283,7 +283,7 @@ public class SourceDiscoverer
 					{
 						log.debug("Il file ricade nelle estensioni del tipo, quindi posso provare il parsing con l'ebnf " + type.getGrammar());
 						parser = new AntlrEngine(type.getGrammar(), type.getSource());
-						if (parser.process(content))
+						if (parser.process(file, content))
 						{
 							log.debug("Sono riuscito a parsare il contenuto! Il file è di tipo \"" + type.getSource() + "\" e i suoi imports sono:\n" + parser.getImports());
 							srcfile.addLang(type.getSource());

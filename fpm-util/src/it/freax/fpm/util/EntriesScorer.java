@@ -62,7 +62,7 @@ public class EntriesScorer<E>
 					{
 						if (!keyequals)
 						{
-							// FIXME: caso particolare, prendo ret
+							// HACK: caso particolare, prendo ret
 						}
 					}
 					else if (lesser)
@@ -80,7 +80,7 @@ public class EntriesScorer<E>
 					{
 						if (!keyequals)
 						{
-							// FIXME: caso particolare, prendo ret
+							// HACK: caso particolare, prendo ret
 						}
 					}
 					else if (greater)

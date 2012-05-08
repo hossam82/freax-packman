@@ -2,6 +2,7 @@ package it.freax.fpm.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
 import org.apache.log4j.*;
 
@@ -44,21 +45,33 @@ public class LogConfigurator
 	public Logger configure(boolean logToConsole)
 	{
 		Logger log = Logger.getLogger(clazz);
+		boolean loadDefaults = false;
 		String logPath = null;
 		PatternLayout layout = null;
 		Strings str = Strings.getOne();
-		String logLevel = "";
+		String logLevel = "", logConsoleLevel = "", logFileLevel = "";
 		try
 		{
 			Constants c = Constants.getOneReset(clazz);
-			logLevel = c.getConstant("log.level");
-			logPath = str.safeConcatPaths(c.getConstant("log.dir"), c.getConstant("log.file"));
-			if (!str.checkPathExistence(logPath))
+			Properties log4j = c.getLog4j();
+			loadDefaults = log4j.isEmpty();
+			if (!loadDefaults)
 			{
-				str.createPath(logPath);
-				new File(logPath).createNewFile();
+				PropertyConfigurator.configure(log4j);
 			}
-			layout = new PatternLayout(c.getConstant("log.pattern"));
+			else
+			{
+				logLevel = c.getConstant("log.level");
+				logConsoleLevel = c.getConstant("log.console.level");
+				logFileLevel = c.getConstant("log.file.level");
+				logPath = str.safeConcatPaths(c.getConstant("log.dir"), c.getConstant("log.file"));
+				if (!str.checkPathExistence(logPath))
+				{
+					str.createPath(logPath);
+					new File(logPath).createNewFile();
+				}
+				layout = new PatternLayout(c.getConstant("log.pattern"));
+			}
 		}
 		catch (Throwable e)
 		{
@@ -71,26 +84,31 @@ public class LogConfigurator
 			layout = new PatternLayout(Constants.DEFAULT_LOG_PATTERN);
 		}
 
-		log.setLevel(Level.toLevel(logLevel));
+		if (loadDefaults)
+		{
+			log.setLevel(Level.toLevel(logLevel));
 
-		if (logToConsole)
-		{
-			ConsoleAppender consapp = new ConsoleAppender(layout);
-			consapp.setTarget("System.out");
-			log.addAppender(consapp);
-		}
+			if (logToConsole)
+			{
+				ConsoleAppender consapp = new ConsoleAppender(layout);
+				consapp.setTarget("System.out");
+				consapp.setThreshold(Level.toLevel(logConsoleLevel));
+				log.addAppender(consapp);
+			}
 
-		FileAppender fileapp;
-		try
-		{
-			fileapp = new FileAppender(layout, logPath);
-			log.addAppender(fileapp);
+			FileAppender fileapp;
+			try
+			{
+				fileapp = new FileAppender(layout, logPath);
+				fileapp.setThreshold(Level.toLevel(logFileLevel));
+				log.addAppender(fileapp);
+			}
+			catch (IOException e)
+			{
+				log.warn("FileAppender not initialized! ".concat(e.getMessage()));
+			}
 		}
-		catch (IOException e)
-		{
-			log.warn("FileAppender not initialized! ".concat(e.getMessage()));
-		}
-		log.info("Logger initialized!");
+		log.trace("Logger initialized!");
 		return log;
 	}
 }
