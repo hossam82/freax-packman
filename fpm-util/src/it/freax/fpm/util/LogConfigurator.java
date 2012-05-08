@@ -1,5 +1,6 @@
 package it.freax.fpm.util;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.log4j.*;
@@ -46,23 +47,31 @@ public class LogConfigurator
 		String logPath = null;
 		PatternLayout layout = null;
 		Strings str = Strings.getOne();
+		String logLevel = "";
 		try
 		{
-			Constants c = Constants.getOne();
+			Constants c = Constants.getOneReset(clazz);
+			logLevel = c.getConstant("log.level");
 			logPath = str.safeConcatPaths(c.getConstant("log.dir"), c.getConstant("log.file"));
+			if (!str.checkPathExistence(logPath))
+			{
+				str.createPath(logPath);
+				new File(logPath).createNewFile();
+			}
 			layout = new PatternLayout(c.getConstant("log.pattern"));
 		}
 		catch (Throwable e)
 		{
-			logPath = str.safeConcatPaths(Constants.USER_HOME, Constants.FPM_DIR);
+			logPath = str.safeConcatPaths(Constants.USER_HOME, "." + Constants.FPM_DIR);
 			if (!str.checkPathExistence(logPath))
 			{
 				str.createPath(logPath);
 			}
+			logPath = str.safeConcatPaths(logPath, Constants.MAIN_LOG_FILE);
 			layout = new PatternLayout(Constants.DEFAULT_LOG_PATTERN);
 		}
 
-		log.setLevel(Level.ALL);
+		log.setLevel(Level.toLevel(logLevel));
 
 		if (logToConsole)
 		{
@@ -81,7 +90,7 @@ public class LogConfigurator
 		{
 			log.warn("FileAppender not initialized! ".concat(e.getMessage()));
 		}
-
+		log.info("Logger initialized!");
 		return log;
 	}
 }

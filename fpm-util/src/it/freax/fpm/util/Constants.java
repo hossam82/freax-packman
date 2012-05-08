@@ -120,14 +120,43 @@ public final class Constants
 	 * Delimitatore per la variabile Entry Point all'interno dei file di
 	 * grammatica.<br>
 	 * Sitassi aggiunta per fpm.<br>
-	 * Il delimitatore viene usato nel modo:
-	 * {@literal @@EP::ENTRY_POINT[reverse(@@EP::)]}<br>
+	 * Il delimitatore viene usato come commento di colorazione direttamente sul
+	 * tag all'interno della grammatica nel modo:
+	 * {@literal /*@@EP::* / ENTRY_POINT /*[reverse(@@EP::)]* /}<br>
 	 * Esempio:<br>
-	 * {@literal @@EP::compilationUnit::PE@@}
+	 * {@literal /*@@EP::* / compilationUnit /*::PE@@* /}
 	 * 
 	 * @author kLeZ-hAcK<br>
 	 */
 	public static final String ENTRY_POINT_DEL = "@@EP::";
+
+	/**
+	 * Delimitatore per la variabile Import Statement all'interno dei file di
+	 * grammatica.<br>
+	 * Sitassi aggiunta per fpm.<br>
+	 * Il delimitatore viene usato come commento di colorazione direttamente sul
+	 * tag all'interno della grammatica nel modo:
+	 * {@literal /*@@IS::* / IMPORT_STMT /*[reverse(@@IS::)]* /}<br>
+	 * Esempio:<br>
+	 * {@literal /*@@EP::* / IMPORT /*::PE@@* /}
+	 * 
+	 * @author kLeZ-hAcK<br>
+	 */
+	public static final String IMPORT_STMT_DEL = "@@IS::";
+
+	/**
+	 * Delimitatore per la variabile Import Statement all'interno dei file di
+	 * grammatica.<br>
+	 * Sitassi aggiunta per fpm.<br>
+	 * Il delimitatore viene usato come commento di colorazione direttamente sul
+	 * tag all'interno della grammatica nel modo:
+	 * {@literal /*@@EOS::* / EOS /*[reverse(@@EOS::)]* /}<br>
+	 * Esempio:<br>
+	 * {@literal /*@@EOS::* / SEMI /*::EOS@@* /}
+	 * 
+	 * @author kLeZ-hAcK<br>
+	 */
+	public static final String EOS_DEL = "@@EOS::";
 
 	/**
 	 * Lista di percorsi da utilizzare per la ricerca del MAIN_CONF_FILE.<br/>
@@ -163,7 +192,8 @@ public final class Constants
 		return sysConf;
 	}
 
-	private static MapEntry<String, Properties> loadFpmConf() throws ConfigurationReadException
+	@SuppressWarnings("static-access")
+	private static MapEntry<String, Properties> loadFpmConf(Class<?> clazz) throws ConfigurationReadException
 	{
 		MapEntry<String, Properties> ret = null;
 
@@ -196,7 +226,7 @@ public final class Constants
 				InputStream is = null;
 				if (relative)
 				{
-					is = ClassLoader.getSystemResourceAsStream(path);
+					is = clazz.getClassLoader().getSystemResourceAsStream(path);
 
 					path = getSystemConfDir();
 					Strings.getOne().createPath(path);
@@ -208,10 +238,7 @@ public final class Constants
 					os.close();
 					os = null;
 				}
-				else
-				{
-					is = new FileInputStream(path);
-				}
+				is = new FileInputStream(path);
 				fpmConf = new Properties();
 
 				fpmConf.load(is);
@@ -234,7 +261,8 @@ public final class Constants
 		return ret;
 	}
 
-	private static Properties loadLocalizedStrings(String path, String pattern) throws ExtensionDecodingException
+	@SuppressWarnings("static-access")
+	private static Properties loadLocalizedStrings(Class<?> clazz, String path, String pattern) throws ExtensionDecodingException
 	{
 		Properties ret = null;
 		Strings s = Strings.getOne();
@@ -243,21 +271,29 @@ public final class Constants
 		String fullpath = s.concatPaths(path, locRes);
 		try
 		{
-			if (s.isRelativePath(path))
+			if (s.isRelativePath(fullpath))
 			{
-				is = ClassLoader.getSystemResourceAsStream(fullpath);
+				is = clazz.getClassLoader().getSystemResourceAsStream(fullpath);
 			}
 			else
 			{
 				is = new FileInputStream(fullpath);
 			}
-
 			ret = new Properties();
-			ret.load(is);
+			if (is != null)
+			{
+				ret.load(is);
+			}
+			else
+			{
+				is = clazz.getClassLoader().getSystemResourceAsStream(CONF_DIR + FS + pattern.replace(COUNTRY_P, "default"));
+				ret = new Properties();
+				ret.load(is);
+			}
 		}
 		catch (IOException e)
 		{
-			is = ClassLoader.getSystemResourceAsStream(CONF_DIR + FS + pattern.replace(COUNTRY_P, "default"));
+			is = clazz.getClassLoader().getSystemResourceAsStream(CONF_DIR + FS + pattern.replace(COUNTRY_P, "default"));
 			ret = new Properties();
 			try
 			{
@@ -270,17 +306,17 @@ public final class Constants
 		return ret;
 	}
 
-	public static Constants getOne() throws ConfigurationReadException
+	public static Constants getOne(Class<?> clazz) throws ConfigurationReadException
 	{
 		if (!hasLoaded && (singleton == null))
 		{
-			MapEntry<String, Properties> entry = loadFpmConf();
+			MapEntry<String, Properties> entry = loadFpmConf(clazz);
 			String locFilesPath = entry.getValue().getProperty("localized.files.path");
 			String locFilesPattern = entry.getValue().getProperty("localized.files.pattern");
 			Properties localizedStrings;
 			try
 			{
-				localizedStrings = loadLocalizedStrings(locFilesPath, locFilesPattern);
+				localizedStrings = loadLocalizedStrings(clazz, locFilesPath, locFilesPattern);
 			}
 			catch (ExtensionDecodingException e)
 			{
@@ -295,11 +331,11 @@ public final class Constants
 		return singleton;
 	}
 
-	public static Constants getOneReset() throws ConfigurationReadException
+	public static Constants getOneReset(Class<?> clazz) throws ConfigurationReadException
 	{
 		hasLoaded = false;
 		singleton = null;
-		return getOne();
+		return getOne(clazz);
 	}
 
 	private void setDefaultConfPath(String confPath)
@@ -324,7 +360,7 @@ public final class Constants
 
 	public String getDefaultFpmPath()
 	{
-		return getDefaultConfPath().replace(CONF_DIR, "").replace(FS + FS, FS);
+		return getDefaultConfPath().substring(0, getDefaultConfPath().indexOf(CONF_DIR)).replace(FS + FS, FS);
 	}
 
 	public String getConstant(String name)

@@ -87,7 +87,7 @@ public class Strings
 	{
 		str = str.trim();
 		int idx = str.lastIndexOf(' ');
-		if ((str != null) && !str.equalsIgnoreCase(""))
+		if ((str != null) && !str.equalsIgnoreCase("") && (idx > -1))
 		{
 			str = str.substring(0, idx);
 		}
@@ -98,7 +98,7 @@ public class Strings
 	{
 		str = str.trim();
 		int idx = str.lastIndexOf(' ') + 1;
-		if ((str != null) && !str.equalsIgnoreCase(""))
+		if ((str != null) && !str.equalsIgnoreCase("") && (idx > -1))
 		{
 			str = str.substring(idx, str.length());
 		}
@@ -110,7 +110,7 @@ public class Strings
 		String ret = "";
 		if ((input != null) && !input.isEmpty())
 		{
-			ret = input.substring(input.indexOf(startDelimiter) + 1);
+			ret = input.substring(input.indexOf(startDelimiter) + startDelimiter.length());
 			if (!ret.equalsIgnoreCase(input))
 			{
 				ret = ret.substring(0, ret.indexOf(endDelimiter));
@@ -366,16 +366,19 @@ public class Strings
 				ret += Constants.FS;
 			}
 
-			if (args[i].endsWith(Constants.FS) || ((i == (args.length - 1)) && !isNullOrEmpty(getExtension(args[i]))))
+			if (args[i] != null)
 			{
-				ret += args[i];
-			}
-			else
-			{
-				ret += args[i] + Constants.FS;
+				if (args[i].endsWith(Constants.FS) || ((i == (args.length - 1)) && !isNullOrEmpty(getExtension(args[i]))))
+				{
+					ret += args[i];
+				}
+				else
+				{
+					ret += args[i] + Constants.FS;
+				}
 			}
 		}
-		return ret;
+		return (ret.endsWith(Constants.FS) ? ret.substring(0, ret.length() - 1) : ret);
 	}
 
 	public boolean isNullOrEmpty(String s)
@@ -405,7 +408,6 @@ public class Strings
 		File f = new File(path);
 		if (!f.exists())
 		{
-
 			if (f.getParent() == null)
 			{
 				ret = f.mkdir();

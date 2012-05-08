@@ -36,7 +36,7 @@ public class SourceDiscoverer
 		this.reader = reader;
 		this.spec = spec;
 		entries = reader.getEntries();
-		Constants c = Constants.getOne();
+		Constants c = Constants.getOne(getClass());
 		conf = Configuration.load(Strings.getOne().safeConcatPaths(c.getConstant("conf.path"), c.getConstant("conf.sourcediscover")));
 	}
 

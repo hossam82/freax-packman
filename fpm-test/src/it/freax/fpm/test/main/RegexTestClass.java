@@ -12,7 +12,9 @@ public class RegexTestClass
 	 */
 	public static void main(String[] args) throws Exception
 	{
-		Pattern p = Pattern.compile("(.*)VERSION(.*)=(.*)");
+		String pattern = "";
+		pattern = "(.*)VERSION(.*)=(.*)";
+		Pattern p = Pattern.compile(pattern);
 		System.out.println(p.matcher("SMB_VERSION_STRING='3.5.5'").matches());
 		System.out.println(p.matcher("VERSION='3.5.5'").matches());
 		String path = "/home/kLeZ-hAcK/Documents/Programmi/Sorgenti/samba-3.5.5/source3/configure";

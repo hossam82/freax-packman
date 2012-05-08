@@ -148,19 +148,15 @@ public class Streams
 
 	public void dump(InputStream is, String pathname) throws IOException
 	{
-		dump(is, pathname, 1024);
-	}
-
-	public void dump(InputStream is, String pathname, int buffer) throws IOException
-	{
-		FileOutputStream fos = new FileOutputStream(new File(pathname));
-		byte[] b = new byte[buffer];
-		int off = 0;
-		while (is.read(b, off, b.length) > -1)
+		OutputStream os = new FileOutputStream(pathname);
+		byte[] buffer = new byte[4096];
+		int bytesRead;
+		while ((bytesRead = is.read(buffer)) != -1)
 		{
-			fos.write(b, off, b.length);
-			off += b.length;
+			os.write(buffer, 0, bytesRead);
 		}
+		is.close();
+		os.close();
 	}
 
 	/**

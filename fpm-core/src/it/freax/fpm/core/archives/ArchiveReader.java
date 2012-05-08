@@ -84,7 +84,8 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader>
 			fis.close();
 		}
 		catch (IOException e)
-		{}
+		{
+		}
 		fis = null;
 	}
 
@@ -115,7 +116,7 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader>
 
 	private static String getArchiveType(File file) throws IOException, ConfigurationReadException
 	{
-		Constants consts = Constants.getOne();
+		Constants consts = Constants.getOne(ArchiveReader.class);
 		String ret = "Unsupported";
 		FileInputStream input = new FileInputStream(file);
 		String type = String.format("%h%h", input.read(), input.read());
@@ -199,7 +200,7 @@ public abstract class ArchiveReader implements Comparable<ArchiveReader>
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (file == null ? 0 : file.hashCode());
+		result = (prime * result) + (file == null ? 0 : file.hashCode());
 		return result;
 	}
 

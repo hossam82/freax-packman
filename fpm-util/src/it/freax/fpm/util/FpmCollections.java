@@ -105,13 +105,13 @@ public class FpmCollections<E>
 		{
 			prefix = sublist(0, position - 1);
 			postfix = sublist(position, lastIndex());
-			clear();
 		}
 		else
 		{
 			prefix = new ArrayList<E>();
 			postfix = coll;
 		}
+		coll = new ArrayList<E>();
 		if (position <= size())
 		{
 			addAll(prefix);

@@ -37,53 +37,78 @@ public class AntlrEngine
 	private final String grammarName;
 	private final String langName;
 	private final Constants consts;
-	private final String antlrOutput;
+	private final File antlrOutput;
 	private final String antlrPlainArgs;
 	private final ArrayList<String> antlrArgs;
 	private final String lexerSuffix;
 	private final String parserSuffix;
-	private final URLClassLoader loader;
 	private final File grammarsFolder;
 	private final File grammar;
 	private final Language lang;
+	private final String classPrefix;
+	private int importStmt = -1;
+	private int eos = -1;
 	private ParserRuleReturnScope parserRetVal;
+	private final File classpath;
 
 	public AntlrEngine(String grammarName, String langName) throws ConfigurationReadException, MalformedURLException, ExtensionDecodingException, FileNotFoundException
 	{
 		this.grammarName = grammarName;
 		this.langName = langName;
-		consts = Constants.getOne();
-		antlrOutput = Strings.getOne().safeConcatPaths(consts.getDefaultFpmPath(), consts.getConstant("generated.output.directory"));
-		antlrPlainArgs = consts.getConstant("antlr.cmdline.options");
+		consts = Constants.getOneReset(getClass());
+		antlrOutput = new File(Strings.getOne().safeConcatPaths(consts.getDefaultFpmPath(), consts.getConstant("generated.output.directory")));
+		if (!antlrOutput.exists())
+		{
+			antlrOutput.mkdirs();
+		}
+		antlrPlainArgs = consts.getConstant("antlr.cmdline.options").replace(Constants.ANTLR_OUT_P, antlrOutput.getAbsolutePath());
 		antlrArgs = new ArrayList<String>(Arrays.asList(antlrPlainArgs.split(" ")));
 		lexerSuffix = consts.getConstant("lexer.suffix");
 		parserSuffix = consts.getConstant("parser.suffix");
-		loader = getAntlrClassLoader();
+
+		FpmCollections<String> pakDirs = FpmCollections.getOne(Arrays.asList(Constants.ENGINE_PACKAGE.split("\\.")));
+		pakDirs.insert(antlrOutput.getAbsolutePath(), 0);
+		pakDirs.add(Constants.FS);
+		String path = Strings.getOne().safeConcatPaths(pakDirs.toArray(new String[] {}));
+		classpath = new File(path);
+
 		grammarsFolder = getGrammarsFolder();
-		grammar = getGrammarFile(grammarsFolder);
-		lang = Language.create(grammar, langName);
 		if (!grammarsFolder.exists())
 		{
 			grammarsFolder.mkdirs();
 			fillGrammarsFolder(grammarsFolder);
 		}
+		else if (grammarsFolder.listFiles(new FileNameRegexFilter(".*\\.g")) == null)
+		{
+			fillGrammarsFolder(grammarsFolder);
+		}
+		grammar = getGrammarFile(grammarsFolder);
+		lang = Language.create(grammar, langName);
+		classPrefix = Constants.ENGINE_PACKAGE + lang.getLanguageName();
 	}
 
-	public boolean process(String sourceFile) throws ExtensionDecodingException, IOException, ConfigurationReadException
+	public boolean process(String sourceContents) throws ExtensionDecodingException, IOException, ConfigurationReadException
 	{
 		boolean ret = false;
 		if (grammarsFolder.exists())
 		{
 			if (isAlreadyBuilt())
 			{
-				ret = runParser(sourceFile);
+				ret = runParser(sourceContents);
+			}
+			else if (isAlreadyGenerated())
+			{
+				if (build())
+				{
+					ret = runParser(sourceContents);
+				}
 			}
 			else
 			{
 				generateParser(grammar);
 				if (build())
 				{
-					ret = runParser(sourceFile);
+					ret = runParser(sourceContents);
 				}
 			}
 		}
@@ -98,13 +123,13 @@ public class AntlrEngine
 		{
 			for (int i = 0; i < t.getChildCount(); i++)
 			{
-				if (t.getChild(i).getType() == lang.getImportStmt())
+				if (t.getChild(i).getType() == importStmt)
 				{
 					int j = i + 1;
 					StringBuilder sb = new StringBuilder();
 					String current;
 					Tree child = t.getChild(j);
-					while ((child != null) && (child.getType() != lang.getEos()))
+					while ((child != null) && (child.getType() != eos))
 					{
 						current = child.toString();
 						sb.append(current);
@@ -125,7 +150,7 @@ public class AntlrEngine
 	public File getGrammarFile(File grammarsFolder) throws FileNotFoundException
 	{
 		File[] grammars = grammarsFolder.listFiles(new FileNameRegexFilter(langName + ".*\\.g"));
-		File grammar = grammars.length > 0 ? grammars[0] : null;
+		File grammar = (grammars != null) && (grammars.length > 0) ? grammars[0] : null;
 		if ((grammar == null) || !grammar.exists())
 		{
 			String msg = "Grammar file not found. Check grammars folder.";
@@ -145,23 +170,25 @@ public class AntlrEngine
 		antlr.process();
 	}
 
-	public boolean isAlreadyBuilt()
+	public boolean isAlreadyGenerated()
 	{
-		FpmCollections<String> pakDirs = FpmCollections.getOne(Constants.ENGINE_PACKAGE.split("\\."));
-		pakDirs.insert(antlrOutput, 0);
+		Strings s = Strings.getOne();
 
-		String regexPattern = "%s(%s|%s).*\\.class";
-		String regex = String.format(regexPattern, lang.getLanguageName(), lexerSuffix, parserSuffix);
 		String lexerSourceName = lang.getLanguageName().concat(lexerSuffix).concat(".java");
 		String parserSourceName = lang.getLanguageName().concat(parserSuffix).concat(".java");
 
-		Strings s = Strings.getOne();
+		File lexerSource = new File(s.safeConcatPaths(antlrOutput.getAbsolutePath(), lexerSourceName));
+		File parserSource = new File(s.safeConcatPaths(antlrOutput.getAbsolutePath(), parserSourceName));
+		return lexerSource.exists() && parserSource.exists();
+	}
 
-		File lexerSource = new File(s.safeConcatPaths(antlrOutput, lexerSourceName));
-		File parserSource = new File(s.safeConcatPaths(antlrOutput, parserSourceName));
-		File classesFolder = new File(s.safeConcatPaths(pakDirs.toArray(new String[] {})));
-		File[] generatedClasses = classesFolder.listFiles(new FileNameRegexFilter(regex));
-		return lexerSource.exists() && parserSource.exists() && (generatedClasses.length > 0);
+	public boolean isAlreadyBuilt()
+	{
+		String regexPattern = "%s(%s|%s)?.*\\.class";
+		String regex = String.format(regexPattern, lang.getLanguageName(), parserSuffix, lexerSuffix);
+
+		File[] generatedClasses = classpath.listFiles(new FileNameRegexFilter(regex));
+		return (generatedClasses != null) && (generatedClasses.length > 0);
 	}
 
 	/**
@@ -196,55 +223,63 @@ public class AntlrEngine
 	 * @param lang
 	 * @return
 	 */
-	public boolean runParser(String sourceFile)
+	public boolean runParser(String sourceContents)
 	{
-		boolean ret = true;
+		boolean ret = false;
 		try
 		{
-			String classPrefix = Constants.ENGINE_PACKAGE + lang.getLanguageName();
-			Lexer lexer = (Lexer) Class.forName(classPrefix + lexerSuffix, true, loader).newInstance();
-			lexer.setCharStream(new ANTLRStringStream(sourceFile));
+			Lexer lexer = (Lexer) Class.forName(classPrefix + lexerSuffix, true, getAntlrClassLoader()).newInstance();
+			lexer.setCharStream(new ANTLRStringStream(sourceContents));
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
-			Class<?> parserClass = Class.forName(classPrefix + parserSuffix, true, loader);
+			Class<?> parserClass = Class.forName(classPrefix + parserSuffix, true, getAntlrClassLoader());
+
+			importStmt = parserClass.getField(lang.getImportStmt()).getInt(null);
+			eos = parserClass.getField(lang.getEos()).getInt(null);
+
 			Constructor<?> parserCTor = parserClass.getConstructor(TokenStream.class);
 			Parser parser = (Parser) parserCTor.newInstance(tokens);
 			Method entryPointMethod = parserClass.getMethod(lang.getEntryPoint());
 			parserRetVal = (ParserRuleReturnScope) entryPointMethod.invoke(parser);
+			ret = true; // FIXME: ANTLR doesn't throws any exception when error
+			            // parsing so I have to think a method to go in error
+			            // when parsing is failed and to gain antlr logs in
+			            // order to write them on the log file
 		}
 		catch (SecurityException e)
 		{
 			ErrorHandler.getOne(getClass()).handle(e);
-			ret = false;
 		}
 		catch (IllegalArgumentException e)
 		{
 			ErrorHandler.getOne(getClass()).handle(e);
-			ret = false;
 		}
 		catch (InstantiationException e)
 		{
 			ErrorHandler.getOne(getClass()).handle(e);
-			ret = false;
 		}
 		catch (IllegalAccessException e)
 		{
 			ErrorHandler.getOne(getClass()).handle(e);
-			ret = false;
 		}
 		catch (ClassNotFoundException e)
 		{
 			ErrorHandler.getOne(getClass()).handle(e);
-			ret = false;
 		}
 		catch (NoSuchMethodException e)
 		{
 			ErrorHandler.getOne(getClass()).handle(e);
-			ret = false;
 		}
 		catch (InvocationTargetException e)
 		{
+			ErrorHandler.getOne(getClass()).handle("Error in parsing!", e);
+		}
+		catch (NoSuchFieldException e)
+		{
 			ErrorHandler.getOne(getClass()).handle(e);
-			ret = false;
+		}
+		catch (MalformedURLException e)
+		{
+			ErrorHandler.getOne(getClass()).handle(e);
 		}
 		return ret;
 	}
@@ -255,9 +290,9 @@ public class AntlrEngine
 	 */
 	private URLClassLoader getAntlrClassLoader() throws MalformedURLException
 	{
-		URL[] classpath = new URL[] { new URL("file://" + antlrOutput) };
+		URL[] urlclasspath = new URL[] { antlrOutput.toURI().toURL() };
 		ClassLoader sysCL = ClassLoader.getSystemClassLoader();
-		URLClassLoader loader = URLClassLoader.newInstance(classpath, sysCL);
+		URLClassLoader loader = URLClassLoader.newInstance(urlclasspath, sysCL);
 		return loader;
 	}
 
@@ -282,11 +317,11 @@ public class AntlrEngine
 
 		try
 		{
-			JavaFileObject lexer = getFileObject(antlrOutput, grammarName, lexerSuffix);
-			JavaFileObject parser = getFileObject(antlrOutput, grammarName, parserSuffix);
+			JavaFileObject lexer = getFileObject(antlrOutput.getAbsolutePath(), langName, lexerSuffix);
+			JavaFileObject parser = getFileObject(antlrOutput.getAbsolutePath(), langName, parserSuffix);
 
 			Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(lexer, parser);
-			String[] args = consts.getConstant("java.compiler.cmdline.options").replace(Constants.ANTLR_OUT_P, antlrOutput).split(" ");
+			String[] args = consts.getConstant("java.compiler.cmdline.options").replace(Constants.ANTLR_OUT_P, antlrOutput.getAbsolutePath()).split(" ");
 			Iterable<String> options = Arrays.asList(args);
 			CompilationTask task = compiler.getTask(null, null, diagnostics, options, null, compilationUnits);
 

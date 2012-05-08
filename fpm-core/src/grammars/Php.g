@@ -11,7 +11,7 @@ options {
 }
 
 tokens{
-    SemiColon = ';';
+    /*@@EOS::*/SemiColon/*::SOE@@*/ = ';';
     Comma = ',';
     OpenBrace = '(';
     CloseBrace = ')';
@@ -127,7 +127,7 @@ package it.freax.parsers;
 }
 
 
-prog : statement*;
+/*@@EP::*/prog/*::PE@@*/ : statement*;
 
 statement
     : simpleStatement? BodyString
@@ -445,7 +445,7 @@ Array
     : ('a'|'A')('r'|'R')('r'|'R')('a'|'A')('y'|'Y')
     ;
 
-RequireOperator
+/*@@IS::*/RequireOperator/*::SI@@*/
     : 'require' | 'require_once' | 'include' | 'include_once'
     ;
 
