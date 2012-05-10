@@ -3,13 +3,15 @@ log4j.rootCategory=DEBUG, APPENDER_OUT, APPENDER_FILE
 
 #APPENDER_OUT
 log4j.appender.APPENDER_OUT=org.apache.log4j.ConsoleAppender
+log4j.appender.APPENDER_OUT.threshold=INFO
 log4j.appender.APPENDER_OUT.layout=org.apache.log4j.PatternLayout
-log4j.appender.APPENDER_OUT.layout.ConversionPattern=%5p [%t] (%F:%L) - %m%n
+log4j.appender.APPENDER_OUT.layout.ConversionPattern=%-8r [%t] %-5p %c - %m%n
 
 #APPENDER_FILE
 log4j.appender.APPENDER_FILE=org.apache.log4j.RollingFileAppender
-log4j.appender.APPENDER_FILE.File=mioLog.log
+
+log4j.appender.APPENDER_FILE.File=~/.fpm/fpm.log
 log4j.appender.APPENDER_FILE.MaxFileSize=100KB
-log4j.appender.APPENDER_FILE.MaxBackupIndex=1
+log4j.appender.APPENDER_FILE.MaxBackupIndex=10
 log4j.appender.APPENDER_FILE.layout=org.apache.log4j.PatternLayout
-log4j.appender.APPENDER_FILE.layout.ConversionPattern=%p %t %c - %m%n
+log4j.appender.APPENDER_FILE.layout.ConversionPattern=%-8r [%t] %-5p %c - %m%n

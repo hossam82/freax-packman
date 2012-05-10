@@ -82,6 +82,7 @@ public class LogConfigurator
 			}
 			logPath = str.safeConcatPaths(logPath, Constants.MAIN_LOG_FILE);
 			layout = new PatternLayout(Constants.DEFAULT_LOG_PATTERN);
+			loadDefaults = true;
 		}
 
 		if (loadDefaults)

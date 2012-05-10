@@ -1,8 +1,6 @@
 package it.freax.fpm.util;
 
 import it.freax.fpm.util.exceptions.ConfigurationReadException;
-import it.freax.fpm.util.exceptions.ExtensionDecodingException;
-
 import java.io.*;
 import java.util.Properties;
 import java.util.Scanner;
@@ -164,13 +162,23 @@ public final class Constants
 	public static final String EOS_DEL = "@@EOS::";
 
 	/**
+	 * Nome del file delle stringhe localizzate per fpm.
+	 */
+	public static final String LOCAL_STRINGS_FILE = "loc-" + COUNTRY_P + "-strings.i18n";
+
+	/**
+	 * Percorso interno dove trovare le stringhe localizzate in fpm.
+	 */
+	public static final String LOCAL_STRINGS_PATH = "i18n";
+
+	/**
 	 * Lista di percorsi da utilizzare per la ricerca del MAIN_CONF_FILE.<br/>
 	 * In maniera gerarchica si trova il percorso di sistema o il percorso
 	 * relativo (una risorsa all'interno del jar di fpm, reset to default).<br/>
 	 * Se in presenza di un reset to default, il file di configurazione va
 	 * scritto sul disco nella directory di sistema.
 	 */
-	public static final String CONF_PATHS = getSystemConfDir() + SEP_P + REL_P + FS + CONF_DIR + FS;
+	public static final String CONF_PATHS = getSystemConfDir() + SEP_P + REL_P + FS + CONF_DIR + FS + SEP_P + REL_P + FS + LOCAL_STRINGS_PATH + FS;
 
 	private static Constants singleton = null;
 	private static boolean hasLoaded = false;
@@ -179,8 +187,6 @@ public final class Constants
 	private Properties fpmConf;
 	private Properties localizedStrings;
 	private Properties log4j;
-
-	//FIXME: Do some refactorings in Properties load methods!!!
 
 	private static String getSystemConfDir()
 	{
@@ -201,15 +207,16 @@ public final class Constants
 	}
 
 	@SuppressWarnings("static-access")
-	private static MapEntry<String, Properties> loadFpmConf(Class<?> clazz) throws ConfigurationReadException
+	public static MapEntry<String, Properties> loadConf(Class<?> clazz, String fileName, String defaultFileName, boolean writeToDisk, boolean force, boolean vital) throws ConfigurationReadException
 	{
 		MapEntry<String, Properties> ret = null;
 
+		hasLoaded = (force ? false : hasLoaded);
 		Scanner sc = new Scanner(CONF_PATHS).useDelimiter(SEP_P);
-		String prev = "";
+		String prev = "", file = fileName;
 		while (sc.hasNext() && !hasLoaded)
 		{
-			Properties fpmConf = null;
+			Properties conf = null;
 			boolean relative = false;
 			String path = sc.next();
 			if (path.startsWith(PREV_P))
@@ -227,7 +234,7 @@ public final class Constants
 			}
 			prev = path;
 
-			path = path.concat(MAIN_CONF_FILE);
+			path = path.concat(file);
 
 			try
 			{
@@ -236,28 +243,41 @@ public final class Constants
 				{
 					is = clazz.getClassLoader().getSystemResourceAsStream(path);
 
-					path = getSystemConfDir();
-					Strings.getOne().createPath(path);
-					path += MAIN_CONF_FILE;
+					if (writeToDisk && (is != null))
+					{
+						path = getSystemConfDir();
+						Strings.getOne().createPath(path);
+						path = path.concat(file);
 
-					FileOutputStream os = new FileOutputStream(path);
-					IOUtils.copy(is, os);
-					os.flush();
-					os.close();
-					os = null;
+						FileOutputStream os = new FileOutputStream(path);
+						IOUtils.copy(is, os);
+						os.flush();
+						os.close();
+						os = null;
+					}
 				}
-				is = new FileInputStream(path);
-				fpmConf = new Properties();
+				else
+				{
+					is = new FileInputStream(path);
+				}
+				conf = new Properties();
 
-				fpmConf.load(is);
-				if (fpmConf.isEmpty()) { throw new ConfigurationReadException(); }
+				if (is != null)
+				{
+					conf.load(is);
+				}
+				else
+				{
+					throw new FileNotFoundException();
+				}
+				if (conf.isEmpty() && vital) { throw new ConfigurationReadException(); }
 
-				ret = new MapEntry<String, Properties>(path, fpmConf);
+				ret = new MapEntry<String, Properties>(path, conf);
 				hasLoaded = true;
 			}
 			catch (FileNotFoundException e)
 			{
-				fpmConf = null;
+				conf = null;
 				singleton = null;
 				hasLoaded = false;
 			}
@@ -266,92 +286,9 @@ public final class Constants
 				throw new ConfigurationReadException();
 			}
 		}
-		return ret;
-	}
-
-	@SuppressWarnings("static-access")
-	private static Properties loadLocalizedStrings(Class<?> clazz, String path, String pattern) throws ExtensionDecodingException
-	{
-		Properties ret = null;
-		Strings s = Strings.getOne();
-		InputStream is = null;
-		String locRes = pattern.replace(COUNTRY_P, COUNTRY);
-		String fullpath = s.concatPaths(path, locRes);
-		try
+		if ((ret == null) && !Strings.getOne().isNullOrEmpty(defaultFileName))
 		{
-			if (s.isRelativePath(fullpath))
-			{
-				is = clazz.getClassLoader().getSystemResourceAsStream(fullpath);
-			}
-			else
-			{
-				is = new FileInputStream(fullpath);
-			}
-			ret = new Properties();
-			if (is != null)
-			{
-				ret.load(is);
-			}
-			else
-			{
-				is = clazz.getClassLoader().getSystemResourceAsStream(CONF_DIR + FS + pattern.replace(COUNTRY_P, "default"));
-				ret = new Properties();
-				ret.load(is);
-			}
-		}
-		catch (IOException e)
-		{
-			is = clazz.getClassLoader().getSystemResourceAsStream(CONF_DIR + FS + pattern.replace(COUNTRY_P, "default"));
-			ret = new Properties();
-			try
-			{
-				ret.load(is);
-			}
-			catch (Throwable t)
-			{
-			}
-		}
-		return ret;
-	}
-
-	@SuppressWarnings("static-access")
-	private static Properties loadLog4J(Class<?> clazz) throws ExtensionDecodingException
-	{
-		Properties ret = null;
-		Strings s = Strings.getOne();
-		InputStream is = null;
-		String fullpath = s.concatPaths(CONF_DIR, LOG4J_CONF_FILE);
-		try
-		{
-			if (s.isRelativePath(fullpath))
-			{
-				is = clazz.getClassLoader().getSystemResourceAsStream(fullpath);
-
-				fullpath = getSystemConfDir();
-				Strings.getOne().createPath(fullpath);
-				fullpath += LOG4J_CONF_FILE;
-
-				FileOutputStream os = new FileOutputStream(fullpath);
-				IOUtils.copy(is, os);
-				os.flush();
-				os.close();
-				os = null;
-			}
-			is = new FileInputStream(fullpath);
-			ret = new Properties();
-			ret.load(is);
-		}
-		catch (IOException e)
-		{
-			is = clazz.getClassLoader().getSystemResourceAsStream(CONF_DIR + FS + LOG4J_CONF_FILE);
-			ret = new Properties();
-			try
-			{
-				ret.load(is);
-			}
-			catch (Throwable t)
-			{
-			}
+			ret = loadConf(clazz, defaultFileName, null, writeToDisk, force, vital);
 		}
 		return ret;
 	}
@@ -360,26 +297,25 @@ public final class Constants
 	{
 		if (!hasLoaded && (singleton == null))
 		{
-			MapEntry<String, Properties> entry = loadFpmConf(clazz);
-			String locFilesPath = entry.getValue().getProperty("localized.files.path");
-			String locFilesPattern = entry.getValue().getProperty("localized.files.pattern");
-			Properties localizedStrings;
-			Properties log4j;
-			try
-			{
-				localizedStrings = loadLocalizedStrings(clazz, locFilesPath, locFilesPattern);
-				log4j = loadLog4J(clazz);
-			}
-			catch (ExtensionDecodingException e)
-			{
-				throw new ConfigurationReadException((Exception) e.fillInStackTrace());
-			}
+			String localStringsFile = LOCAL_STRINGS_FILE.replace(COUNTRY_P, COUNTRY);
+			String localStringsDefault = LOCAL_STRINGS_FILE.replace(COUNTRY_P, "default");
+
+			MapEntry<String, Properties> fpmConf = loadConf(clazz, MAIN_CONF_FILE, null, true, true, true);
+			MapEntry<String, Properties> localizedStrings = loadConf(clazz, localStringsFile, localStringsDefault, false, true, false);
+			MapEntry<String, Properties> log4j = loadConf(clazz, LOG4J_CONF_FILE, null, true, true, false);
 
 			singleton = new Constants();
-			singleton.setDefaultConfPath(entry.getKey());
-			singleton.setFpmConf(entry.getValue());
-			singleton.setLocalizedStrings(localizedStrings);
-			singleton.setLog4j(log4j);
+			singleton.setDefaultConfPath(fpmConf.getKey());
+			singleton.setFpmConf(fpmConf.getValue());
+			if (localizedStrings != null)
+			{
+				singleton.setLocalizedStrings(localizedStrings.getValue());
+			}
+			if (log4j != null)
+			{
+				singleton.setLog4j(log4j.getValue());
+			}
+			hasLoaded = true;
 		}
 		return singleton;
 	}
@@ -390,6 +326,43 @@ public final class Constants
 		singleton = null;
 		return getOne(clazz);
 	}
+
+	public static String getProperty(Properties props, String defaultProp, String propName)
+	{
+		String ret = defaultProp;
+		if (props.containsKey(propName))
+		{
+			ret = props.getProperty(propName);
+		}
+		return ret;
+	}
+
+	public String getDefaultFpmPath()
+	{
+		return getDefaultConfPath().substring(0, getDefaultConfPath().indexOf(CONF_DIR)).replace(FS + FS, FS);
+	}
+
+	public String getConstant(String name)
+	{
+		return getFpmConf().getProperty(name);
+	}
+
+	public String getConstant(String name, String defaultProp)
+	{
+		return getProperty(getFpmConf(), name, defaultProp);
+	}
+
+	public String getLocalizedString(String name)
+	{
+		return getLocalizedStrings().getProperty(name);
+	}
+
+	public String getLocalizedString(String name, String defaultProp)
+	{
+		return getProperty(getLocalizedStrings(), name, defaultProp);
+	}
+
+	// GETTERS/SETTERS ---------------------------------------------------------
 
 	private void setDefaultConfPath(String confPath)
 	{
@@ -411,21 +384,6 @@ public final class Constants
 		return fpmConf;
 	}
 
-	public String getDefaultFpmPath()
-	{
-		return getDefaultConfPath().substring(0, getDefaultConfPath().indexOf(CONF_DIR)).replace(FS + FS, FS);
-	}
-
-	public String getConstant(String name)
-	{
-		return getFpmConf().getProperty(name);
-	}
-
-	public String getConstant(String name, String defaultProp)
-	{
-		return getProperty(getFpmConf(), name, defaultProp);
-	}
-
 	private void setLocalizedStrings(Properties localizedStrings)
 	{
 		this.localizedStrings = localizedStrings;
@@ -434,26 +392,6 @@ public final class Constants
 	public Properties getLocalizedStrings()
 	{
 		return localizedStrings;
-	}
-
-	public String getLocalizedString(String name)
-	{
-		return getLocalizedStrings().getProperty(name);
-	}
-
-	public String getLocalizedString(String name, String defaultProp)
-	{
-		return getProperty(getLocalizedStrings(), name, defaultProp);
-	}
-
-	public static String getProperty(Properties props, String defaultProp, String propName)
-	{
-		String ret = defaultProp;
-		if (props.containsKey(propName))
-		{
-			ret = props.getProperty(propName);
-		}
-		return ret;
 	}
 
 	public Properties getLog4j()
