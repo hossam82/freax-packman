@@ -52,7 +52,7 @@ public class LogConfigurator
 		String logLevel = "", logConsoleLevel = "", logFileLevel = "";
 		try
 		{
-			Constants c = Constants.getOneReset(clazz);
+			Constants c = Constants.getOne(clazz);
 			Properties log4j = c.getLog4j();
 			loadDefaults = log4j.isEmpty();
 			if (!loadDefaults)

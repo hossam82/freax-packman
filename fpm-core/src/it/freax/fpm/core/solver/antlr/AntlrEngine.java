@@ -54,7 +54,7 @@ public class AntlrEngine
 	{
 		this.grammarName = grammarName;
 		this.langName = langName;
-		consts = Constants.getOneReset(getClass());
+		consts = Constants.getOne(getClass());
 		antlrOutput = new File(Strings.getOne().safeConcatPaths(consts.getDefaultFpmPath(), consts.getConstant("generated.output.directory")));
 		if (!antlrOutput.exists())
 		{
