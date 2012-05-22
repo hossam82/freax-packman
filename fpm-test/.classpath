@@ -5,7 +5,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/fpm-util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/fpm-core"/>
 	<classpathentry kind="lib" path="/fpm-util/lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="lib/antlr-3.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="src" path="/antlr"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
