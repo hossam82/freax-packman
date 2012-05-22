@@ -1,8 +1,9 @@
 package it.freax.fpm.test.main;
 
-import it.freax.fpm.core.download.AbstractDownload;
-import it.freax.fpm.core.download.FtpDownload;
-import it.freax.fpm.core.download.HttpDownload;
+import it.freax.fpm.util.AbstractDownload;
+import it.freax.fpm.util.Constants;
+import it.freax.fpm.util.FtpDownload;
+import it.freax.fpm.util.HttpDownload;
 
 import java.io.Console;
 import java.net.MalformedURLException;
@@ -13,12 +14,12 @@ public class MainClass
 {
 	private static final String PARAMETER_REGEX = "[\\-|\\-\\-][\\p{Graph}]*";
 	private static final String URL_REGEX = "(http|ftp)?\\:\\/\\/[\\p{Graph}\\p{Punct}]*";
-	private static final String PATH_REGEX = System.getProperty("file.separator") + "[\\p{Graph}\\p{Punct}]*";
+	private static final String PATH_REGEX = Constants.FS + "[\\p{Graph}\\p{Punct}]*";
 	private static final String SUPPORTED_CMDS[] = { "--protocol", "--proxy", "-p", "--port", "-P", "--user", "-u", "--password", "--ftpUser", "--ftpPassword" };
 	private static boolean useProxy = false, requiresAuthentication = false,
-			ftpAuthentication = false;
+	        ftpAuthentication = false;
 	private static String path = "", uri = "", protocol = "HTTP",
-			proxyUrl = "", user = "", ftpUser = "", ftpPassword = "";
+	        proxyUrl = "", user = "", ftpUser = "", ftpPassword = "";
 	private static char password[] = new char[0];
 	private static int proxyPort = 0;
 
@@ -200,7 +201,7 @@ public class MainClass
 					{
 						break;
 					}
-					if (k == SUPPORTED_CMDS.length - 1)
+					if (k == (SUPPORTED_CMDS.length - 1))
 					{
 						k = 10000;
 					}

@@ -1,6 +1,8 @@
 package it.freax.fpm.core.executor;
 
-import it.freax.fpm.core.types.ExitCodeControl;
+import it.freax.fpm.core.specs.tarball.types.ExitCodeControlType;
+import it.freax.fpm.util.Constants;
+import it.freax.fpm.util.ErrorHandler;
 import it.freax.fpm.util.LogConfigurator;
 
 import java.io.BufferedReader;
@@ -46,7 +48,7 @@ public class Executor implements Runnable
 	@Override
 	public void run()
 	{
-		String delimiter = ExitCodeControl.getDelimiter(instruction.getExitCodecontrol());
+		String delimiter = ExitCodeControlType.getDelimiter(instruction.getExitCodecontrol());
 		String command = "";
 		int exitStatus = 0;
 
@@ -87,7 +89,7 @@ public class Executor implements Runnable
 				for (int i = 0; i < cmd.length; i++)
 				{
 					sb.append(cmd[i]);
-					if (i < cmd.length - 1)
+					if (i < (cmd.length - 1))
 					{
 						sb.append(" ");
 					}
@@ -98,9 +100,9 @@ public class Executor implements Runnable
 				{
 					StringBuilder path = new StringBuilder();
 					path.append(pwd.getAbsolutePath());
-					if (!path.toString().endsWith(System.getProperty("file.separator")))
+					if (!path.toString().endsWith(Constants.FS))
 					{
-						path.append(System.getProperty("file.separator"));
+						path.append(Constants.FS);
 					}
 					path.append(command.substring(3));
 					pwd = new File(path.toString());
@@ -166,12 +168,12 @@ public class Executor implements Runnable
 		catch (IOException e)
 		{
 			status = ERROR;
-			log.error(null, e);
+			ErrorHandler.getOne(getClass()).handle(e);
 		}
 		catch (InterruptedException e)
 		{
 			status = ERROR;
-			log.error(null, e);
+			ErrorHandler.getOne(getClass()).handle(e);
 		}
 	}
 }

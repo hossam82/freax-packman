@@ -6,7 +6,7 @@ package it.freax.fpm.test.main;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import it.freax.fpm.core.solver.antlr.Language;
+import it.freax.fpm.core.specs.tarball.antlr.Language;
 import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 
 /**

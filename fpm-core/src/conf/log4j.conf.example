@@ -1,5 +1,5 @@
 #LOGGER
-log4j.rootCategory=DEBUG, APPENDER_OUT, APPENDER_FILE
+log4j.rootCategory=APPENDER_OUT, APPENDER_FILE
 
 #APPENDER_OUT
 log4j.appender.APPENDER_OUT=org.apache.log4j.ConsoleAppender
@@ -9,7 +9,6 @@ log4j.appender.APPENDER_OUT.layout.ConversionPattern=%-8r [%t] %-5p %c - %m%n
 
 #APPENDER_FILE
 log4j.appender.APPENDER_FILE=org.apache.log4j.RollingFileAppender
-
 log4j.appender.APPENDER_FILE.File=~/.fpm/fpm.log
 log4j.appender.APPENDER_FILE.MaxFileSize=100KB
 log4j.appender.APPENDER_FILE.MaxBackupIndex=10

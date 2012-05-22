@@ -16,7 +16,7 @@ import org.antlr.runtime.tree.*;
 @SuppressWarnings({"all", "warnings", "unchecked"})
 public class PhpParser extends Parser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Abstract", "AccessModifier", "Ampersand", "And", "Apply", "Array", "ArrayAssign", "AsignmentOperator", "Asterisk", "Bang", "Block", "BodyString", "Boolean", "Break", "Case", "Cast", "Class", "ClassDefinition", "ClassMember", "Clone", "CloseBrace", "CloseCurlyBrace", "CloseSquareBrace", "Colon", "Comma", "ComparisionOperator", "Const", "Continue", "DNum", "Decimal", "Default", "Digits", "Do", "Dollar", "Dot", "DoubleQuotedString", "Echo", "Else", "ElseIf", "Empty", "Eol", "EqualityOperator", "Equals", "EscapeCharector", "Exponent_DNum", "Extends", "Field", "FirstBodyString", "For", "ForCondition", "ForInit", "ForUpdate", "Foreach", "Forwardslash", "Function", "Global", "HereDoc", "HereDocContents", "Hexadecimal", "If", "IfExpression", "Implements", "IncrementOperator", "InstanceMember", "Instanceof", "Integer", "Interface", "Label", "LogicalAnd", "LogicalOr", "Member", "Method", "Minus", "Modifiers", "MultilineComment", "New", "Octal", "OpenBrace", "OpenCurlyBrace", "OpenSquareBrace", "Or", "Params", "Percent", "Pipe", "Plus", "Postfix", "Prefix", "PrimitiveType", "QuestionMark", "Real", "Reference", "RequireOperator", "Return", "SemiColon", "ShiftOperator", "SingleQuotedString", "SinglelineComment", "Static", "SuppressWarnings", "Switch", "Tilde", "UnixComment", "UnquotedString", "Var", "While", "WhiteSpace", "Xor", "'as'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Abstract", "AccessModifier", "Ampersand", "And", "Apply", "Array", "ArrayAssign", "AsignmentOperator", "Asterisk", "Bang", "Block", "BodyString", "Boolean", "Break", "Case", "Cast", "Class", "ClassDefinition", "ClassMember", "Clone", "CloseBrace", "CloseCurlyBrace", "CloseSquareBrace", "Colon", "Comma", "ComparisionOperator", "Const", "Continue", "DNum", "Decimal", "Default", "Digits", "Do", "Dollar", "Dot", "DoubleQuotedString", "Echo", "Else", "ElseIf", "Empty", "Eol", "EqualityOperator", "Equals", "EscapeCharector", "Exponent_DNum", "Extends", "Field", "FirstBodyString", "For", "ForCondition", "ForInit", "ForUpdate", "Foreach", "Forwardslash", "Function", "Global", "HereDoc", "HereDocContents", "Hexadecimal", "If", "IfExpression", "Implements", "IncrementOperator", "InstanceMember", "Instanceof", "Integer", "Interface", "Label", "LogicalAnd", "LogicalOr", "Member", "MethodType", "Minus", "Modifiers", "MultilineComment", "New", "Octal", "OpenBrace", "OpenCurlyBrace", "OpenSquareBrace", "Or", "Params", "Percent", "Pipe", "Plus", "Postfix", "Prefix", "PrimitiveType", "QuestionMark", "Real", "Reference", "RequireOperator", "Return", "SemiColon", "ShiftOperator", "SingleQuotedString", "SinglelineComment", "Static", "SuppressWarnings", "Switch", "Tilde", "UnixComment", "UnquotedString", "Var", "While", "WhiteSpace", "Xor", "'as'"
     };
 
     public static final int EOF=-1;
@@ -925,7 +925,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "interfaceMember"
-    // Php.g:159:1: interfaceMember : ( Const UnquotedString ( Equals atom )? ';' -> ^( Const UnquotedString ( atom )? ) | ( fieldModifier )* Function UnquotedString parametersDefinition ';' -> ^( Method ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ) );
+    // Php.g:159:1: interfaceMember : ( Const UnquotedString ( Equals atom )? ';' -> ^( Const UnquotedString ( atom )? ) | ( fieldModifier )* Function UnquotedString parametersDefinition ';' -> ^( MethodType ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ) );
     public final PhpParser.interfaceMember_return interfaceMember() throws RecognitionException {
         PhpParser.interfaceMember_return retval = new PhpParser.interfaceMember_return();
         retval.start = input.LT(1);
@@ -966,7 +966,7 @@ public TreeAdaptor getTreeAdaptor() {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 6) ) { return retval; }
 
-            // Php.g:160:5: ( Const UnquotedString ( Equals atom )? ';' -> ^( Const UnquotedString ( atom )? ) | ( fieldModifier )* Function UnquotedString parametersDefinition ';' -> ^( Method ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ) )
+            // Php.g:160:5: ( Const UnquotedString ( Equals atom )? ';' -> ^( Const UnquotedString ( atom )? ) | ( fieldModifier )* Function UnquotedString parametersDefinition ';' -> ^( MethodType ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ) )
             int alt10=2;
             int LA10_0 = input.LA(1);
 
@@ -1138,13 +1138,13 @@ public TreeAdaptor getTreeAdaptor() {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (CommonTree)adaptor.nil();
-                    // 163:9: -> ^( Method ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition )
+                    // 163:9: -> ^( MethodType ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition )
                     {
-                        // Php.g:163:12: ^( Method ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition )
+                        // Php.g:163:12: ^( MethodType ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition )
                         {
                         CommonTree root_1 = (CommonTree)adaptor.nil();
                         root_1 = (CommonTree)adaptor.becomeRoot(
-                        (CommonTree)adaptor.create(Method, "Method")
+                        (CommonTree)adaptor.create(Method, "MethodType")
                         , root_1);
 
                         // Php.g:163:21: ^( Modifiers ( fieldModifier )* )
@@ -1616,7 +1616,7 @@ public TreeAdaptor getTreeAdaptor() {
 
 
     // $ANTLR start "classMember"
-    // Php.g:183:1: classMember : ( ( fieldModifier )* Function UnquotedString parametersDefinition ( bracketedBlock | ';' ) -> ^( Method ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ( bracketedBlock )? ) | Var Dollar UnquotedString ( Equals atom )? ';' -> ^( Var ^( Dollar UnquotedString ) ( atom )? ) | Const UnquotedString ( Equals atom )? ';' -> ^( Const UnquotedString ( atom )? ) | ( fieldModifier )* ( Dollar UnquotedString ) ( Equals atom )? ';' -> ^( Field ^( Modifiers ( fieldModifier )* ) ^( Dollar UnquotedString ) ( atom )? ) );
+    // Php.g:183:1: classMember : ( ( fieldModifier )* Function UnquotedString parametersDefinition ( bracketedBlock | ';' ) -> ^( MethodType ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ( bracketedBlock )? ) | Var Dollar UnquotedString ( Equals atom )? ';' -> ^( Var ^( Dollar UnquotedString ) ( atom )? ) | Const UnquotedString ( Equals atom )? ';' -> ^( Const UnquotedString ( atom )? ) | ( fieldModifier )* ( Dollar UnquotedString ) ( Equals atom )? ';' -> ^( Field ^( Modifiers ( fieldModifier )* ) ^( Dollar UnquotedString ) ( atom )? ) );
     public final PhpParser.classMember_return classMember() throws RecognitionException {
         PhpParser.classMember_return retval = new PhpParser.classMember_return();
         retval.start = input.LT(1);
@@ -1686,7 +1686,7 @@ public TreeAdaptor getTreeAdaptor() {
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 9) ) { return retval; }
 
-            // Php.g:184:5: ( ( fieldModifier )* Function UnquotedString parametersDefinition ( bracketedBlock | ';' ) -> ^( Method ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ( bracketedBlock )? ) | Var Dollar UnquotedString ( Equals atom )? ';' -> ^( Var ^( Dollar UnquotedString ) ( atom )? ) | Const UnquotedString ( Equals atom )? ';' -> ^( Const UnquotedString ( atom )? ) | ( fieldModifier )* ( Dollar UnquotedString ) ( Equals atom )? ';' -> ^( Field ^( Modifiers ( fieldModifier )* ) ^( Dollar UnquotedString ) ( atom )? ) )
+            // Php.g:184:5: ( ( fieldModifier )* Function UnquotedString parametersDefinition ( bracketedBlock | ';' ) -> ^( MethodType ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ( bracketedBlock )? ) | Var Dollar UnquotedString ( Equals atom )? ';' -> ^( Var ^( Dollar UnquotedString ) ( atom )? ) | Const UnquotedString ( Equals atom )? ';' -> ^( Const UnquotedString ( atom )? ) | ( fieldModifier )* ( Dollar UnquotedString ) ( Equals atom )? ';' -> ^( Field ^( Modifiers ( fieldModifier )* ) ^( Dollar UnquotedString ) ( atom )? ) )
             int alt22=4;
             switch ( input.LA(1) ) {
             case Abstract:
@@ -1873,13 +1873,13 @@ public TreeAdaptor getTreeAdaptor() {
                     RewriteRuleSubtreeStream stream_retval=new RewriteRuleSubtreeStream(adaptor,"rule retval",retval!=null?retval.tree:null);
 
                     root_0 = (CommonTree)adaptor.nil();
-                    // 186:9: -> ^( Method ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ( bracketedBlock )? )
+                    // 186:9: -> ^( MethodType ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ( bracketedBlock )? )
                     {
-                        // Php.g:186:12: ^( Method ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ( bracketedBlock )? )
+                        // Php.g:186:12: ^( MethodType ^( Modifiers ( fieldModifier )* ) UnquotedString parametersDefinition ( bracketedBlock )? )
                         {
                         CommonTree root_1 = (CommonTree)adaptor.nil();
                         root_1 = (CommonTree)adaptor.becomeRoot(
-                        (CommonTree)adaptor.create(Method, "Method")
+                        (CommonTree)adaptor.create(Method, "MethodType")
                         , root_1);
 
                         // Php.g:186:21: ^( Modifiers ( fieldModifier )* )

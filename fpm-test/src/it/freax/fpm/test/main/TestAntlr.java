@@ -3,13 +3,14 @@
  */
 package it.freax.fpm.test.main;
 
-import it.freax.fpm.core.solver.antlr.AntlrEngine;
+import it.freax.fpm.core.specs.tarball.antlr.AntlrEngine;
 import it.freax.fpm.util.LogConfigurator;
 import it.freax.fpm.util.Streams;
 import it.freax.fpm.util.exceptions.ConfigurationReadException;
 import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Calendar;
 
 import org.antlr.runtime.*;
@@ -33,7 +34,7 @@ public class TestAntlr
 			long start = Calendar.getInstance().getTimeInMillis();
 			log.debug(start);
 			AntlrEngine engine;
-			String[] sources = new String[] { "/usr/share/cacti/install/index.php", "/home/kLeZ-hAcK/projects/FreaxPackageManager/fpm-test/src/it/freax/fpm/test/main/TestAntlr.java" };
+			String[] sources = new String[] { "/usr/src/linux/kernel/cpu.c", "/usr/share/cacti/install/index.php", "/home/kLeZ-hAcK/projects/FreaxPackageManager/fpm-test/src/it/freax/fpm/test/main/TestAntlr.java" };
 			for (String source : sources)
 			{
 				engine = new AntlrEngine("Java.g", "Java");
@@ -64,6 +65,10 @@ public class TestAntlr
 			log.error("", e);
 		}
 		catch (ExtensionDecodingException e)
+		{
+			log.error("", e);
+		}
+		catch (URISyntaxException e)
 		{
 			log.error("", e);
 		}

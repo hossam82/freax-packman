@@ -32,7 +32,7 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="5" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.download.FtpDownload" project="fpm-core" 
+  <class id="5" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.util.FtpDownload" project="fpm-util" 
     file="/fpm-core/src/it/freax/fpm/core/download/FtpDownload.java" binary="false">    
     <position height="127" width="254" x="424" y="782"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
@@ -40,23 +40,23 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="6" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.download.AbstractDownload" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/download/AbstractDownload.java" binary="false">    
+  <class id="6" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.util.AbstractDownload" 
+    project="fpm-util" file="/fpm-core/src/it/freax/fpm/core/download/AbstractDownload.java" binary="false">    
     <position height="705" width="422" x="571" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="7" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.download.SimpleAuthenticator" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/download/SimpleAuthenticator.java" binary="false">    
+  <class id="7" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.util.SimpleAuthenticator" 
+    project="fpm-util" file="/fpm-core/src/it/freax/fpm/core/download/SimpleAuthenticator.java" binary="false">    
     <position height="127" width="288" x="718" y="1391"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="8" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.download.HttpDownload" project="fpm-core" 
+  <class id="8" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.util.HttpDownload" project="fpm-util" 
     file="/fpm-core/src/it/freax/fpm/core/download/HttpDownload.java" binary="false">    
     <position height="127" width="258" x="718" y="782"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
@@ -80,72 +80,72 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="11" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.antlr.AntlrEngine" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/solver/antlr/AntlrEngine.java" binary="false">    
+  <class id="11" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.antlr.AntlrEngine" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/antlr/AntlrEngine.java" binary="false">    
     <position height="569" width="360" x="1016" y="782"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="12" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.antlr.Language" project="fpm-core" 
-    file="/fpm-core/src/it/freax/fpm/core/solver/antlr/Language.java" binary="false">    
+  <class id="12" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.antlr.Language" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/antlr/Language.java" binary="false">    
     <position height="331" width="232" x="1046" y="1391"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="13" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.conf.NotableFile" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/solver/conf/NotableFile.java" binary="false">    
+  <class id="13" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.conf.NotableFile" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/conf/NotableFile.java" binary="false">    
     <position height="178" width="130" x="1696" y="1847"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="14" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.conf.MethodParams" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/solver/conf/MethodParams.java" binary="false">    
+  <class id="14" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.conf.MethodParams" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/conf/MethodParams.java" binary="false">    
     <position height="263" width="193" x="1751" y="2235"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="15" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.conf.General" project="fpm-core" 
-    file="/fpm-core/src/it/freax/fpm/core/solver/conf/General.java" binary="false">    
+  <class id="15" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.conf.General" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/conf/General.java" binary="false">    
     <position height="144" width="222" x="2216" y="1391"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="16" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.conf.Configuration" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/solver/conf/Configuration.java" binary="false">    
+  <class id="16" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.conf.Configuration" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/conf/Configuration.java" binary="false">    
     <position height="314" width="329" x="1805" y="782"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="17" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.conf.ConfType" project="fpm-core" 
-    file="/fpm-core/src/it/freax/fpm/core/solver/conf/ConfType.java" binary="false">    
+  <class id="17" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.conf.ConfType" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/conf/ConfType.java" binary="false">    
     <position height="416" width="245" x="1579" y="1391"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="18" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.conf.Instruction" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/solver/conf/Instruction.java" binary="false">    
+  <class id="18" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.conf.Instruction" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/conf/Instruction.java" binary="false">    
     <position height="246" width="156" x="1500" y="1847"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="19" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.conf.Additive" project="fpm-core" 
-    file="/fpm-core/src/it/freax/fpm/core/solver/conf/Additive.java" binary="false">    
+  <class id="19" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.conf.Additive" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/conf/Additive.java" binary="false">    
     <position height="348" width="287" x="1866" y="1847"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
@@ -160,120 +160,122 @@
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="21" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.core.SourceDiscoverer" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/solver/core/SourceDiscoverer.java" binary="false">    
+  <class id="21" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.SourceDiscovererer" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/SourceDiscoverer.java" binary="false">    
     <position height="399" width="419" x="1579" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="22" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.dto.CompilationUnit" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/solver/dto/CompilationUnit.java" binary="false">    
+  <class id="22" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.dto.CompilationUnit" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/dto/CompilationUnit.java" binary="false">    
     <position height="331" width="201" x="2478" y="1391"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="23" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.dto.BasicInfos" project="fpm-core" 
-    file="/fpm-core/src/it/freax/fpm/core/solver/dto/BasicInfos.java" binary="false">    
+  <class id="23" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.dto.BasicInfos" project="fpm-core" 
+    file="/fpm-core/src/it/freax/fpm/core/specs/tarball/dto/BasicInfos.java" binary="false">    
     <position height="246" width="166" x="480" y="2235"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="24" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.dto.SrcFile" project="fpm-core" 
-    file="/fpm-core/src/it/freax/fpm/core/solver/dto/SrcFile.java" binary="false">    
+  <class id="24" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.dto.SrcFile" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/dto/SrcFile.java" binary="false">    
     <position height="399" width="210" x="2767" y="2235"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="25" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.dto.Treenode" project="fpm-core" 
-    file="/fpm-core/src/it/freax/fpm/core/solver/dto/Treenode.java" binary="false">    
+  <class id="25" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.dto.Treenode" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/dto/Treenode.java" binary="false">    
     <position height="229" width="191" x="2237" y="782"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="26" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.specs.DummySpec" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/solver/specs/DummySpec.java" binary="false">    
+  <class id="26" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.DummySpec" project="fpm-core" 
+    file="/fpm-core/src/it/freax/fpm/core/specs/DummySpec.java" binary="false">    
     <position height="212" width="189" x="1019" y="1847"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="27" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.specs.TarballSpec" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/solver/specs/TarballSpec.java" binary="false">    
+  <class id="27" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.TarballSpec" project="fpm-core" 
+    file="/fpm-core/src/it/freax/fpm/core/specs/TarballSpec.java" binary="false">    
     <position height="246" width="170" x="1248" y="1847"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="28" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.specs.Spec" project="fpm-core" 
-    file="/fpm-core/src/it/freax/fpm/core/solver/specs/Spec.java" binary="false">    
+  <class id="28" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.Spec" project="fpm-core" 
+    file="/fpm-core/src/it/freax/fpm/core/specs/Spec.java" binary="false">    
     <position height="365" width="219" x="459" y="1391"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="29" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.specs.FileSystemSpec" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/solver/specs/FileSystemSpec.java" binary="false">    
+  <class id="29" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.FileSystemSpec" project="fpm-core" 
+    file="/fpm-core/src/it/freax/fpm/core/specs/FileSystemSpec.java" binary="false">    
     <position height="348" width="154" x="230" y="782"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <class id="30" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.solver.specs.RpmSpec" project="fpm-core" 
-    file="/fpm-core/src/it/freax/fpm/core/solver/specs/RpmSpec.java" binary="false">    
+  <class id="30" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.RpmSpec" project="fpm-core" 
+    file="/fpm-core/src/it/freax/fpm/core/specs/RpmSpec.java" binary="false">    
     <position height="212" width="146" x="292" y="1847"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </class>  
-  <enumeration id="31" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.types.WhereToParseType" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/types/WhereToParseType.java" binary="false">    
+  <enumeration id="31" corner="BOTTOM_RIGHT" language="java" 
+    name="it.freax.fpm.core.specs.tarball.types.WhereToParseType" project="fpm-core" 
+    file="/fpm-core/src/it/freax/fpm/core/specs/tarball/types/WhereToParseType.java" binary="false">    
     <position height="127" width="168" x="1543" y="2235"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </enumeration>  
-  <enumeration id="32" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.types.RootExecution" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/types/RootExecution.java" binary="false">    
+  <enumeration id="32" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.types.RootExecutionType" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/types/RootExecution.java" binary="false">    
     <position height="144" width="229" x="2256" y="1847"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </enumeration>  
-  <enumeration id="33" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.types.InfoType" project="fpm-core" 
-    file="/fpm-core/src/it/freax/fpm/core/types/InfoType.java" binary="false">    
+  <enumeration id="33" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.types.InfoType" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/types/InfoType.java" binary="false">    
     <position height="178" width="140" x="2174" y="2235"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </enumeration>  
-  <enumeration id="34" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.types.ExitCodeControl" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/types/ExitCodeControl.java" binary="false">    
+  <enumeration id="34" corner="BOTTOM_RIGHT" language="java" 
+    name="it.freax.fpm.core.specs.tarball.types.ExitCodeControlType" project="fpm-core" 
+    file="/fpm-core/src/it/freax/fpm/core/specs/tarball/types/ExitCodeControl.java" binary="false">    
     <position height="161" width="243" x="2354" y="2235"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      
       <operations public="true" package="true" protected="true" private="true"/>    
     </display>  
   </enumeration>  
-  <enumeration id="35" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.types.MethodType" 
-    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/types/MethodType.java" binary="false">    
+  <enumeration id="35" corner="BOTTOM_RIGHT" language="java" name="it.freax.fpm.core.specs.tarball.types.MethodType" 
+    project="fpm-core" file="/fpm-core/src/it/freax/fpm/core/specs/tarball/types/MethodType.java" binary="false">    
     <position height="144" width="196" x="1965" y="2759"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true"/>      

@@ -204,9 +204,40 @@ public class FpmCollections<E>
 		coll.clear();
 	}
 
+	public Collection<String> diffOfStrings(Collection<String> otherColl, boolean byLeft)
+	{
+		return FpmCollections.getOne(toStringsList()).diff(otherColl, byLeft);
+	}
+
+	public Collection<E> diff(Collection<E> otherColl, boolean byLeft)
+	{
+		Collection<E> ret = new ArrayList<E>();
+		Collection<E> listToIterate = (byLeft ? coll : otherColl);
+		Collection<E> listToCheck = (byLeft ? otherColl : coll);
+
+		for (E elem : listToIterate)
+		{
+			if (!listToCheck.contains(elem))
+			{
+				ret.add(elem);
+			}
+		}
+		return ret;
+	}
+
 	@Override
 	public String toString()
 	{
 		return coll.toString();
+	}
+
+	public List<String> toStringsList()
+	{
+		ArrayList<String> ret = new ArrayList<String>();
+		for (E elem : coll)
+		{
+			ret.add(elem.toString());
+		}
+		return ret;
 	}
 }

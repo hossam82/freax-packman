@@ -88,4 +88,16 @@
 			<additive id="4" infotype="Changelog" wheretoparse="Nothing" whattoparse="" howtoparse=""/>
 		</additives>
 	</type>
+	<type src="Java" grammar="Java.g" ext=".java" opts="">
+		<notevoli>
+			<file id="1" name="Makefile"/>
+			<file id="2" name="build.xml" />
+		</notevoli>
+		<instructionSet>
+			<instruction id="0" action="fpmInternalBuild()" permissions="user"/>
+		</instructionSet>
+		<additives>
+			<additive id="" infotype="" wheretoparse="" whattoparse="" howtoparse=""/>
+		</additives>
+	</type>
 </conf>

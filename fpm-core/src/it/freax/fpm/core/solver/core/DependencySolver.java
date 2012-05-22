@@ -1,6 +1,8 @@
 package it.freax.fpm.core.solver.core;
 
-import it.freax.fpm.core.solver.specs.Spec;
+import java.util.Collection;
+
+import it.freax.fpm.core.specs.Spec;
 
 /**
  * This is the abstract Solver for the freax package manager system.
@@ -11,16 +13,16 @@ import it.freax.fpm.core.solver.specs.Spec;
  */
 public abstract class DependencySolver implements Runnable
 {
-	private final Spec spec;
+	private final Collection<Spec> specs;
 
-	public DependencySolver(Spec spec)
+	public DependencySolver(Collection<Spec> specs)
 	{
-		this.spec = spec;
+		this.specs = specs;
 	}
 
-	public Spec getSpec()
+	public Collection<Spec> getSpecs()
 	{
-		return spec;
+		return specs;
 	}
 
 	public abstract void Solve();

@@ -1,6 +1,6 @@
 package it.freax.fpm.test.main;
 
-import it.freax.fpm.core.solver.specs.TarballSpec;
+import it.freax.fpm.core.specs.TarballSpec;
 import it.freax.fpm.util.TimeSpan;
 
 import java.io.File;

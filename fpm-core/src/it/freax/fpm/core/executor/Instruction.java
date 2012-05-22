@@ -1,6 +1,6 @@
 package it.freax.fpm.core.executor;
 
-import it.freax.fpm.core.types.ExitCodeControl;
+import it.freax.fpm.core.specs.tarball.types.ExitCodeControlType;
 
 public class Instruction
 {
@@ -8,7 +8,7 @@ public class Instruction
 	private String command;
 	private int exitCode;
 	private String output;
-	private ExitCodeControl exitCodecontrol;
+	private ExitCodeControlType exitCodecontrol;
 
 	public Instruction(String command, String workingDir)
 	{
@@ -46,12 +46,12 @@ public class Instruction
 		this.output = value;
 	}
 
-	public ExitCodeControl getExitCodecontrol()
+	public ExitCodeControlType getExitCodecontrol()
 	{
 		return this.exitCodecontrol;
 	}
 
-	public void setExitCodecontrol(ExitCodeControl exitCodecontrol)
+	public void setExitCodecontrol(ExitCodeControlType exitCodecontrol)
 	{
 		this.exitCodecontrol = exitCodecontrol;
 	}
