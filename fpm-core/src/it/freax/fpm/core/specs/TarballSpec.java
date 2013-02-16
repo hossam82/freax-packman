@@ -16,10 +16,7 @@ public class TarballSpec extends Spec
 
 	public TarballSpec(Spec spec)
 	{
-		if (spec != null)
-		{
-			map(spec);
-		}
+		super(spec);
 	}
 
 	public void setPackageName(String packageName)

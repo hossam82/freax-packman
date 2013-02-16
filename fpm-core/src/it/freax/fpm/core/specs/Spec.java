@@ -37,6 +37,14 @@ public abstract class Spec
 		DocFiles = new HashMap<String, String>();
 	}
 
+	public Spec(Spec spec)
+	{
+		if (spec != null)
+		{
+			map(spec);
+		}
+	}
+
 	public File getFile()
 	{
 		return File;

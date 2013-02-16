@@ -56,7 +56,7 @@
  *  REQUIRES ANTLR v3
  */
 grammar Python;
-options {language=JavaScript;}
+options { backtrack = true; memoize = true; output = AST; ASTLabelType = CommonTree; }
 
 tokens {
     INDENT;
