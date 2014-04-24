@@ -6,7 +6,7 @@ package it.freax.fpm.util;
 import java.util.Enumeration;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class StringDelimiterTokenizer implements Enumeration<String>
