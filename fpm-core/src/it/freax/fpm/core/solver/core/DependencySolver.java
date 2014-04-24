@@ -9,7 +9,7 @@ import it.freax.fpm.core.specs.Spec;
  * This allows other installer-localized Solvers to have a common interface
  * to talk to for the bad job of solving the dlhell.
  * 
- * @author kLeZ-hAcK
+ * @author klez
  */
 public abstract class DependencySolver implements Runnable
 {
