@@ -15,7 +15,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class TestListResources
 {
@@ -84,6 +84,7 @@ public class TestListResources
 			String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
 			JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
 			Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+			jar.close();
 			Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
 			while (entries.hasMoreElements())
 			{
