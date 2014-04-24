@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class FileNameRegexFilter implements FilenameFilter
 {
