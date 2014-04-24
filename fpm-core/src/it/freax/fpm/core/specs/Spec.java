@@ -10,7 +10,7 @@ import java.util.HashMap;
  * This is the Spec class, that allows child classes to have same
  * fields and methods so the solvers have a little less difficult job.
  * 
- * @author kLeZ-hAcK
+ * @author klez
  */
 public abstract class Spec
 {
