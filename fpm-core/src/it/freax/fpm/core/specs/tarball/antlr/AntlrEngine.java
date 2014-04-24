@@ -26,7 +26,7 @@ import org.antlr.runtime.tree.Tree;
 import org.apache.log4j.Logger;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class AntlrEngine
 {
@@ -321,6 +321,7 @@ public class AntlrEngine
 	{
 		boolean success;
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+		JavaFileManager fm = compiler.getStandardFileManager(null, null, null);
 		DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 
 		try
@@ -329,9 +330,13 @@ public class AntlrEngine
 			JavaFileObject parser = getFileObject(antlrOutput.getAbsolutePath(), langName, parserSuffix);
 
 			Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(lexer, parser);
+
+			//if (!classpath.exists()) classpath.mkdirs();
+
+			//String[] args = consts.getConstant("java.compiler.cmdline.options").replace(Constants.ANTLR_OUT_P, classpath.getAbsolutePath()).split(" ");
 			String[] args = consts.getConstant("java.compiler.cmdline.options").replace(Constants.ANTLR_OUT_P, antlrOutput.getAbsolutePath()).split(" ");
 			Iterable<String> options = Arrays.asList(args);
-			CompilationTask task = compiler.getTask(null, null, diagnostics, options, null, compilationUnits);
+			CompilationTask task = compiler.getTask(null, fm, diagnostics, options, null, compilationUnits);
 
 			success = task.call();
 			StringBuilder sb = new StringBuilder();
@@ -368,6 +373,7 @@ public class AntlrEngine
 		{
 			writer.append(scanner.nextLine()).append(Constants.LS);
 		}
+		scanner.close();
 		return new SourceObject(className, writer.toString());
 	}
 
