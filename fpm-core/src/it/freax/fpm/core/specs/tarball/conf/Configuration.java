@@ -197,6 +197,10 @@ public class Configuration
 		{
 			ret = parent.getChild(name.toUpperCase());
 		}
+		if (ret == null)
+		{
+			ret = new Element(name);
+		}
 		return ret;
 	}
 
