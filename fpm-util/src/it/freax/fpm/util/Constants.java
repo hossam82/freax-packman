@@ -117,7 +117,7 @@ public final class Constants
 	/**
 	 * Package per le classi generate dal motore ANTLR
 	 */
-	public static final String ENGINE_PACKAGE = "it.freax.fpm.core.solver.parsers.";
+	public static final String ENGINE_PACKAGE = "it.freax.fpm.core.specs.tarball.antlr.parsers.";
 
 	/**
 	 * Delimitatore per la variabile Entry Point all'interno dei file di
@@ -129,7 +129,7 @@ public final class Constants
 	 * Esempio:<br>
 	 * {@literal /*@@EP::* / compilationUnit /*::PE@@* /}
 	 * 
-	 * @author kLeZ-hAcK<br>
+	 * @author klez<br>
 	 */
 	public static final String ENTRY_POINT_DEL = "@@EP::";
 
@@ -143,7 +143,7 @@ public final class Constants
 	 * Esempio:<br>
 	 * {@literal /*@@EP::* / IMPORT /*::PE@@* /}
 	 * 
-	 * @author kLeZ-hAcK<br>
+	 * @author klez<br>
 	 */
 	public static final String IMPORT_STMT_DEL = "@@IS::";
 
@@ -157,7 +157,7 @@ public final class Constants
 	 * Esempio:<br>
 	 * {@literal /*@@EOS::* / SEMI /*::EOS@@* /}
 	 * 
-	 * @author kLeZ-hAcK<br>
+	 * @author klez<br>
 	 */
 	public static final String EOS_DEL = "@@EOS::";
 
@@ -206,7 +206,7 @@ public final class Constants
 		return sysConf;
 	}
 
-	@SuppressWarnings("static-access")
+	@SuppressWarnings({ "static-access", "resource" })
 	public static MapEntry<String, Properties> loadConf(Class<?> clazz, String fileName, String defaultFileName, boolean writeToDisk, boolean force, boolean vital) throws ConfigurationReadException
 	{
 		MapEntry<String, Properties> ret = null;
@@ -286,6 +286,8 @@ public final class Constants
 				throw new ConfigurationReadException();
 			}
 		}
+		sc.close();
+		sc = null;
 		if ((ret == null) && !Strings.getOne().isNullOrEmpty(defaultFileName))
 		{
 			ret = loadConf(clazz, defaultFileName, null, writeToDisk, force, vital);
