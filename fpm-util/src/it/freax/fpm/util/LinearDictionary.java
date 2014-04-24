@@ -6,7 +6,7 @@ package it.freax.fpm.util;
 import java.util.*;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class LinearDictionary<K, V> implements Map<K, V>, Iterable<MapEntry<K, V>>
