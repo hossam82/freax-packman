@@ -8,7 +8,7 @@ import java.util.Observable;
 /**
  * This class downloads a file from a URL.
  * 
- * @author kLeZ-hAcK
+ * @author klez
  * @version 0.1
  */
 public abstract class AbstractDownload extends Observable implements Runnable
