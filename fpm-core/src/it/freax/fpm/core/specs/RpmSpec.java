@@ -8,11 +8,13 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.log4j.Logger;
 import org.freecompany.redline.ReadableChannelWrapper;
 import org.freecompany.redline.Scanner;
 import org.freecompany.redline.header.Format;
+import org.freecompany.redline.header.Header;
 import org.freecompany.redline.payload.CpioHeader;
 
 public class RpmSpec extends Spec
@@ -60,6 +62,10 @@ public class RpmSpec extends Spec
 				header = new CpioHeader();
 				total = header.read(in, total);
 				log.debug(header);
+				Header rpmheader = new Header();
+				rpmheader.read(in);
+				log.debug(rpmheader);
+				log.debug(rpmheader.getEntry(Header.HeaderTag.NAME));
 				final int skip = header.getFileSize();
 				if (uncompressed.skip(skip) != skip) { throw new RuntimeException("Skip failed."); }
 				total += header.getFileSize();
