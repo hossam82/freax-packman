@@ -17,7 +17,7 @@ import org.antlr.runtime.*;
 import org.apache.log4j.Logger;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class TestAntlr
 {
@@ -34,7 +34,7 @@ public class TestAntlr
 			long start = Calendar.getInstance().getTimeInMillis();
 			log.debug(start);
 			AntlrEngine engine;
-			String[] sources = new String[] { "/usr/src/linux/kernel/cpu.c", "/usr/share/cacti/install/index.php", "/home/kLeZ-hAcK/projects/FreaxPackageManager/fpm-test/src/it/freax/fpm/test/main/TestAntlr.java" };
+			String[] sources = new String[] { "/usr/src/linux/kernel/cpu.c", "/usr/share/cacti/install/index.php", "/home/klez/projects/FreaxPackageManager/fpm-test/src/it/freax/fpm/test/main/TestAntlr.java" };
 			for (String source : sources)
 			{
 				engine = new AntlrEngine("Java.g", "Java");
