@@ -30,10 +30,10 @@ public class MainClass
 	{
 		if (args[0].equalsIgnoreCase("--debug"))
 		{
-			args = new String[] { "-p", "localhost", "-P", "5865", "/home/kLeZ-hAcK/", "http://download.opensuse.org/distribution/11.2/iso/openSUSE-11.2-DVD-x86_64.iso" };
-			args = new String[] { "/home/kLeZ-hAcK/", "http://download.opensuse.org/distribution/11.2/iso/openSUSE-11.2-DVD-x86_64.iso" };
-			args = new String[] { "/home/kLeZ-hAcK/", "ftp://ftp.kde.org/pub/kde/stable/4.4.4/src/kdeaccessibility-4.4.4.tar.bz2" };
-			args = new String[] { "/home/kLeZ-hAcK/", "http://ftp.unina.it/pub/Linux/kde/stable/4.4.4/src/kdeaccessibility-4.4.4.tar.bz3" };
+			args = new String[] { "-p", "localhost", "-P", "5865", "/home/klez/", "http://download.opensuse.org/distribution/11.2/iso/openSUSE-11.2-DVD-x86_64.iso" };
+			args = new String[] { "/home/klez/", "http://download.opensuse.org/distribution/11.2/iso/openSUSE-11.2-DVD-x86_64.iso" };
+			args = new String[] { "/home/klez/", "ftp://ftp.kde.org/pub/kde/stable/4.4.4/src/kdeaccessibility-4.4.4.tar.bz2" };
+			args = new String[] { "/home/klez/", "http://ftp.unina.it/pub/Linux/kde/stable/4.4.4/src/kdeaccessibility-4.4.4.tar.bz3" };
 		}
 
 		if (!CheckCommandLine(args)) { return; }
