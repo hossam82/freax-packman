@@ -8,7 +8,7 @@ import java.io.FilenameFilter;
 import java.util.Map;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class GrammarFilter<K, V> implements FilenameFilter
 {
