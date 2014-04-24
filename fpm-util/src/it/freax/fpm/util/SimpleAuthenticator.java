@@ -1,5 +1,5 @@
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * @version 0.1
  */
 package it.freax.fpm.util;
