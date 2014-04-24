@@ -6,7 +6,7 @@ package it.freax.fpm.util;
 import org.apache.log4j.Logger;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class ErrorHandler
 {
