@@ -7,7 +7,7 @@ import java.util.Calendar;
  * FileSystemSpec: if an instance of this object has only a name, this object's
  * related file doesn't exists on disk.
  * 
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class FileSystemSpec
 {
