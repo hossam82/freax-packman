@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class Language
 {
