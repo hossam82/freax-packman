@@ -35,6 +35,8 @@ tokens
 }
 @lexer::header
 {
+	package it.freax.fpm.core.specs.tarball.antlr.parsers;
+
 	import java.io.File;
 	import java.io.IOException;
 }
