@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class Generics<T>
 {
