@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class FpmCollections<E>
 {
