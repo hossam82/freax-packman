@@ -13,7 +13,7 @@ import java.util.Properties;
  * This class extends AbstractDownload class for downloading file
  * from HTTP protocol.
  * 
- * @author kLeZ-hAcK
+ * @author klez
  * @version 0.1
  */
 public final class HttpDownload extends AbstractDownload
