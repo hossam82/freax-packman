@@ -35,7 +35,7 @@ public class ProcessRunner
 
 		// command =
 		// "rm -rf hexedit-0.9.7/ && tar -xvzf hexedit-0.9.7.tar.gz && cd hexedit-0.9.7/ && ./configure && make && sudo make install";
-		// workingDir = "/home/kLeZ-hAcK/Documents/Programmi/hexedit/";
+		// workingDir = "/home/klez/Documents/Programmi/hexedit/";
 		Executor bld;
 
 		try
