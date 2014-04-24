@@ -92,12 +92,14 @@ tokens {
 }
 
 @lexer::header {
-package it.freax.fpm.core.solver.parsers;
+package it.freax.fpm.core.specs.tarball.antlr.parsers;
+
 import it.freax.fpm.util.exceptions.RuntimeParseException;
 }
 
 @parser::header {
-package it.freax.fpm.core.solver.parsers;
+package it.freax.fpm.core.specs.tarball.antlr.parsers;
+
 import it.freax.fpm.util.exceptions.RuntimeParseException;
 }
 
