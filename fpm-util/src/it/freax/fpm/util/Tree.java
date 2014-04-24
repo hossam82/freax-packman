@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class Tree<T>
