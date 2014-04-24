@@ -17,7 +17,7 @@ public class RegexTestClass
 		Pattern p = Pattern.compile(pattern);
 		System.out.println(p.matcher("SMB_VERSION_STRING='3.5.5'").matches());
 		System.out.println(p.matcher("VERSION='3.5.5'").matches());
-		String path = "/home/kLeZ-hAcK/Documents/Programmi/Sorgenti/samba-3.5.5/source3/configure";
+		String path = "/home/klez/Documents/Programmi/Sorgenti/samba-3.5.5/source3/configure";
 		Scanner scn = new Scanner(new File(path));
 		int countNoPat = 0, countPat = 0;
 		long timestart = Calendar.getInstance().getTimeInMillis();
@@ -37,6 +37,7 @@ public class RegexTestClass
 				countPat++;
 			}
 		}
+		scn.close();
 		System.out.println(Calendar.getInstance().getTimeInMillis() - timestart);
 		System.out.println(countNoPat);
 		System.out.println(countPat);
