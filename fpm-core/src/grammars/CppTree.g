@@ -8,6 +8,8 @@ options
 scope Macros { Map	 defines; }
 @header
 {
+	package it.freax.fpm.core.specs.tarball.antlr.parsers;
+
 	import	java.util.Set;
 	import	java.lang.*;
 	import 	java.util.HashSet;
