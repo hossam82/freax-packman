@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class PairNode<K, V> implements Iterable<PairNode<K, V>>
