@@ -9,8 +9,8 @@
                 <attribute name="Main-Class" value="it.freax.fpm.test.main.MainClass"/>
                 <attribute name="Class-Path" value=".:/usr/share/java/"/>
             </manifest>
-            <fileset dir="/home/kLeZ-hAcK/Documents/Programmazione/FreaxPackageManager/fpm-test/bin"/>
-            <fileset dir="/home/kLeZ-hAcK/Documents/Programmazione/FreaxPackageManager/fpm-core/bin"/>
+            <fileset dir="/home/klez/Documents/Programmazione/FreaxPackageManager/fpm-test/bin"/>
+            <fileset dir="/home/klez/Documents/Programmazione/FreaxPackageManager/fpm-core/bin"/>
         </jar>
     </target>
 </project>
