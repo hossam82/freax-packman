@@ -97,7 +97,7 @@
 			<instruction id="0" action="fpmInternalBuild()" permissions="user"/>
 		</instructionSet>
 		<additives>
-			<additive id="" infotype="" wheretoparse="" whattoparse="" howtoparse=""/>
+<!-- 			<additive id="" infotype="" wheretoparse="" whattoparse="" howtoparse=""/> -->
 		</additives>
 	</type>
 </conf>
