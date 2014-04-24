@@ -62,6 +62,9 @@ tokens {
     INDENT;
     DEDENT;
 }
+header {
+package it.freax.fpm.core.specs.tarball.antlr.parsers;
+}
 
 @lexer::members {
 /** Handles context-sensitive lexing of implicit line joining such as
