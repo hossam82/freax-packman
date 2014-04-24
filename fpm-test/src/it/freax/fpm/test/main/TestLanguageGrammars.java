@@ -10,7 +10,7 @@ import it.freax.fpm.core.specs.tarball.antlr.Language;
 import it.freax.fpm.util.exceptions.ExtensionDecodingException;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class TestLanguageGrammars
 {
@@ -19,7 +19,7 @@ public class TestLanguageGrammars
 	 */
 	public static void main(String[] args)
 	{
-		String path = "/home/kLeZ-hAcK/projects/FreaxPackageManager/fpm-core/src/grammars/Java.g";
+		String path = "/home/klez/projects/FreaxPackageManager/fpm-core/src/grammars/Java.g";
 		try
 		{
 			System.out.println(Language.create(new File(path), "Java"));
