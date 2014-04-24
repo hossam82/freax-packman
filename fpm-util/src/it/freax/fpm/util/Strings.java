@@ -113,7 +113,8 @@ public class Strings
 			ret = input.substring(input.indexOf(startDelimiter) + startDelimiter.length());
 			if (!ret.equalsIgnoreCase(input))
 			{
-				ret = ret.substring(0, ret.indexOf(endDelimiter));
+				int end = ret.indexOf(endDelimiter);
+				ret = ret.substring(0, end > 0 ? end : ret.length() - 1);
 			}
 		}
 		return ret;
@@ -160,11 +161,9 @@ public class Strings
 		while (scn.hasNextLine())
 		{
 			String line = scn.nextLine();
-			if (!line.isEmpty())
-			{
-				ret.add(line);
-			}
+			if (!line.isEmpty()) ret.add(line);
 		}
+		scn.close();
 		return ret;
 	}
 
@@ -192,11 +191,9 @@ public class Strings
 		while (scn.hasNext())
 		{
 			String curr = scn.nextLine();
-			if (patRegex.matcher(curr).matches())
-			{
-				ret.add(curr);
-			}
+			if (patRegex.matcher(curr).matches()) ret.add(curr);
 		}
+		scn.close();
 		return ret;
 	}
 
@@ -488,13 +485,10 @@ public class Strings
 	public StringWriter toStringWriter(String source)
 	{
 		StringWriter writer = new StringWriter();
-		Scanner scanner;
-
-		scanner = new Scanner(source);
+		Scanner scanner = new Scanner(source);
 		while (scanner.hasNextLine())
-		{
 			writer.append(scanner.nextLine()).append(Constants.FS);
-		}
+		scanner.close();
 		return writer;
 	}
 }
