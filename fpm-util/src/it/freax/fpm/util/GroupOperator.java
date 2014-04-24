@@ -4,7 +4,7 @@
 package it.freax.fpm.util;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public enum GroupOperator
