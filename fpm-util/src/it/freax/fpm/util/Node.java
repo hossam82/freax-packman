@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class Node<T> implements Iterable<Node<T>>
