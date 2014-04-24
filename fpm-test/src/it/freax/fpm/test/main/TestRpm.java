@@ -8,7 +8,7 @@ import java.io.File;
 import it.freax.fpm.core.specs.RpmSpec;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class TestRpm
 {
@@ -20,7 +20,7 @@ public class TestRpm
 	{
 		String path = "";
 		//		path = args[0];
-		path = "/home/kLeZ-hAcK/Scaricati/skype-2.2.0.35-suse.i586.rpm";
+		path = "/home/klez/Scaricati/RPM/skype-4.2.0.11-suse.i586.rpm";
 		File file = new File(path);
 		RpmSpec spec = new RpmSpec(null);
 		spec.Load(file);
