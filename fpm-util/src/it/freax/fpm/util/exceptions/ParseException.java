@@ -4,7 +4,7 @@
 package it.freax.fpm.util.exceptions;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class ParseException extends Exception
