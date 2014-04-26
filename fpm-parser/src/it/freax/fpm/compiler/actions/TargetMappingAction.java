@@ -8,7 +8,7 @@ import it.freax.fpm.compiler.edo.StructureTree;
 import it.freax.fpm.compiler.interfaces.IAction;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class TargetMappingAction<K, V> implements IAction<StructureTree<K, V>, ComputationGraph<K, V>>
 {

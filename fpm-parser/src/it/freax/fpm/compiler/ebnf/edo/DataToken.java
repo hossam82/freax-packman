@@ -6,7 +6,7 @@ package it.freax.fpm.compiler.ebnf.edo;
 import it.freax.fpm.util.exceptions.ParseException;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class DataToken extends EbnfToken

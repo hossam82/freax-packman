@@ -7,7 +7,7 @@ import it.freax.fpm.compiler.edo.TokenSequence;
 import it.freax.fpm.compiler.interfaces.IAnalysis;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class LexicalAnalysis implements IAnalysis<String, TokenSequence>
 {

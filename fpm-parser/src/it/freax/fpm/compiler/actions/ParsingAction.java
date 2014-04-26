@@ -8,7 +8,7 @@ import it.freax.fpm.compiler.edo.TokenSequence;
 import it.freax.fpm.compiler.interfaces.IAction;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class ParsingAction implements IAction<TokenSequence, ConnectionSequence>
 {

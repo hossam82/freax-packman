@@ -4,7 +4,7 @@
 package it.freax.fpm.compiler.interfaces;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public interface IAnalysis<IN, OUT>
 {

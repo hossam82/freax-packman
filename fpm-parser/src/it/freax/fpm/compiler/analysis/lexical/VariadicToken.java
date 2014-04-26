@@ -4,7 +4,7 @@
 package it.freax.fpm.compiler.analysis.lexical;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class VariadicToken extends Token

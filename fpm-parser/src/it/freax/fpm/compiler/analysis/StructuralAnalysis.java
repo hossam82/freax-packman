@@ -8,7 +8,7 @@ import it.freax.fpm.compiler.edo.ConnectionSequence;
 import it.freax.fpm.compiler.interfaces.IAnalysis;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class StructuralAnalysis implements IAnalysis<String, ConnectionSequence>
 {

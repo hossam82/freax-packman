@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class Ebnf

@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class EbnfToken extends Token

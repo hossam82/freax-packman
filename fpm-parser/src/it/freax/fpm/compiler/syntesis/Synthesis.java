@@ -10,7 +10,7 @@ import it.freax.fpm.compiler.edo.TargetCode;
 import it.freax.fpm.compiler.interfaces.ISyntesis;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class Synthesis<K, V> implements ISyntesis<K, V>
 {

@@ -7,7 +7,7 @@ import it.freax.fpm.compiler.edo.StructureTree;
 import it.freax.fpm.compiler.edo.TargetCode;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public interface ISyntesis<K, V>
 {

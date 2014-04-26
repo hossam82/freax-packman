@@ -8,7 +8,7 @@ import it.freax.fpm.compiler.edo.StructureTree;
 import it.freax.fpm.compiler.interfaces.IAnalysis;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class SemanticAnalysis<K, V> implements IAnalysis<ConnectionSequence, StructureTree<K, V>>
 {

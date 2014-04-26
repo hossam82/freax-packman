@@ -11,7 +11,7 @@ import it.freax.fpm.util.Strings;
 import java.io.IOException;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class Compiler
 {

@@ -6,7 +6,7 @@ package it.freax.fpm.compiler.edo;
 import java.util.List;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public abstract class OutputData<OUT>
 {

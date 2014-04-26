@@ -9,7 +9,7 @@ import it.freax.fpm.compiler.edo.StructureTree;
 import it.freax.fpm.compiler.interfaces.IAction;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class AnalysisAction<K, V> implements IAction<String, StructureTree<K, V>>
 {

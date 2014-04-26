@@ -4,7 +4,7 @@
 package it.freax.fpm.compiler.exceptions;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class AmbiguousCrossReferenceException extends Exception

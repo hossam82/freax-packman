@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class TestTree

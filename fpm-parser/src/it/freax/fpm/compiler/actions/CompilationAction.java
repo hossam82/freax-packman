@@ -10,7 +10,7 @@ import it.freax.fpm.compiler.interfaces.IElement;
 import it.freax.fpm.compiler.syntesis.Synthesis;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class CompilationAction implements IAction<String, TargetCode>
 {

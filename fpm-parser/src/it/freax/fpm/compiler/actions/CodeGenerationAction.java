@@ -8,7 +8,7 @@ import it.freax.fpm.compiler.edo.TargetTree;
 import it.freax.fpm.compiler.interfaces.IAction;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  */
 public class CodeGenerationAction<K, V> implements IAction<StructureTree<K, V>, TargetTree<K, V>>
 {

@@ -4,7 +4,7 @@
 package it.freax.fpm.compiler.edo;
 
 /**
- * @author kLeZ-hAcK
+ * @author klez
  * 
  */
 public class Connection
